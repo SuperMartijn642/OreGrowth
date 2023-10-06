@@ -39,8 +39,7 @@ To add a recipe, create a new JSON file in the 'recipes' folder and set its type
                         // base receives a random tick
    "growth_chance": 0.3, // chance for a crystal to grow when it
                          // receives a random tick
-   "result": { // item dropped when a fully crystal grown crystal
-               // is broken
+   "result": { // item dropped when a fully grown crystal is broken
       "item": "minecraft:pumpkin_pie",
       "count": 2
    }
