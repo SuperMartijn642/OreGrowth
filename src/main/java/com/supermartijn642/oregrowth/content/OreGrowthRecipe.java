@@ -129,7 +129,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
             ItemStack output = ShapedRecipe.itemStackFromJson(json.getAsJsonObject("result"));
             if(output.isEmpty())
                 throw new RuntimeException("Invalid output '" + output + "'!");
-            return new OreGrowthRecipe(blockIdentifier, base, stages, spawnChance, growthChance, output);
+            return new OreGrowthRecipe(identifier, base, stages, spawnChance, growthChance, output);
         }
 
         @Override
@@ -150,7 +150,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
             ItemStack output = buffer.readItem();
             if(output.isEmpty())
                 throw new RuntimeException("Invalid output '" + output + "'!");
-            return new OreGrowthRecipe(blockIdentifier, base, stages, spawnChance, growthChance, output);
+            return new OreGrowthRecipe(identifier, base, stages, spawnChance, growthChance, output);
         }
 
         @Override
