@@ -1,18 +1,19 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.supermartijn642.core.registry.Registries;
 import com.supermartijn642.oregrowth.OreGrowth;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
@@ -23,14 +24,12 @@ public class OreGrowthRecipe implements Recipe<Container> {
 
     public static final Serializer SERIALIZER = new Serializer();
 
-    private final ResourceLocation identifier;
     private final Block base;
     private final int stages;
     private final double spawnChance, growthChance;
     private final ItemStack output;
 
-    public OreGrowthRecipe(ResourceLocation identifier, Block base, int stages, double spawnChance, double growthChance, ItemStack output){
-        this.identifier = identifier;
+    public OreGrowthRecipe(Block base, int stages, double spawnChance, double growthChance, ItemStack output){
         this.base = base;
         this.stages = stages;
         this.spawnChance = spawnChance;
@@ -79,11 +78,6 @@ public class OreGrowthRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ResourceLocation getId(){
-        return this.identifier;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer(){
         return SERIALIZER;
     }
@@ -112,28 +106,18 @@ public class OreGrowthRecipe implements Recipe<Container> {
     private static class Serializer implements RecipeSerializer<OreGrowthRecipe> {
 
         @Override
-        public OreGrowthRecipe fromJson(ResourceLocation identifier, JsonObject json){
-            ResourceLocation blockIdentifier = new ResourceLocation(GsonHelper.getAsString(json, "base"));
-            Block base = Registries.BLOCKS.getValue(blockIdentifier);
-            if(base == null)
-                throw new RuntimeException("Unknown block '" + blockIdentifier + "'!");
-            int stages = GsonHelper.getAsInt(json, "stages");
-            if(stages < 1 || stages > OreGrowthBlock.MAX_STAGES)
-                throw new RuntimeException("Invalid number of stages: '" + stages + "'!");
-            double spawnChance = GsonHelper.getAsDouble(json, "spawn_chance");
-            if(spawnChance <= 0 || spawnChance > 1)
-                throw new RuntimeException("Invalid spawn chance: '" + spawnChance + "'!");
-            double growthChance = GsonHelper.getAsDouble(json, "growth_chance");
-            if(growthChance <= 0 || growthChance > 1)
-                throw new RuntimeException("Invalid growth chance: '" + growthChance + "'!");
-            ItemStack output = ShapedRecipe.itemStackFromJson(json.getAsJsonObject("result"));
-            if(output.isEmpty())
-                throw new RuntimeException("Invalid output '" + output + "'!");
-            return new OreGrowthRecipe(blockIdentifier, base, stages, spawnChance, growthChance, output);
+        public Codec<OreGrowthRecipe> codec(){
+            return RecordCodecBuilder.create(instance -> instance.group(
+                Registries.BLOCKS.getVanillaRegistry().byNameCodec().fieldOf("base").forGetter(OreGrowthRecipe::base),
+                Codec.intRange(1, 4).fieldOf("stages").forGetter(OreGrowthRecipe::stages),
+                Codec.doubleRange(0, 1).fieldOf("spawn_chance").forGetter(OreGrowthRecipe::spawnChance),
+                Codec.doubleRange(0, 1).fieldOf("growth_chance").forGetter(OreGrowthRecipe::growthChance),
+                CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC.fieldOf("result").forGetter(OreGrowthRecipe::output)
+            ).apply(instance, OreGrowthRecipe::new));
         }
 
         @Override
-        public OreGrowthRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf buffer){
+        public OreGrowthRecipe fromNetwork(FriendlyByteBuf buffer){
             ResourceLocation blockIdentifier = buffer.readResourceLocation();
             Block base = Registries.BLOCKS.getValue(blockIdentifier);
             if(base == null)
@@ -150,7 +134,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
             ItemStack output = buffer.readItem();
             if(output.isEmpty())
                 throw new RuntimeException("Invalid output '" + output + "'!");
-            return new OreGrowthRecipe(blockIdentifier, base, stages, spawnChance, growthChance, output);
+            return new OreGrowthRecipe(base, stages, spawnChance, growthChance, output);
         }
 
         @Override

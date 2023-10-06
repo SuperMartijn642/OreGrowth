@@ -32,11 +32,12 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         if(result.isEmpty())
             throw new RuntimeException("Invalid result '" + result + "'!");
 
-        OreGrowthRecipe recipe = new OreGrowthRecipe(new ResourceLocation(namespace, location), base, stages, spawnChance, growthChance, result);
-        if(this.recipes.containsKey(recipe.getId()))
-            throw new RuntimeException("Duplicate recipe for location '" + recipe.getId() + "'!");
+        ResourceLocation identifier = new ResourceLocation(namespace, location);
+        if(this.recipes.containsKey(identifier))
+            throw new RuntimeException("Duplicate recipe for location '" + identifier + "'!");
 
-        this.recipes.put(recipe.getId(), recipe);
+        OreGrowthRecipe recipe = new OreGrowthRecipe(base, stages, spawnChance, growthChance, result);
+        this.recipes.put(identifier, recipe);
         this.cache.trackToBeGeneratedResource(ResourceType.DATA, namespace, "recipes", location, ".json");
     }
 
@@ -50,8 +51,9 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
 
     @Override
     public void save(){
-        for(OreGrowthRecipe recipe : this.recipes.values()){
-            ResourceLocation location = recipe.getId();
+        for(Map.Entry<ResourceLocation,OreGrowthRecipe> entry : this.recipes.entrySet()){
+            ResourceLocation location = entry.getKey();
+            OreGrowthRecipe recipe = entry.getValue();
             this.cache.saveJsonResource(ResourceType.DATA, recipe.toJson(), location.getNamespace(), "recipes", location.getPath() + ".json");
         }
     }
