@@ -147,16 +147,18 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.scale(1, -1, 1);
         poseStack.scale(16, 16, 16);
+        RenderSystem.applyModelViewMatrix();
         BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
         boolean blockLight = !model.usesBlockLight();
         if(blockLight)
             Lighting.setupForFlatItems();
 
-        poseStack.mulPose(new Quaternion(30, 225, 0, true));
-        poseStack.scale(0.625f, 0.625f, 0.625f);
-        poseStack.translate(-0.5f, -0.5f, -0.5f);
+        PoseStack poseStack2 = new PoseStack();
+        poseStack2.mulPose(new Quaternion(30, 225, 0, true));
+        poseStack2.scale(0.625f, 0.625f, 0.625f);
+        poseStack2.translate(-0.5f, -0.5f, -0.5f);
         MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
+        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack2, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
 
         bufferSource.endBatch();
         if(blockLight)
