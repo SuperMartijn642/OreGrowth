@@ -1,6 +1,7 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.supermartijn642.oregrowth.OreGrowth;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 
@@ -21,6 +22,7 @@ public class OreGrowthRecipeManager {
     public static void reloadRecipes(RecipeManager recipeManager){
         recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
             .stream()
+            .map(RecipeHolder::value)
             .map(OreGrowthRecipe.class::cast)
             .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity()));
     }
