@@ -6,6 +6,7 @@ import com.supermartijn642.core.item.CreativeItemGroup;
 import com.supermartijn642.core.item.ItemProperties;
 import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
+import com.supermartijn642.oregrowth.compat.OreGrowthTOPPlugin;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
@@ -14,7 +15,12 @@ import com.supermartijn642.oregrowth.generators.OreGrowthModelGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthOreGrowthRecipeGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.function.Consumer;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -33,6 +39,10 @@ public class OreGrowth {
         if(CommonUtils.getEnvironmentSide().isClient())
             OreGrowthClient.initializeClient();
         registerGenerators();
+
+        // The One Probe integration
+        if(CommonUtils.isModLoaded("theoneprobe"))
+            FMLJavaModLoadingContext.get().getModEventBus().addListener((Consumer<InterModEnqueueEvent>)event -> InterModComms.sendTo("theoneprobe", "getTheOneProbe", OreGrowthTOPPlugin::new));
     }
 
     private static void register(){
