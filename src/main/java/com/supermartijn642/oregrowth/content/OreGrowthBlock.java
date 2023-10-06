@@ -132,6 +132,13 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
+    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity){
+        Direction facing = state.getValue(FACE);
+        Block base = level.getBlockState(pos.relative(facing)).getBlock();
+        return base.getSoundType(state, level, pos, entity);
+    }
+
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context){
         return SHAPES_ROTATED[(state.getValue(STAGE) - 1) * 6 + state.getValue(FACE).ordinal()].getUnderlying();
     }

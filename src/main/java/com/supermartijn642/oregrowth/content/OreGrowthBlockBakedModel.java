@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -15,20 +15,23 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
 public class OreGrowthBlockBakedModel implements BakedModel {
+
+    public static final ModelProperty<Block> BASE_BLOCK_PROPERTY = new ModelProperty<>();
 
     private static final int BLOCK_VERTEX_DATA_UV_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.UV);
     private static final int BLOCK_VERTEX_DATA_TINT_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.COLOR);
@@ -52,28 +55,24 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context){
+    public @NotNull ModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData data){
+        if(data.has(BASE_BLOCK_PROPERTY))
+            return data;
+
         // Get the base block
         BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
-        Block base = blockView.getBlockState(basePos).getBlock();
-        this.baseBlock.set(base);
-
-        context.bakedModelConsumer().accept(this, state);
-
-        this.baseBlock.set(null);
+        Block base = level.getBlockState(basePos).getBlock();
+        return ModelData.builder().with(BASE_BLOCK_PROPERTY, base).build();
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context){
-        context.bakedModelConsumer().accept(this);
-    }
-
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource random){
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource random, @NotNull ModelData data, @Nullable RenderType renderType){
         // Get the base block
         Block base = this.baseBlock.get();
         if(base == null)
-            return this.original.getQuads(state, side, random);
+            base = data.get(BASE_BLOCK_PROPERTY);
+        if(base == null)
+            return this.original.getQuads(state, side, random, data, renderType);
 
         // Get the correct cache and quads
         Map<Block,List<BakedQuad>> cache = side == null ? this.directionlessQuadCache : this.quadCache.get(side);
@@ -102,21 +101,26 @@ public class OreGrowthBlockBakedModel implements BakedModel {
         return quads;
     }
 
+    @Override
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource random){
+        return this.getQuads(state, side, random, ModelData.EMPTY, RenderType.solid());
+    }
+
     private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, RandomSource random){
         BlockState baseState = baseBlock.defaultBlockState();
         BakedModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
-        if(!baseModel.isVanillaAdapter())
-            return originalQuads;
 
         // Find the most occurring sprite (and sprite color)
         Map<TextureAtlasSprite,Pair<Holder<Integer>,Integer>> spriteCounts = new HashMap<>();
         for(Direction cullFace : MODEL_DIRECTIONS){
-            baseModel.getQuads(baseState, cullFace, random)
-                .forEach(quad -> {
-                    TextureAtlasSprite sprite = quad.getSprite();
-                    Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), quad.getTintIndex())).left();
-                    count.set(count.get() + 1);
-                });
+            for(RenderType renderType : baseModel.getRenderTypes(baseState, random, ModelData.EMPTY)){
+                baseModel.getQuads(baseState, cullFace, random, ModelData.EMPTY, renderType)
+                    .forEach(quad -> {
+                        TextureAtlasSprite sprite = quad.getSprite();
+                        Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), quad.getTintIndex())).left();
+                        count.set(count.get() + 1);
+                    });
+            }
         }
         if(spriteCounts.isEmpty())
             return originalQuads;
@@ -201,11 +205,6 @@ public class OreGrowthBlockBakedModel implements BakedModel {
         if(index == vertexFormat.getElements().size() || element == null)
             throw new RuntimeException("Expected vertex format to have a '" + vertexFormat + "' attribute");
         return vertexFormat.offsets.getInt(index);
-    }
-
-    @Override
-    public boolean isVanillaAdapter(){
-        return false;
     }
 
     @Override

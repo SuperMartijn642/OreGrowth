@@ -22,14 +22,19 @@ import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
@@ -39,6 +44,8 @@ import java.util.List;
  * Created 05/10/2023 by SuperMartijn642
  */
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
+
+    private static final RandomSource RANDOM = RandomSource.create();
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -111,19 +118,16 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         guiGraphics.renderFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 16);
 
         // Base block
-        renderModel(guiGraphics, recipe.base().defaultBlockState(), 9, 29, 0);
+        renderModel(guiGraphics, recipe.base().defaultBlockState(), 9, 29, 0, ModelData.EMPTY);
 
         // Ore growth block
         int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
         BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
-        BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
-        if(model instanceof OreGrowthBlockBakedModel)
-            ((OreGrowthBlockBakedModel)model).withContext(recipe.base(), () -> renderModel(guiGraphics, state, 9, 13, 10));
-        else
-            renderModel(guiGraphics, state, 9, 13, 10);
+        ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, recipe.base()).build();
+        renderModel(guiGraphics, state, 9, 13, 10, modelData);
     }
 
-    private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset){
+    private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset, ModelData modelData){
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(x + 8, y + 8, 150 + offset);
@@ -138,7 +142,10 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
         poseStack.translate(-0.5f, -0.5f, -0.5f);
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, guiGraphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY);
+        RANDOM.setSeed(42);
+        ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, RANDOM, modelData);
+        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentCullBlockSheet() : Sheets.cutoutBlockSheet();
+        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, guiGraphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
 
         guiGraphics.flush();
         if(blockLight)

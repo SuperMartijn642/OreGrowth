@@ -1,5 +1,6 @@
 package com.supermartijn642.oregrowth;
 
+import com.supermartijn642.core.CommonUtils;
 import com.supermartijn642.core.item.BaseBlockItem;
 import com.supermartijn642.core.item.CreativeItemGroup;
 import com.supermartijn642.core.item.ItemProperties;
@@ -11,23 +12,26 @@ import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthModelGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthOreGrowthRecipeGenerator;
-import net.fabricmc.api.ModInitializer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.fml.common.Mod;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
-public class OreGrowth implements ModInitializer {
+@Mod(OreGrowth.MODID)
+public class OreGrowth {
 
     public static final String MODID = "oregrowth";
 
-    public static final RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = RecipeType.register("oregrowth:ore_growth");
+    public static RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE;
     public static OreGrowthBlock ORE_GROWTH_BLOCK;
     public static BaseBlockItem ORE_GROWTH_ITEM;
 
-    @Override
-    public void onInitialize(){
+    public OreGrowth(){
         register();
+        if(CommonUtils.getEnvironmentSide().isClient())
+            OreGrowthClient.initializeClient();
         registerGenerators();
     }
 
@@ -36,6 +40,7 @@ public class OreGrowth implements ModInitializer {
         handler.registerRecipeSerializer("ore_growth", () -> OreGrowthRecipe.SERIALIZER);
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
+        handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(new ResourceLocation(MODID, "ore_growth")));
     }
 
     public static void registerGenerators(){
