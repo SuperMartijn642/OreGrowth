@@ -28,7 +28,7 @@ Ore Growth is completely customizable and custom recipes can allow crystals to g
 To add a recipe, create a new JSON file in the 'recipes' folder and set its type to `oregrowth:ore_growth`. Here is an example of the properties for an ore growth recipes to make crystals grow on pumpkins:
 
 <table>
-<tr><td max-width='100px'>
+<tr><td>
 
 ```json5
 {
@@ -36,11 +36,11 @@ To add a recipe, create a new JSON file in the 'recipes' folder and set its type
    "base": "minecraft:pumpkin", // block the crystal grows on
    "stages": 4, // number of growth stages the crystal has
    "spawn_chance": 0.2, // chance for a crystal to spawn when the
- base receives a random tick
+                        // base receives a random tick
    "growth_chance": 0.3, // chance for a crystal to grow when it
- receives a random tick
+                         // receives a random tick
    "result": { // item dropped when a fully crystal grown crystal
- is broken
+               // is broken
       "item": "minecraft:pumpkin_pie",
       "count": 2
    }
