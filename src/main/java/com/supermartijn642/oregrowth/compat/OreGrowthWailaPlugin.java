@@ -11,6 +11,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -82,8 +83,8 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
                     }
 
                     @Override
-                    public @Nullable String getMessage(){
-                        return currentIcon.getMessage();
+                    public IElement message(@Nullable Component message){
+                        return currentIcon.message(message);
                     }
                 };
             }

@@ -1,4 +1,4 @@
-// this.cache.versionId	2023-10-06T12:30:20.5086301	Core Lib Generators
+// 1.19.2	2023-10-06T12:49:58.679816	Core Lib Generators
 de2445af9724c05ec31a7794cc07087d8d484d81 data\oregrowth\recipes\iron_ore_growth.json
 f4ae3390b1f95c7a9884d21bbe79084668133404 data\oregrowth\recipes\redstone_ore_growth.json
 1270563c45a9443c05378907a2382d862009a5ec data\oregrowth\recipes\ancient_debris_growth.json
@@ -21,4 +21,3 @@ c9a6c13224b1d886be4d4b38d33309165f1e4d18 data\oregrowth\recipes\deepslate_redsto
 0268e05641e1a9ebb8caf016267d348f9aa27bd5 data\oregrowth\recipes\diamond_ore_growth.json
 019546bc3dfe09cb21bd14ff187e042e2c0d8006 data\oregrowth\recipes\deepslate_lapis_ore_growth.json
 ddac6261f7a5648c31ade74d16be6500e0c62475 data\oregrowth\recipes\nether_gold_ore_growth.json
-63bf9a5a382caac4d04873aa5e952809a52e4636 assets\minecraft\atlases\blocks.json

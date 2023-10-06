@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
-public class OreGrowthBlockBakedModel implements BakedModel {
+public class OreGrowthBlockBakedModel implements BakedModel, FabricBakedModel {
 
     private static final int BLOCK_VERTEX_DATA_UV_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.UV);
     private static final int BLOCK_VERTEX_DATA_TINT_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.COLOR);
@@ -105,7 +106,7 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, RandomSource random){
         BlockState baseState = baseBlock.defaultBlockState();
         BakedModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
-        if(!baseModel.isVanillaAdapter())
+        if(!((FabricBakedModel)baseModel).isVanillaAdapter())
             return originalQuads;
 
         // Find the most occurring sprite (and sprite color)

@@ -3,7 +3,6 @@ package com.supermartijn642.oregrowth.content;
 import com.google.gson.JsonObject;
 import com.supermartijn642.core.registry.Registries;
 import com.supermartijn642.oregrowth.OreGrowth;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -64,7 +63,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess){
+    public ItemStack assemble(Container container){
         return ItemStack.EMPTY;
     }
 
@@ -74,7 +73,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess){
+    public ItemStack getResultItem(){
         return ItemStack.EMPTY;
     }
 
