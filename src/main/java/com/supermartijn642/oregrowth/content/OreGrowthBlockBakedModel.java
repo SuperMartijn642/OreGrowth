@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -14,11 +13,12 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,24 +55,24 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public @NotNull ModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData data){
-        if(data.has(BASE_BLOCK_PROPERTY))
+    public @NotNull IModelData getModelData(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData data){
+        if(data.hasProperty(BASE_BLOCK_PROPERTY))
             return data;
 
         // Get the base block
         BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
         Block base = level.getBlockState(basePos).getBlock();
-        return ModelData.builder().with(BASE_BLOCK_PROPERTY, base).build();
+        return new ModelDataMap.Builder().withInitial(BASE_BLOCK_PROPERTY, base).build();
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource random, @NotNull ModelData data, @Nullable RenderType renderType){
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random random, @NotNull IModelData data){
         // Get the base block
         Block base = this.baseBlock.get();
         if(base == null)
-            base = data.get(BASE_BLOCK_PROPERTY);
+            base = data.getData(BASE_BLOCK_PROPERTY);
         if(base == null)
-            return this.original.getQuads(state, side, random, data, renderType);
+            return this.original.getQuads(state, side, random, data);
 
         // Get the correct cache and quads
         Map<Block,List<BakedQuad>> cache = side == null ? this.directionlessQuadCache : this.quadCache.get(side);
@@ -102,25 +102,23 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource random){
-        return this.getQuads(state, side, random, ModelData.EMPTY, RenderType.solid());
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random random){
+        return this.getQuads(state, side, random, EmptyModelData.INSTANCE);
     }
 
-    private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, RandomSource random){
+    private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, Random random){
         BlockState baseState = baseBlock.defaultBlockState();
         BakedModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
 
         // Find the most occurring sprite (and sprite color)
         Map<TextureAtlasSprite,Pair<Holder<Integer>,Integer>> spriteCounts = new HashMap<>();
         for(Direction cullFace : MODEL_DIRECTIONS){
-            for(RenderType renderType : baseModel.getRenderTypes(baseState, random, ModelData.EMPTY)){
-                baseModel.getQuads(baseState, cullFace, random, ModelData.EMPTY, renderType)
-                    .forEach(quad -> {
-                        TextureAtlasSprite sprite = quad.getSprite();
-                        Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), quad.getTintIndex())).left();
-                        count.set(count.get() + 1);
-                    });
-            }
+            baseModel.getQuads(baseState, cullFace, random, EmptyModelData.INSTANCE)
+                .forEach(quad -> {
+                    TextureAtlasSprite sprite = quad.getSprite();
+                    Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), quad.getTintIndex())).left();
+                    count.set(count.get() + 1);
+                });
         }
         if(spriteCounts.isEmpty())
             return originalQuads;

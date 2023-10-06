@@ -5,13 +5,14 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Random;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -35,7 +36,7 @@ public class BlockStateBaseMixin {
         method = "randomTick",
         at = @At("HEAD")
     )
-    private void randomTick(ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci){
+    private void randomTick(ServerLevel level, BlockPos pos, Random random, CallbackInfo ci){
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
         OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(state.getBlock());

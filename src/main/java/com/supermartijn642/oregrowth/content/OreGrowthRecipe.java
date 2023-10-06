@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -108,7 +109,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
         return json;
     }
 
-    private static class Serializer implements RecipeSerializer<OreGrowthRecipe> {
+    private static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<OreGrowthRecipe> {
 
         @Override
         public OreGrowthRecipe fromJson(ResourceLocation identifier, JsonObject json){

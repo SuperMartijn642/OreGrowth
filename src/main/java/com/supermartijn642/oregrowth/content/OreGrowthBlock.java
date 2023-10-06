@@ -7,7 +7,6 @@ import com.supermartijn642.oregrowth.OreGrowth;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,13 +39,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
 public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock {
 
-    public static void trySpawnOreGrowth(OreGrowthRecipe recipe, ServerLevel level, BlockPos pos, RandomSource random){
+    public static void trySpawnOreGrowth(OreGrowthRecipe recipe, ServerLevel level, BlockPos pos, Random random){
         if(random.nextFloat() > recipe.spawnChance())
             return;
 
@@ -98,7 +98,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random){
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, Random random){
         Block base = level.getBlockState(pos.relative(state.getValue(FACE))).getBlock();
         OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
         if(recipe == null){

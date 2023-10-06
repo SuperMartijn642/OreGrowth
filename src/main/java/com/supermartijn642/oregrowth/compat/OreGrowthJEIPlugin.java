@@ -25,7 +25,7 @@ public class OreGrowthJEIPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration){
-        registration.addRecipeCategories(new OreGrowthJEIRecipeCategory(registration.getJeiHelpers().getGuiHelper(), registration.getJeiHelpers().getIngredientManager()));
+        registration.addRecipeCategories(new OreGrowthJEIRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override

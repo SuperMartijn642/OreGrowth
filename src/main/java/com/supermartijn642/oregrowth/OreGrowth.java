@@ -13,8 +13,9 @@ import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthModelGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthOreGrowthRecipeGenerator;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -50,7 +51,7 @@ public class OreGrowth {
         handler.registerRecipeSerializer("ore_growth", () -> OreGrowthRecipe.SERIALIZER);
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getDecoration())));
-        handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(new ResourceLocation(MODID, "ore_growth")));
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, (Consumer<RegistryEvent.Register<Block>>)event -> ORE_GROWTH_RECIPE_TYPE = RecipeType.register("oregrowth:ore_growth"));
     }
 
     public static void registerGenerators(){

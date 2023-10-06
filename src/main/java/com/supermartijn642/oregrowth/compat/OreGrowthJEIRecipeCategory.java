@@ -23,23 +23,21 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.runtime.IIngredientManager;
+import mezz.jei.common.render.ItemStackRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 
 import java.util.List;
 
@@ -48,16 +46,25 @@ import java.util.List;
  */
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
 
-    private static final RandomSource RANDOM = RandomSource.create();
-
     private final IDrawable background;
     private final IDrawable icon;
-    private final IIngredientManager ingredientManager;
+    private final ItemStackRenderer itemStackRenderer = new ItemStackRenderer();
 
-    public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper, IIngredientManager ingredientManager){
+    public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper){
         this.background = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 10, 93, 52);
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.ORE_GROWTH_BLOCK));
-        this.ingredientManager = ingredientManager;
+    }
+
+    @SuppressWarnings("removal")
+    @Override
+    public ResourceLocation getUid(){
+        return new ResourceLocation(OreGrowth.MODID, "ore_growth_category");
+    }
+
+    @SuppressWarnings("removal")
+    @Override
+    public Class<? extends OreGrowthRecipe> getRecipeClass(){
+        return OreGrowthRecipe.class;
     }
 
     @Override
@@ -83,7 +90,6 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     @Override
     public void setRecipe(IRecipeLayoutBuilder layoutBuilder, OreGrowthRecipe recipe, IFocusGroup focusGroup){
         // Base block
-        IIngredientRenderer<ItemStack> originalRenderer = this.ingredientManager.getIngredientRenderer(VanillaTypes.ITEM_STACK);
         layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, 2, 22)
             .addItemStack(new ItemStack(recipe.base()))
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
@@ -93,12 +99,12 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
                 @Override
                 public List<Component> getTooltip(ItemStack stack, TooltipFlag flag){
-                    return originalRenderer.getTooltip(stack, flag);
+                    return itemStackRenderer.getTooltip(stack, flag);
                 }
 
                 @Override
                 public Font getFontRenderer(Minecraft minecraft, ItemStack ingredient){
-                    return originalRenderer.getFontRenderer(minecraft, ingredient);
+                    return itemStackRenderer.getFontRenderer(minecraft, ingredient);
                 }
 
                 @Override
@@ -127,19 +133,19 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         RenderSystem.disableDepthTest();
 
         // Base block
-        renderModel(recipe.base().defaultBlockState(), 9, 29, 0, ModelData.EMPTY);
+        renderModel(recipe.base().defaultBlockState(), 9, 29, 0, EmptyModelData.INSTANCE);
 
         // Ore growth block
         int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
         BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
-        ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, recipe.base()).build();
+        IModelData modelData = new ModelDataMap.Builder().withInitial(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, recipe.base()).build();
         renderModel(state, 9, 13, 10, modelData);
 
         modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
     }
 
-    private static void renderModel(BlockState state, int x, int y, int offset, ModelData modelData){
+    private static void renderModel(BlockState state, int x, int y, int offset, IModelData modelData){
         ClientUtils.getTextureManager().getTexture(TextureAtlases.getBlocks()).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlases.getBlocks());
         RenderSystem.enableBlend();
@@ -162,10 +168,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack2.scale(0.625f, 0.625f, 0.625f);
         poseStack2.translate(-0.5f, -0.5f, -0.5f);
         MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
-        RANDOM.setSeed(42);
-        ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, RANDOM, modelData);
-        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentCullBlockSheet() : Sheets.cutoutBlockSheet();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack2, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
+        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack2, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData);
 
         bufferSource.endBatch();
         if(blockLight)
