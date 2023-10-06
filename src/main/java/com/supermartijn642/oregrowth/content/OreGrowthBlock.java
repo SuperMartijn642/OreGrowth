@@ -28,8 +28,10 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -91,7 +93,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     public OreGrowthBlock(){
-        super(false, BlockProperties.create().lootTable(BuiltInLootTables.EMPTY).randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
+        super(false, BlockProperties.create(Material.STONE, MaterialColor.NONE).lootTable(BuiltInLootTables.EMPTY).randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
         this.registerDefaultState(this.defaultBlockState().setValue(STAGE, 1).setValue(FACE, Direction.DOWN).setValue(WATERLOGGED, false));
     }
 
@@ -109,13 +111,13 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder){
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
         Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if(entity == null)
             return Collections.emptyList();
         Vec3 origin = builder.getParameter(LootContextParams.ORIGIN);
         BlockPos pos = new BlockPos((int)origin.x, (int)origin.y, (int)origin.z);
-        return this.getDrops(state, entity.level(), pos);
+        return this.getDrops(state, entity.getLevel(), pos);
     }
 
     public List<ItemStack> getDrops(BlockState state, Level level, BlockPos pos){

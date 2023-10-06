@@ -1,6 +1,6 @@
 {
   "oregrowth.block.ore_growth": "Ore Cluster",
-  "oregrowth.ore_growth_block.adjusted_name": "%s Cluster",
+  "oregrowth.ore_growth_block.adjusted_name": "%s Crystal",
   "oregrowth.ore_growth_block.growth_hint": "Growth: %s",
   "oregrowth.jei_category.title": "Crystal Growth"
 }

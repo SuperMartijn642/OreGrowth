@@ -1,10 +1,10 @@
-// this.cache.versionId	2023-10-05T19:34:01.7883666	Core Lib Generators
+// this.cache.versionId	2023-10-06T12:30:20.5086301	Core Lib Generators
 de2445af9724c05ec31a7794cc07087d8d484d81 data\oregrowth\recipes\iron_ore_growth.json
 f4ae3390b1f95c7a9884d21bbe79084668133404 data\oregrowth\recipes\redstone_ore_growth.json
 1270563c45a9443c05378907a2382d862009a5ec data\oregrowth\recipes\ancient_debris_growth.json
 c53c5a3d0091ddf4daed6653f7376911691a5b97 data\oregrowth\recipes\deepslate_iron_ore_growth.json
 9705945a534fc4fff4ef484805c4321d6f010000 data\oregrowth\recipes\deepslate_diamond_ore_growth.json
-c45ec08d8b59afb45fe6ac53fa050fbf7a4e0a17 assets\oregrowth\lang\en_us.json
+ba6eed4714f78019417f6d548dbcd40104845966 assets\oregrowth\lang\en_us.json
 99cc733621448b29a95ab22baeba41019b4dcfa3 data\oregrowth\recipes\emerald_ore_growth.json
 e3c2835bc7b84b0bad9702018f6c742a8622beed data\oregrowth\recipes\lapis_ore_growth.json
 feaa449f8d116c7d50657bc019f779f3d14731f6 data\oregrowth\recipes\deepslate_coal_ore_growth.json

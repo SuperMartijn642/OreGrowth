@@ -1,9 +1,11 @@
 package com.supermartijn642.oregrowth.compat;
 
 import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
+import com.supermartijn642.core.render.RenderUtils;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
@@ -21,7 +23,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
@@ -78,7 +80,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             .addItemStack(new ItemStack(recipe.base()))
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
                 @Override
-                public void render(GuiGraphics guiGraphics, ItemStack stack){
+                public void render(PoseStack poseStack, ItemStack stack){
                 }
 
                 @Override
@@ -106,25 +108,26 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     }
 
     @Override
-    public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY){
+    public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, PoseStack poseStack, double mouseX, double mouseY){
         // Pickaxe
-        guiGraphics.renderFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 16);
+        RenderSystem.enableDepthTest();
+        ClientUtils.getItemRenderer().renderAndDecorateFakeItem(poseStack, Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 16);
+        RenderSystem.disableDepthTest();
 
         // Base block
-        renderModel(guiGraphics, recipe.base().defaultBlockState(), 9, 29, 0);
+        renderModel(poseStack, recipe.base().defaultBlockState(), 9, 29, 0);
 
         // Ore growth block
         int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
         BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
         BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
         if(model instanceof OreGrowthBlockBakedModel)
-            ((OreGrowthBlockBakedModel)model).withContext(recipe.base(), () -> renderModel(guiGraphics, state, 9, 13, 10));
+            ((OreGrowthBlockBakedModel)model).withContext(recipe.base(), () -> renderModel(poseStack, state, 9, 13, 10));
         else
-            renderModel(guiGraphics, state, 9, 13, 10);
+            renderModel(poseStack, state, 9, 13, 10);
     }
 
-    private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset){
-        PoseStack poseStack = guiGraphics.pose();
+    private static void renderModel(PoseStack poseStack, BlockState state, int x, int y, int offset){
         poseStack.pushPose();
         poseStack.translate(x + 8, y + 8, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
@@ -138,9 +141,10 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
         poseStack.translate(-0.5f, -0.5f, -0.5f);
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, guiGraphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY);
+        MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
+        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
 
-        guiGraphics.flush();
+        bufferSource.endBatch();
         if(blockLight)
             Lighting.setupFor3DItems();
         poseStack.popPose();
