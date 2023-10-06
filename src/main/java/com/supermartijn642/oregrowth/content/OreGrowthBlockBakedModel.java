@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
@@ -53,7 +52,7 @@ public class OreGrowthBlockBakedModel implements BakedModel, FabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context){
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context){
         // Get the base block
         BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
         Block base = blockView.getBlockState(basePos).getBlock();
@@ -65,12 +64,12 @@ public class OreGrowthBlockBakedModel implements BakedModel, FabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context){
+    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context){
         context.bakedModelConsumer().accept(this);
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource random){
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random random){
         // Get the base block
         Block base = this.baseBlock.get();
         if(base == null)
@@ -103,7 +102,7 @@ public class OreGrowthBlockBakedModel implements BakedModel, FabricBakedModel {
         return quads;
     }
 
-    private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, RandomSource random){
+    private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, Random random){
         BlockState baseState = baseBlock.defaultBlockState();
         BakedModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
         if(!((FabricBakedModel)baseModel).isVanillaAdapter())

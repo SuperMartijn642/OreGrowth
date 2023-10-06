@@ -23,7 +23,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.runtime.IIngredientManager;
+import mezz.jei.common.render.ItemStackRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -45,12 +45,23 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
     private final IDrawable background;
     private final IDrawable icon;
-    private final IIngredientManager ingredientManager;
+    private final ItemStackRenderer itemStackRenderer = new ItemStackRenderer();
 
-    public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper, IIngredientManager ingredientManager){
+    public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper){
         this.background = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 10, 93, 52);
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.ORE_GROWTH_BLOCK));
-        this.ingredientManager = ingredientManager;
+    }
+
+    @SuppressWarnings("removal")
+    @Override
+    public ResourceLocation getUid(){
+        return new ResourceLocation(OreGrowth.MODID, "ore_growth_category");
+    }
+
+    @SuppressWarnings("removal")
+    @Override
+    public Class<? extends OreGrowthRecipe> getRecipeClass(){
+        return OreGrowthRecipe.class;
     }
 
     @Override
@@ -76,7 +87,6 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     @Override
     public void setRecipe(IRecipeLayoutBuilder layoutBuilder, OreGrowthRecipe recipe, IFocusGroup focusGroup){
         // Base block
-        IIngredientRenderer<ItemStack> originalRenderer = this.ingredientManager.getIngredientRenderer(VanillaTypes.ITEM_STACK);
         layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, 2, 22)
             .addItemStack(new ItemStack(recipe.base()))
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
@@ -86,12 +96,12 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
                 @Override
                 public List<Component> getTooltip(ItemStack stack, TooltipFlag flag){
-                    return originalRenderer.getTooltip(stack, flag);
+                    return itemStackRenderer.getTooltip(stack, flag);
                 }
 
                 @Override
                 public Font getFontRenderer(Minecraft minecraft, ItemStack ingredient){
-                    return originalRenderer.getFontRenderer(minecraft, ingredient);
+                    return itemStackRenderer.getFontRenderer(minecraft, ingredient);
                 }
 
                 @Override
@@ -147,16 +157,18 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.scale(1, -1, 1);
         poseStack.scale(16, 16, 16);
+        RenderSystem.applyModelViewMatrix();
         BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
         boolean blockLight = !model.usesBlockLight();
         if(blockLight)
             Lighting.setupForFlatItems();
 
-        poseStack.mulPose(new Quaternion(30, 225, 0, true));
-        poseStack.scale(0.625f, 0.625f, 0.625f);
-        poseStack.translate(-0.5f, -0.5f, -0.5f);
+        PoseStack poseStack2 = new PoseStack();
+        poseStack2.mulPose(new Quaternion(30, 225, 0, true));
+        poseStack2.scale(0.625f, 0.625f, 0.625f);
+        poseStack2.translate(-0.5f, -0.5f, -0.5f);
         MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
+        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack2, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
 
         bufferSource.endBatch();
         if(blockLight)
