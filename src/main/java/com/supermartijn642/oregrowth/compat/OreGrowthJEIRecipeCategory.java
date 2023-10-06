@@ -1,11 +1,14 @@
 package com.supermartijn642.oregrowth.compat;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.render.RenderUtils;
+import com.supermartijn642.core.render.TextureAtlases;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
@@ -37,8 +40,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.data.ModelData;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 import java.util.List;
 
@@ -116,40 +117,55 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
     @Override
     public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, PoseStack poseStack, double mouseX, double mouseY){
+        PoseStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushPose();
+        modelViewStack.mulPoseMatrix(poseStack.last().pose());
+
         // Pickaxe
         RenderSystem.enableDepthTest();
-        ClientUtils.getItemRenderer().renderAndDecorateFakeItem(poseStack, Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 16);
+        ClientUtils.getItemRenderer().renderAndDecorateFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 16);
         RenderSystem.disableDepthTest();
 
         // Base block
-        renderModel(poseStack, recipe.base().defaultBlockState(), 9, 29, 0, ModelData.EMPTY);
+        renderModel(recipe.base().defaultBlockState(), 9, 29, 0, ModelData.EMPTY);
 
         // Ore growth block
         int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
         BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
         ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, recipe.base()).build();
-        renderModel(poseStack, state, 9, 13, 10, modelData);
+        renderModel(state, 9, 13, 10, modelData);
+
+        modelViewStack.popPose();
+        RenderSystem.applyModelViewMatrix();
     }
 
-    private static void renderModel(PoseStack poseStack, BlockState state, int x, int y, int offset, ModelData modelData){
+    private static void renderModel(BlockState state, int x, int y, int offset, ModelData modelData){
+        ClientUtils.getTextureManager().getTexture(TextureAtlases.getBlocks()).setFilter(false, false);
+        RenderSystem.setShaderTexture(0, TextureAtlases.getBlocks());
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        PoseStack poseStack = RenderSystem.getModelViewStack();
         poseStack.pushPose();
         poseStack.translate(x + 8, y + 8, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
-        poseStack.mulPoseMatrix(new Matrix4f().scaling(1, -1, 1));
+        poseStack.scale(1, -1, 1);
         poseStack.scale(16, 16, 16);
+        RenderSystem.applyModelViewMatrix();
         BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
         boolean blockLight = !model.usesBlockLight();
         if(blockLight)
             Lighting.setupForFlatItems();
 
-        poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
-        poseStack.scale(0.625f, 0.625f, 0.625f);
-        poseStack.translate(-0.5f, -0.5f, -0.5f);
+        PoseStack poseStack2 = new PoseStack();
+        poseStack2.mulPose(new Quaternion(30, 225, 0, true));
+        poseStack2.scale(0.625f, 0.625f, 0.625f);
+        poseStack2.translate(-0.5f, -0.5f, -0.5f);
         MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
         RANDOM.setSeed(42);
         ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, RANDOM, modelData);
         RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentCullBlockSheet() : Sheets.cutoutBlockSheet();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
+        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack2, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
 
         bufferSource.endBatch();
         if(blockLight)
