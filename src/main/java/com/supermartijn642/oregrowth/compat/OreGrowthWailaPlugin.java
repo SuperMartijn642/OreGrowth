@@ -1,5 +1,6 @@
 package com.supermartijn642.oregrowth.compat;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.oregrowth.OreGrowth;
@@ -8,7 +9,6 @@ import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,7 +19,6 @@ import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.theme.IThemeHelper;
 import snownee.jade.api.ui.Element;
 import snownee.jade.api.ui.IElement;
 
@@ -44,7 +43,8 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
                 // Replace the block name
                 tooltip.remove(Identifiers.CORE_OBJECT_NAME);
-                tooltip.add(0, IThemeHelper.get().title(TextComponents.translation("oregrowth.ore_growth_block.adjusted_name", base.getName()).get()));
+                //noinspection UnstableApiUsage
+                tooltip.add(0, config.getWailaConfig().getFormatting().title(TextComponents.translation("oregrowth.ore_growth_block.adjusted_name", base.getName()).get()));
 
                 // Add the growth tooltip
                 OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
@@ -73,12 +73,12 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
                     }
 
                     @Override
-                    public void render(GuiGraphics guiGraphics, float x, float y, float maxX, float maxY){
+                    public void render(PoseStack poseStack, float x, float y, float maxX, float maxY){
                         BakedModel model = ClientUtils.getItemRenderer().getItemModelShaper().getItemModel(OreGrowth.ORE_GROWTH_BLOCK.asItem());
                         if(model instanceof OreGrowthBlockBakedModel)
-                            ((OreGrowthBlockBakedModel)model).withContext(base, () -> currentIcon.render(guiGraphics, x, y, maxX, maxY));
+                            ((OreGrowthBlockBakedModel)model).withContext(base, () -> currentIcon.render(poseStack, x, y, maxX, maxY));
                         else
-                            currentIcon.render(guiGraphics, x, y, maxX, maxY);
+                            currentIcon.render(poseStack, x, y, maxX, maxY);
                     }
 
                     @Override

@@ -1,5 +1,6 @@
 package com.supermartijn642.oregrowth.compat;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.registry.Registries;
@@ -10,7 +11,6 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -112,12 +112,12 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
         }
 
         @Override
-        public void render(GuiGraphics graphics, int x, int y){
+        public void render(PoseStack poseStack, int x, int y){
             BakedModel model = ClientUtils.getItemRenderer().getItemModelShaper().getItemModel(OreGrowth.ORE_GROWTH_BLOCK.asItem());
             if(model instanceof OreGrowthBlockBakedModel)
-                ((OreGrowthBlockBakedModel)model).withContext(this.base, () -> super.render(graphics, x, y));
+                ((OreGrowthBlockBakedModel)model).withContext(this.base, () -> super.render(poseStack, x, y));
             else
-                super.render(graphics, x, y);
+                super.render(poseStack, x, y);
         }
 
         @Override
