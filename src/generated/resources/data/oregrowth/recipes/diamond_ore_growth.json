@@ -1,0 +1,11 @@
+{
+  "type": "oregrowth:ore_growth",
+  "base": "minecraft:diamond_ore",
+  "stages": 4,
+  "spawn_chance": 0.1,
+  "growth_chance": 0.1,
+  "result": {
+    "item": "minecraft:diamond",
+    "count": 1
+  }
+}
