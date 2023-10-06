@@ -58,7 +58,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
             @Override
             public ResourceLocation getUid(){
-                return new ResourceLocation("ore_growth_hint");
+                return new ResourceLocation(OreGrowth.MODID, "ore_growth_hint");
             }
         }, OreGrowthBlock.class);
         registration.registerBlockIcon(new IBlockComponentProvider() {
@@ -95,7 +95,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
             @Override
             public ResourceLocation getUid(){
-                return new ResourceLocation("ore_growth_icon");
+                return new ResourceLocation(OreGrowth.MODID, "ore_growth_icon");
             }
         }, OreGrowthBlock.class);
     }

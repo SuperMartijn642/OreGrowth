@@ -1,14 +1,14 @@
-// 1.19.2	2023-10-06T12:49:58.679816	Core Lib Generators
+// 1.19.2	2023-10-06T13:24:25.7363542	Core Lib Generators
 de2445af9724c05ec31a7794cc07087d8d484d81 data\oregrowth\recipes\iron_ore_growth.json
 f4ae3390b1f95c7a9884d21bbe79084668133404 data\oregrowth\recipes\redstone_ore_growth.json
 1270563c45a9443c05378907a2382d862009a5ec data\oregrowth\recipes\ancient_debris_growth.json
 c53c5a3d0091ddf4daed6653f7376911691a5b97 data\oregrowth\recipes\deepslate_iron_ore_growth.json
 9705945a534fc4fff4ef484805c4321d6f010000 data\oregrowth\recipes\deepslate_diamond_ore_growth.json
-ba6eed4714f78019417f6d548dbcd40104845966 assets\oregrowth\lang\en_us.json
+99a8f9b9e16783918895c4fa4b846554eaeaac85 assets\oregrowth\lang\en_us.json
 99cc733621448b29a95ab22baeba41019b4dcfa3 data\oregrowth\recipes\emerald_ore_growth.json
 e3c2835bc7b84b0bad9702018f6c742a8622beed data\oregrowth\recipes\lapis_ore_growth.json
 feaa449f8d116c7d50657bc019f779f3d14731f6 data\oregrowth\recipes\deepslate_coal_ore_growth.json
-82b3b46f8092c36f165c23b5fb0a59eaaa1c07cc assets\oregrowth\blockstates\ore_growth.json
+92fb2bb95f593334388d5d2e01de425a3b8cc8e5 assets\oregrowth\blockstates\ore_growth.json
 eb2109641baa5b579f6c377e949f23a45e3ec10e data\oregrowth\recipes\nether_quartz_ore_growth.json
 be77a9a1a023d718a395798b12715f178c8ddf9d data\oregrowth\recipes\deepslate_gold_ore_growth.json
 10c4336aa2653d994e7d36ddb531ba4301f3cbe9 data\oregrowth\recipes\gold_ore_growth.json
