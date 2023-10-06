@@ -19,5 +19,7 @@ public class OreGrowthLanguageGenerator extends LanguageGenerator {
         this.translation("oregrowth.ore_growth_block.adjusted_name", "%s Crystal");
         this.translation("oregrowth.ore_growth_block.growth_hint", "Growth: %s");
         this.translation("oregrowth.jei_category.title", "Crystal Growth");
+        this.translation("config.jade.plugin_oregrowth.ore_growth_hint", "Show crystal growth progress");
+        this.translation("config.jade.plugin_oregrowth.ore_growth_icon", "Replace crystal icon");
     }
 }
