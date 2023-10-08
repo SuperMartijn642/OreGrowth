@@ -56,13 +56,21 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         return this.recipe(location, base, stages, spawnChance, growthChance, result, 1);
     }
 
-    public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, String result, int resultCount){
-        return this.recipe(this.modid, modid + "_" + base + "_growth", new ResourceLocation(modid, base), stages, spawnChance, growthChance, new ResourceLocation(modid, result), resultCount)
+    public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, ResourceLocation result, int resultCount){
+        return this.recipe(this.modid, modid + "_" + base + "_growth", new ResourceLocation(modid, base), stages, spawnChance, growthChance, result, resultCount)
             .modLoadedCondition(modid);
+    }
+
+    public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, String result, int resultCount){
+        return this.modIntegration(modid, base, stages, spawnChance, growthChance, new ResourceLocation(modid, result), resultCount);
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, String result){
         return this.modIntegration(modid, base, stages, spawnChance, growthChance, result, 1);
+    }
+
+    public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, Item result){
+        return this.modIntegration(modid, base, stages, spawnChance, growthChance, Registries.ITEMS.getIdentifier(result), 1);
     }
 
     @Override
