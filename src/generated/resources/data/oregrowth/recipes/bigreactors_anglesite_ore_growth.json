@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "bigreactors"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "bigreactors:anglesite_ore",
+    "stages": 4,
+    "spawn_chance": 0.1,
+    "growth_chance": 0.1,
+    "result": {
+      "item": "bigreactors:anglesite_crystal",
+      "count": 1
+    }
+  }
+}

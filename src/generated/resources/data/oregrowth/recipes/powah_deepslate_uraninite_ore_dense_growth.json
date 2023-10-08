@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "powah"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "powah:deepslate_uraninite_ore_dense",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "powah:uraninite",
+      "count": 3
+    }
+  }
+}

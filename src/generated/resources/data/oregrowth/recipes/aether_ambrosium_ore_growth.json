@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "aether"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "aether:ambrosium_ore",
+    "stages": 3,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.15,
+    "result": {
+      "item": "aether:ambrosium_shard",
+      "count": 1
+    }
+  }
+}

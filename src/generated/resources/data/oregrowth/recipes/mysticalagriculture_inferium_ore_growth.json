@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "mysticalagriculture"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "mysticalagriculture:inferium_ore",
+    "stages": 4,
+    "spawn_chance": 0.3,
+    "growth_chance": 0.4,
+    "result": {
+      "item": "mysticalagriculture:inferium_essence",
+      "count": 1
+    }
+  }
+}

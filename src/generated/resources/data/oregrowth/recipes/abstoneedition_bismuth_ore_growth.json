@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "abstoneedition"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "abstoneedition:bismuth_ore",
+    "stages": 4,
+    "spawn_chance": 0.1,
+    "growth_chance": 0.05,
+    "result": {
+      "item": "abstoneedition:raw_bismuth_chunk",
+      "count": 1
+    }
+  }
+}

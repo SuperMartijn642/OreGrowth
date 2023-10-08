@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "abstoneedition"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "abstoneedition:silver_ore",
+    "stages": 4,
+    "spawn_chance": 0.25,
+    "growth_chance": 0.25,
+    "result": {
+      "item": "abstoneedition:raw_silver",
+      "count": 1
+    }
+  }
+}

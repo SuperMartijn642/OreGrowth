@@ -1,0 +1,22 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "rftoolsbase"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "rftoolsbase:dimensionalshard_overworld",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "rftoolsbase:dimensionalshard",
+      "count": 1
+    }
+  }
+}
