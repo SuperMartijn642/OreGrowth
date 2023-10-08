@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "betternether"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "betternether:nether_lapis_ore",
+    "stages": 2,
+    "spawn_chance": 0.25,
+    "growth_chance": 0.25,
+    "result": {
+      "item": "betternether:lapis_pile",
+      "count": 1
+    }
+  }
+}
