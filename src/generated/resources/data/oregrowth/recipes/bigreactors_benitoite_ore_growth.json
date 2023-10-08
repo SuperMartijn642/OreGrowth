@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "modid": "bigreactors",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "bigreactors:benitoite_ore",
+    "stages": 4,
+    "spawn_chance": 0.1,
+    "growth_chance": 0.1,
+    "result": {
+      "item": "bigreactors:benitoite_crystal",
+      "count": 1
+    }
+  }
+}
