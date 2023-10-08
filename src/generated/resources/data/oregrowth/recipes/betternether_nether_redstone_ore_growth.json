@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "modid": "betternether",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "betternether:nether_redstone_ore",
+    "stages": 2,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "minecraft:redstone",
+      "count": 1
+    }
+  }
+}

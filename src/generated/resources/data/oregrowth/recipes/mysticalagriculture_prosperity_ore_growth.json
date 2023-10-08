@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "modid": "mysticalagriculture",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "mysticalagriculture:prosperity_ore",
+    "stages": 4,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "mysticalagriculture:prosperity_shard",
+      "count": 1
+    }
+  }
+}

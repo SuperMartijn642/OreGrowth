@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "modid": "thermalfoundation",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "thermalfoundation:deepslate_silver_ore",
+    "stages": 4,
+    "spawn_chance": 0.25,
+    "growth_chance": 0.25,
+    "result": {
+      "item": "thermalfoundation:raw_silver",
+      "count": 1
+    }
+  }
+}

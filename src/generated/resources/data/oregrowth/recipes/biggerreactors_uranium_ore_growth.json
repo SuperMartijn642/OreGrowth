@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "modid": "biggerreactors",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "biggerreactors:uranium_ore",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "biggerreactors:uranium_chunk",
+      "count": 1
+    }
+  }
+}

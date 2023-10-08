@@ -1,0 +1,20 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "modid": "betternether",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "betternether:cincinnasite_ore",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.15,
+    "result": {
+      "item": "betternether:cincinnasite",
+      "count": 1
+    }
+  }
+}
