@@ -58,6 +58,26 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Uranium ore
         this.modIntegration(abStoneEdition, "uranium_ore", 4, 0.15, 0.2, "raw_uranium");
 
+        // ----- BetterEnd -----
+        String betterEnd = "betterend";
+        // Ender ore
+        this.modIntegration(betterEnd, "ender_ore", 4, 0.15, 0.15, "ender_shard");
+        // Amber ore
+        this.modIntegration(betterEnd, "amber_ore", 4, 0.2, 0.15, "raw_amber");
+        // Thallasium ore
+        this.modIntegration(betterEnd, "thallasium_ore", 4, 0.1, 0.15, "thallasium_raw");
+
+        // ----- BetterNether -----
+        String betterNether = "betternether";
+        // Cincinnasite ore
+        this.modIntegration(betterNether, "cincinnasite_ore", 4, 0.15, 0.15, "cincinnasite");
+        // Nether ruby ore
+        this.modIntegration(betterNether, "nether_ruby_ore", 4, 0.1, 0.1, "nether_ruby");
+        // Nether lapis ore
+        this.modIntegration(betterNether, "nether_lapis_ore", 2, 0.25, 0.25, "lapis_pile");
+        // Nether redstone ore
+        this.modIntegration(betterNether, "nether_redstone_ore", 2, 0.2, 0.2, Items.REDSTONE);
+
         // ----- Bigger Reactors -----
         String biggerReactors = "biggerreactors";
         // Uranium ore
