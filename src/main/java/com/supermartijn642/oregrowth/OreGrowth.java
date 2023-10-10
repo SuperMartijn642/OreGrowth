@@ -6,6 +6,7 @@ import com.supermartijn642.core.item.ItemProperties;
 import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
+import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
@@ -27,6 +28,7 @@ public class OreGrowth implements ModInitializer {
 
     @Override
     public void onInitialize(){
+        OreGrowthConfig.init();
         register();
         registerGenerators();
     }
@@ -36,6 +38,7 @@ public class OreGrowth implements ModInitializer {
         handler.registerRecipeSerializer("ore_growth", () -> OreGrowthRecipe.SERIALIZER);
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getDecoration())));
+        handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
 
     public static void registerGenerators(){
