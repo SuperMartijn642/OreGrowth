@@ -2,6 +2,9 @@
   "type": "supermartijn642corelib:conditional",
   "conditions": [
     {
+      "type": "oregrowth:default_recipes"
+    },
+    {
       "type": "supermartijn642corelib:mod_loaded",
       "modid": "rftoolsbase"
     }

@@ -1,11 +1,19 @@
 {
-  "type": "oregrowth:ore_growth",
-  "base": "minecraft:ancient_debris",
-  "stages": 4,
-  "spawn_chance": 0.1,
-  "growth_chance": 0.05,
-  "result": {
-    "item": "minecraft:netherite_scrap",
-    "count": 1
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "minecraft:ancient_debris",
+    "stages": 4,
+    "spawn_chance": 0.1,
+    "growth_chance": 0.05,
+    "result": {
+      "item": "minecraft:netherite_scrap",
+      "count": 1
+    }
   }
 }
