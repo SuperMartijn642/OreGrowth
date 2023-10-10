@@ -36,6 +36,7 @@ public class OreGrowth {
     public static BaseBlockItem ORE_GROWTH_ITEM;
 
     public OreGrowth(){
+        OreGrowthConfig.init();
         register();
         if(CommonUtils.getEnvironmentSide().isClient())
             OreGrowthClient.initializeClient();
