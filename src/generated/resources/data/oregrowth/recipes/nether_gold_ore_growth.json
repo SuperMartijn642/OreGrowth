@@ -1,11 +1,20 @@
 {
-  "type": "oregrowth:ore_growth",
-  "base": "minecraft:nether_gold_ore",
-  "stages": 4,
-  "spawn_chance": 0.3,
-  "growth_chance": 0.5,
-  "result": {
-    "item": "minecraft:gold_nugget",
-    "count": 1
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes",
+      "value": {}
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "minecraft:nether_gold_ore",
+    "stages": 4,
+    "spawn_chance": 0.3,
+    "growth_chance": 0.5,
+    "result": {
+      "item": "minecraft:gold_nugget",
+      "count": 1
+    }
   }
 }

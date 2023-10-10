@@ -2,6 +2,10 @@
   "type": "supermartijn642corelib:conditional",
   "conditions": [
     {
+      "type": "oregrowth:default_recipes",
+      "value": {}
+    },
+    {
       "type": "supermartijn642corelib:mod_loaded",
       "value": {
         "modid": "create"
