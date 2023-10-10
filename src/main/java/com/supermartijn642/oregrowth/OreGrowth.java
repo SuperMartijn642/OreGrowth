@@ -8,6 +8,7 @@ import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
 import com.supermartijn642.oregrowth.compat.OreGrowthTOPPlugin;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
+import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
@@ -53,6 +54,7 @@ public class OreGrowth {
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getDecoration())));
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, (Consumer<RegistryEvent.Register<Block>>)event -> ORE_GROWTH_RECIPE_TYPE = RecipeType.register("oregrowth:ore_growth"));
+        handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
 
     public static void registerGenerators(){
