@@ -1,11 +1,19 @@
 {
-  "type": "oregrowth:ore_growth",
-  "base": "minecraft:deepslate_gold_ore",
-  "stages": 4,
-  "spawn_chance": 0.2,
-  "growth_chance": 0.2,
-  "result": {
-    "item": "minecraft:raw_gold",
-    "count": 1
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "minecraft:deepslate_gold_ore",
+    "stages": 4,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "minecraft:raw_gold",
+      "count": 1
+    }
   }
 }
