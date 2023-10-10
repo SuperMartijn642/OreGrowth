@@ -15,6 +15,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -114,9 +115,11 @@ public class OreGrowthRecipe implements Recipe<Container> {
         @Override
         public OreGrowthRecipe fromJson(ResourceLocation identifier, JsonObject json){
             ResourceLocation blockIdentifier = new ResourceLocation(GsonHelper.getAsString(json, "base"));
-            Block base = Registries.BLOCKS.getValue(blockIdentifier);
-            if(base == null)
+            if(!Registries.BLOCKS.hasIdentifier(blockIdentifier))
                 throw new RuntimeException("Unknown block '" + blockIdentifier + "'!");
+            Block base = Registries.BLOCKS.getValue(blockIdentifier);
+            if(base == Blocks.AIR || base == Blocks.CAVE_AIR || base == Blocks.VOID_AIR)
+                throw new RuntimeException("Got AIR block for identifier '" + blockIdentifier + "'!");
             int stages = GsonHelper.getAsInt(json, "stages");
             if(stages < 1 || stages > OreGrowthBlock.MAX_STAGES)
                 throw new RuntimeException("Invalid number of stages: '" + stages + "'!");
@@ -135,9 +138,11 @@ public class OreGrowthRecipe implements Recipe<Container> {
         @Override
         public OreGrowthRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf buffer){
             ResourceLocation blockIdentifier = buffer.readResourceLocation();
-            Block base = Registries.BLOCKS.getValue(blockIdentifier);
-            if(base == null)
+            if(!Registries.BLOCKS.hasIdentifier(blockIdentifier))
                 throw new RuntimeException("Unknown block '" + blockIdentifier + "'!");
+            Block base = Registries.BLOCKS.getValue(blockIdentifier);
+            if(base == Blocks.AIR || base == Blocks.CAVE_AIR || base == Blocks.VOID_AIR)
+                throw new RuntimeException("Got AIR block for identifier '" + blockIdentifier + "'!");
             int stages = buffer.readInt();
             if(stages < 1 || stages > OreGrowthBlock.MAX_STAGES)
                 throw new RuntimeException("Invalid number of stages: '" + stages + "'!");
