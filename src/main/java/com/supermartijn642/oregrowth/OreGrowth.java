@@ -8,6 +8,7 @@ import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
 import com.supermartijn642.oregrowth.compat.OreGrowthTOPPlugin;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
+import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
@@ -35,6 +36,7 @@ public class OreGrowth {
     public static BaseBlockItem ORE_GROWTH_ITEM;
 
     public OreGrowth(){
+        OreGrowthConfig.init();
         register();
         if(CommonUtils.getEnvironmentSide().isClient())
             OreGrowthClient.initializeClient();
@@ -51,6 +53,7 @@ public class OreGrowth {
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
         handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(new ResourceLocation(MODID, "ore_growth")));
+        handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
 
     public static void registerGenerators(){
