@@ -2,6 +2,7 @@ package com.supermartijn642.oregrowth.generators;
 
 import com.supermartijn642.core.generator.ResourceCache;
 import com.supermartijn642.oregrowth.OreGrowth;
+import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -14,6 +15,12 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
 
     public OreGrowthOreGrowthRecipeGenerator(ResourceCache cache){
         super(OreGrowth.MODID, cache);
+    }
+
+    @Override
+    public OreGrowthRecipeBuilder recipe(String namespace, String location, ResourceLocation base, int stages, double spawnChance, double growthChance, ResourceLocation resultItem, int resultCount){
+        return super.recipe(namespace, location, base, stages, spawnChance, growthChance, resultItem, resultCount)
+            .condition(new OreGrowthDefaultRecipeCondition());
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.supermartijn642.core.block.BaseBlock;
 import com.supermartijn642.core.block.BlockProperties;
 import com.supermartijn642.core.block.BlockShape;
 import com.supermartijn642.oregrowth.OreGrowth;
+import com.supermartijn642.oregrowth.OreGrowthConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +46,7 @@ import java.util.List;
 public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock {
 
     public static void trySpawnOreGrowth(OreGrowthRecipe recipe, ServerLevel level, BlockPos pos, RandomSource random){
-        if(random.nextFloat() > recipe.spawnChance())
+        if(random.nextFloat() > recipe.spawnChance() * OreGrowthConfig.spawnChanceScalar.get())
             return;
 
         Direction side = Direction.values()[random.nextInt(Direction.values().length)];
@@ -104,7 +105,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
             return;
         }
         int stage = state.getValue(STAGE);
-        if(stage < recipe.stages() && random.nextFloat() < recipe.growthChance())
+        if(stage < recipe.stages() && random.nextFloat() < recipe.growthChance() * OreGrowthConfig.growthChanceScalar.get())
             level.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));
     }
 
