@@ -1,11 +1,19 @@
 {
-  "type": "oregrowth:ore_growth",
-  "base": "minecraft:copper_ore",
-  "stages": 4,
-  "spawn_chance": 0.2,
-  "growth_chance": 0.3,
-  "result": {
-    "item": "minecraft:raw_copper",
-    "count": 1
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "minecraft:copper_ore",
+    "stages": 4,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.3,
+    "result": {
+      "item": "minecraft:raw_copper",
+      "count": 1
+    }
   }
 }
