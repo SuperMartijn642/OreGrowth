@@ -24,7 +24,7 @@ public class OreGrowthRecipeManager {
             .stream()
             .map(RecipeHolder::value)
             .map(OreGrowthRecipe.class::cast)
-            .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity()));
+            .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity(), (recipe, recipe2) -> recipe));
     }
 
     public static OreGrowthRecipe getRecipeFor(Block block){
