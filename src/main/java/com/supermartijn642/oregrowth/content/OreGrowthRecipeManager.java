@@ -22,7 +22,7 @@ public class OreGrowthRecipeManager {
         recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
             .stream()
             .map(OreGrowthRecipe.class::cast)
-            .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity()));
+            .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity(), (recipe, recipe2) -> recipe));
     }
 
     public static OreGrowthRecipe getRecipeFor(Block block){
