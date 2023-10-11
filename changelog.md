@@ -1,3 +1,6 @@
+### Ore Growth 1.0.3
+- Fixed crash when there's multiple ore growth recipes with the same base
+
 ### Ore Growth 1.0.2
 - Added a config option to disable the default recipes
 - Added config options to scale the spawn and growth chances of all crystals
