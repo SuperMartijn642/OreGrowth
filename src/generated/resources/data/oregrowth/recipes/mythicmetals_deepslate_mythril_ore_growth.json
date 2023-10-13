@@ -1,0 +1,23 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "mythicmetals"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "mythicmetals:deepslate_mythril_ore",
+    "stages": 4,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "mythicmetals:raw_mythril",
+      "count": 1
+    }
+  }
+}
