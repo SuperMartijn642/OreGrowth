@@ -142,6 +142,81 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Soulium ore
         this.modIntegration(mysticalAgriculture, "soulium_ore", 4, 0.2, 0.2, "soulium_dust");
 
+        // ----- Mythic Metals -----
+        String mythicMetals = "mythicmetals";
+        // Adamantite ore
+        this.modIntegration(mythicMetals, "adamantite_ore", 4, 0.2, 0.2, "raw_adamantite");
+        // Deepslate adamantite ore
+        this.modIntegration(mythicMetals, "deepslate_adamantite_ore", 4, 0.2, 0.2, "raw_adamantite");
+        // Aquarium ore
+        this.modIntegration(mythicMetals, "aquarium_ore", 4, 0.2, 0.2, "raw_aquarium");
+        // Banglum ore
+        this.modIntegration(mythicMetals, "banglum_ore", 4, 0.2, 0.2, "raw_banglum");
+        // Nether banglum ore
+        this.modIntegration(mythicMetals, "nether_banglum_ore", 4, 0.2, 0.2, "raw_banglum");
+        // Carmot ore
+        this.modIntegration(mythicMetals, "carmot_ore", 4, 0.2, 0.2, "raw_carmot");
+        // Deepslate carmot ore
+        this.modIntegration(mythicMetals, "deepslate_carmot_ore", 4, 0.2, 0.2, "raw_carmot");
+        // Kyber ore
+        this.modIntegration(mythicMetals, "kyber_ore", 4, 0.2, 0.2, "raw_kyber");
+        // Calcite kyber ore
+        this.modIntegration(mythicMetals, "calcite_kyber_ore", 4, 0.2, 0.2, "raw_kyber");
+        // Manganese ore
+        this.modIntegration(mythicMetals, "manganese_ore", 4, 0.2, 0.2, "raw_manganese");
+        // Morkite ore
+        this.modIntegration(mythicMetals, "morkite_ore", 4, 0.2, 0.2, "raw_morkite");
+        // Deepslate morkite ore
+        this.modIntegration(mythicMetals, "deepslate_morkite_ore", 4, 0.2, 0.2, "raw_morkite");
+        // Midas gold ore
+        this.modIntegration(mythicMetals, "midas_gold_ore", 4, 0.2, 0.2, "raw_midas_gold");
+        // Mythril ore
+        this.modIntegration(mythicMetals, "mythril_ore", 4, 0.2, 0.2, "raw_mythril");
+        // Deepslate mythril ore
+        this.modIntegration(mythicMetals, "deepslate_mythril_ore", 4, 0.2, 0.2, "raw_mythril");
+        // Orichalcum ore
+        this.modIntegration(mythicMetals, "orichalcum_ore", 4, 0.2, 0.2, "raw_orichalcum");
+        // Tuff orichalcum ore
+        this.modIntegration(mythicMetals, "tuff_orichalcum_ore", 4, 0.2, 0.2, "raw_orichalcum");
+        // Smooth basalt orichalcum ore
+        this.modIntegration(mythicMetals, "smooth_basalt_orichalcum_ore", 4, 0.2, 0.2, "raw_orichalcum");
+        // Deepslate orichalcum ore
+        this.modIntegration(mythicMetals, "deepslate_orichalcum_ore", 4, 0.2, 0.2, "raw_orichalcum");
+        // Osmium ore
+        this.modIntegration(mythicMetals, "osmium_ore", 4, 0.15, 0.2, "raw_osmium");
+        // Palladium ore
+        this.modIntegration(mythicMetals, "palladium_ore", 4, 0.2, 0.2, "raw_palladium");
+        // Platinum ore
+        this.modIntegration(mythicMetals, "platinum_ore", 4, 0.2, 0.2, "raw_platinum");
+        // Prometheum ore
+        this.modIntegration(mythicMetals, "prometheum_ore", 4, 0.2, 0.2, "raw_prometheum");
+        // Deepslate prometheum ore
+        this.modIntegration(mythicMetals, "deepslate_prometheum_ore", 4, 0.2, 0.2, "raw_prometheum");
+        // Quadrillum ore
+        this.modIntegration(mythicMetals, "quadrillum_ore", 4, 0.2, 0.2, "raw_quadrillum");
+        // Runite ore
+        this.modIntegration(mythicMetals, "runite_ore", 4, 0.2, 0.2, "raw_runite");
+        // Deepslate runite ore
+        this.modIntegration(mythicMetals, "deepslate_runite_ore", 4, 0.2, 0.2, "raw_runite");
+        // Silver ore
+        this.modIntegration(mythicMetals, "silver_ore", 4, 0.25, 0.25, "raw_silver");
+        // Starrite ore
+        this.modIntegration(mythicMetals, "starrite_ore", 4, 0.2, 0.2, "raw_starrite");
+        // Calcite starrite ore
+        this.modIntegration(mythicMetals, "calcite_starrite_ore", 4, 0.2, 0.2, "raw_starrite");
+        // End stone starrite ore
+        this.modIntegration(mythicMetals, "end_stone_starrite_ore", 4, 0.2, 0.2, "raw_starrite");
+        // Stormyx ore
+        this.modIntegration(mythicMetals, "stormyx_ore", 4, 0.2, 0.2, "raw_stormyx");
+        // Blackstone stormyx ore
+        this.modIntegration(mythicMetals, "blackstone_stormyx_ore", 4, 0.2, 0.2, "raw_stormyx");
+        // Tin ore
+        this.modIntegration(mythicMetals, "tin_ore", 4, 0.2, 0.25, "raw_tin");
+        // Unobtanium ore
+        this.modIntegration(mythicMetals, "unobtanium_ore", 4, 0.1, 0.05, "raw_unobtanium");
+        // Deepslate unobtanium ore
+        this.modIntegration(mythicMetals, "deepslate_unobtanium_ore", 4, 0.1, 0.05, "raw_unobtanium");
+
         // ----- Powah -----
         String powah = "powah";
         // Unraninite ore poor
@@ -199,9 +274,5 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(thermalFoundation, "nickel_ore", 4, 0.2, 0.2, "raw_nickel");
         // Deepslate nickel ore
         this.modIntegration(thermalFoundation, "deepslate_nickel_ore", 4, 0.2, 0.2, "raw_nickel");
-    }
-
-    private static ResourceLocation location(String namespace, String location){
-        return new ResourceLocation(namespace, location);
     }
 }
