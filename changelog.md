@@ -1,3 +1,6 @@
+### Ore Growth 1.0.3a
+- Add compatibility for ores from Mythic Metals
+
 ### Ore Growth 1.0.3
 - Fixed crash when there's multiple ore growth recipes with the same base
 
