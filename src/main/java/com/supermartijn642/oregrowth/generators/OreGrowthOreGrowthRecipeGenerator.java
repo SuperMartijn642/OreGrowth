@@ -129,6 +129,41 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Deepslate lead ore
         this.modIntegration(mekanism, "deepslate_lead_ore", 4, 0.2, 0.2, "raw_lead");
 
+        // More Gems [FABRIC]
+        String moreGems = "more_gems";
+        // Citrine ore
+        this.modIntegration(moreGems, "citrine_ore", 4, 0.15, 0.15, "citrine");
+        // Tourmaline ore
+        this.modIntegration(moreGems, "tourmaline_ore", 4, 0.15, 0.15, "tourmaline");
+        // Kunzite ore
+        this.modIntegration(moreGems, "kunzite_ore", 4, 0.15, 0.15, "kunzite");
+        // Nether kunzite ore
+        this.modIntegration(moreGems, "kunzite_ore_nether", 4, 0.15, 0.15, "kunzite");
+        // Topas ore
+        this.modIntegration(moreGems, "topas_ore", 4, 0.15, 0.15, "topas");
+        // Alexandrite ore
+        this.modIntegration(moreGems, "alexandrite_ore", 4, 0.15, 0.15, "alexandrite");
+        // Nether Alexandrite ore
+        this.modIntegration(moreGems, "alexandrite_ore_nether", 4, 0.15, 0.15, "alexandrite");
+        // Corundum ore
+        this.modIntegration(moreGems, "corundum_ore", 4, 0.15, 0.15, "corundum");
+        // Nether corundum ore
+        this.modIntegration(moreGems, "corundum_ore_nether", 4, 0.15, 0.15, "corundum");
+        // Sapphire ore
+        this.modIntegration(moreGems, "sapphire_ore", 4, 0.15, 0.15, "sapphire");
+        // Deepslate sapphire ore
+        this.modIntegration(moreGems, "sapphire_ore_deepslate", 4, 0.15, 0.15, "sapphire");
+        // Spinal ore
+        this.modIntegration(moreGems, "spinal_ore", 4, 0.15, 0.15, "spinal");
+        // Deepslate spinal ore
+        this.modIntegration(moreGems, "spinal_ore_deepslate", 4, 0.15, 0.15, "spinal");
+        // Carbonado ore
+        this.modIntegration(moreGems, "carbonado_ore", 4, 0.15, 0.15, "carbonado");
+        // Deepslate carbonado ore
+        this.modIntegration(moreGems, "carbonado_ore_deepslate", 4, 0.15, 0.15, "carbonado");
+        // Moissanite ore
+        this.modIntegration(moreGems, "moissanite_ore", 4, 0.1, 0.1, "moissanite");
+
         // ----- Mystical Agriculture -----
         String mysticalAgriculture = "mysticalagriculture";
         // Prosperity ore
