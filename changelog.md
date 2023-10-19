@@ -1,3 +1,6 @@
+### Ore Growth 1.0.4
+- Add compatibility for ores from More Gems \[FABRIC\]
+
 ### Ore Growth 1.0.3a
 - Add compatibility for ores from Mythic Metals
 
