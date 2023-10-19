@@ -1,0 +1,23 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "more_gems"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "more_gems:corundum_ore",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.15,
+    "result": {
+      "item": "more_gems:corundum",
+      "count": 1
+    }
+  }
+}
