@@ -1,0 +1,23 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "modid": "more_gems",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "more_gems:tourmaline_ore",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.15,
+    "result": {
+      "item": "more_gems:tourmaline",
+      "count": 1
+    }
+  }
+}
