@@ -2,12 +2,14 @@ package com.supermartijn642.oregrowth.content;
 
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.supermartijn642.core.registry.Registries;
 import com.supermartijn642.oregrowth.OreGrowth;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
@@ -109,7 +111,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
         @Override
         public Codec<OreGrowthRecipe> codec(){
             return RecordCodecBuilder.create(instance -> instance.group(
-                Registries.BLOCKS.getVanillaRegistry().byNameCodec().fieldOf("base").forGetter(OreGrowthRecipe::base),
+                ExtraCodecs.validate(Registries.BLOCKS.getVanillaRegistry().byNameCodec(), block -> block == Blocks.AIR ? DataResult.error(() -> "Unknown base block!") : DataResult.success(block)).fieldOf("base").forGetter(OreGrowthRecipe::base),
                 Codec.intRange(1, 4).fieldOf("stages").forGetter(OreGrowthRecipe::stages),
                 Codec.doubleRange(0, 1).fieldOf("spawn_chance").forGetter(OreGrowthRecipe::spawnChance),
                 Codec.doubleRange(0, 1).fieldOf("growth_chance").forGetter(OreGrowthRecipe::growthChance),
