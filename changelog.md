@@ -1,3 +1,6 @@
+### Ore Growth 1.0.5
+- Fixed ore growth recipes for Mythic Metals
+
 ### Ore Growth 1.0.4
 - Add compatibility for ores from More Gems \[FABRIC\]
 
