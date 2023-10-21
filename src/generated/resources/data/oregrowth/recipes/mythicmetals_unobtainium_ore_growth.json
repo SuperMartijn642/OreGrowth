@@ -14,12 +14,12 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:unobtanium_ore",
+    "base": "mythicmetals:unobtainium_ore",
     "stages": 4,
     "spawn_chance": 0.1,
     "growth_chance": 0.05,
     "result": {
-      "item": "mythicmetals:raw_unobtanium",
+      "item": "mythicmetals:unobtainium",
       "count": 1
     }
   }
