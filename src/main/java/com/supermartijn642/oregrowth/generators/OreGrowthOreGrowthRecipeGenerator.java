@@ -200,9 +200,9 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Manganese ore
         this.modIntegration(mythicMetals, "manganese_ore", 4, 0.2, 0.2, "raw_manganese");
         // Morkite ore
-        this.modIntegration(mythicMetals, "morkite_ore", 4, 0.2, 0.2, "raw_morkite");
+        this.modIntegration(mythicMetals, "morkite_ore", 4, 0.2, 0.2, "morkite");
         // Deepslate morkite ore
-        this.modIntegration(mythicMetals, "deepslate_morkite_ore", 4, 0.2, 0.2, "raw_morkite");
+        this.modIntegration(mythicMetals, "deepslate_morkite_ore", 4, 0.2, 0.2, "morkite");
         // Midas gold ore
         this.modIntegration(mythicMetals, "midas_gold_ore", 4, 0.2, 0.2, "raw_midas_gold");
         // Mythril ore
@@ -236,11 +236,11 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Silver ore
         this.modIntegration(mythicMetals, "silver_ore", 4, 0.25, 0.25, "raw_silver");
         // Starrite ore
-        this.modIntegration(mythicMetals, "starrite_ore", 4, 0.2, 0.2, "raw_starrite");
+        this.modIntegration(mythicMetals, "starrite_ore", 4, 0.2, 0.2, "starrite");
         // Calcite starrite ore
-        this.modIntegration(mythicMetals, "calcite_starrite_ore", 4, 0.2, 0.2, "raw_starrite");
+        this.modIntegration(mythicMetals, "calcite_starrite_ore", 4, 0.2, 0.2, "starrite");
         // End stone starrite ore
-        this.modIntegration(mythicMetals, "end_stone_starrite_ore", 4, 0.2, 0.2, "raw_starrite");
+        this.modIntegration(mythicMetals, "end_stone_starrite_ore", 4, 0.2, 0.2, "starrite");
         // Stormyx ore
         this.modIntegration(mythicMetals, "stormyx_ore", 4, 0.2, 0.2, "raw_stormyx");
         // Blackstone stormyx ore
@@ -248,9 +248,9 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Tin ore
         this.modIntegration(mythicMetals, "tin_ore", 4, 0.2, 0.25, "raw_tin");
         // Unobtanium ore
-        this.modIntegration(mythicMetals, "unobtanium_ore", 4, 0.1, 0.05, "raw_unobtanium");
+        this.modIntegration(mythicMetals, "unobtainium_ore", 4, 0.1, 0.05, "unobtainium");
         // Deepslate unobtanium ore
-        this.modIntegration(mythicMetals, "deepslate_unobtanium_ore", 4, 0.1, 0.05, "raw_unobtanium");
+        this.modIntegration(mythicMetals, "deepslate_unobtainium_ore", 4, 0.1, 0.05, "unobtainium");
 
         // ----- Powah -----
         String powah = "powah";
