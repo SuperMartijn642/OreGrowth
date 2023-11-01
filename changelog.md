@@ -1,3 +1,6 @@
+### Ore Growth 1.0.6
+- Added work around for caching recipes when KubeJS is installed
+
 ### Ore Growth 1.0.5
 - Fixed ore growth recipes for Mythic Metals
 
