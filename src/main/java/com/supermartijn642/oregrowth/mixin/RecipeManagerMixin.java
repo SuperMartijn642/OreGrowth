@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
-@Mixin(RecipeManager.class)
+@Mixin(value = RecipeManager.class)
 public class RecipeManagerMixin {
 
     @Inject(
         method = "apply",
-        at = @At("RETURN")
+        at = @At("HEAD")
     )
     private void apply(CallbackInfo ci){
         //noinspection DataFlowIssue
@@ -24,7 +24,7 @@ public class RecipeManagerMixin {
 
     @Inject(
         method = "replaceRecipes",
-        at = @At("RETURN")
+        at = @At("HEAD")
     )
     private void replaceRecipes(CallbackInfo ci){
         //noinspection DataFlowIssue
