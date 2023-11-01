@@ -17,21 +17,34 @@ import java.util.stream.Collectors;
  */
 public class OreGrowthRecipeManager {
 
+    private static RecipeManager recipeManager;
+    private static boolean reload = true;
     private static Map<Block,OreGrowthRecipe> recipesByBlock = Collections.emptyMap();
 
-    public static void reloadRecipes(RecipeManager recipeManager){
-        recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
-            .stream()
-            .map(RecipeHolder::value)
-            .map(OreGrowthRecipe.class::cast)
-            .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity(), (recipe, recipe2) -> recipe));
+    public static synchronized void reloadRecipes(RecipeManager recipeManager){
+        OreGrowthRecipeManager.recipeManager = recipeManager;
+        reload = true;
+        recipesByBlock = Collections.emptyMap();
     }
 
     public static OreGrowthRecipe getRecipeFor(Block block){
+        cacheRecipes();
         return recipesByBlock.get(block);
     }
 
     public static List<OreGrowthRecipe> getAllRecipes(){
+        cacheRecipes();
         return Arrays.asList(recipesByBlock.values().toArray(OreGrowthRecipe[]::new));
+    }
+
+    private static synchronized void cacheRecipes(){
+        if(reload && recipeManager != null){
+            recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
+                .stream()
+                .map(RecipeHolder::value)
+                .map(OreGrowthRecipe.class::cast)
+                .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity(), (recipe, recipe2) -> recipe));
+            reload = false;
+        }
     }
 }
