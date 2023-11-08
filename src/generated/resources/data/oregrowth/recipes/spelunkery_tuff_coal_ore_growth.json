@@ -5,21 +5,18 @@
       "type": "oregrowth:default_recipes"
     },
     {
-      "condition": {
-        "modid": "spelunkery",
-        "type": "supermartijn642corelib:mod_loaded"
-      },
-      "type": "supermartijn642corelib:not"
+      "modid": "spelunkery",
+      "type": "supermartijn642corelib:mod_loaded"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:lapis_ore",
+    "base": "spelunkery:tuff_coal_ore",
     "stages": 4,
     "spawn_chance": 0.3,
-    "growth_chance": 0.3,
+    "growth_chance": 0.4,
     "result": {
-      "item": "minecraft:lapis_lazuli",
+      "item": "minecraft:coal",
       "count": 1
     }
   }
