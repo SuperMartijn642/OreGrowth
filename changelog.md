@@ -1,3 +1,6 @@
+### Ore Growth 1.0.7
+- Added compatibility for ores from Spelunkery
+
 ### Ore Growth 1.0.6
 - Added work around for caching recipes when KubeJS is installed
 
