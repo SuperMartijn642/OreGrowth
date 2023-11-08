@@ -5,21 +5,18 @@
       "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:not",
-      "value": {
-        "modid": "spelunkery",
-        "condition": "supermartijn642corelib:mod_loaded"
-      }
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "spelunkery"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:deepslate_lapis_ore",
+    "base": "spelunkery:diorite_coal_ore",
     "stages": 4,
     "spawn_chance": 0.3,
-    "growth_chance": 0.3,
+    "growth_chance": 0.4,
     "result": {
-      "item": "minecraft:lapis_lazuli",
+      "item": "minecraft:coal",
       "count": 1
     }
   }

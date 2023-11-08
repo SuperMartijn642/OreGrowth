@@ -5,21 +5,18 @@
       "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:not",
-      "value": {
-        "modid": "spelunkery",
-        "condition": "supermartijn642corelib:mod_loaded"
-      }
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "spelunkery"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:diamond_ore",
+    "base": "spelunkery:andesite_emerald_ore",
     "stages": 4,
     "spawn_chance": 0.1,
-    "growth_chance": 0.1,
+    "growth_chance": 0.15,
     "result": {
-      "item": "minecraft:diamond",
+      "item": "spelunkery:rough_emerald",
       "count": 1
     }
   }
