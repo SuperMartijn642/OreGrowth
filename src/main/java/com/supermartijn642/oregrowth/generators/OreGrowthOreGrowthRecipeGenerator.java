@@ -1,5 +1,7 @@
 package com.supermartijn642.oregrowth.generators;
 
+import com.supermartijn642.core.data.condition.ModLoadedResourceCondition;
+import com.supermartijn642.core.data.condition.ResourceCondition;
 import com.supermartijn642.core.generator.ResourceCache;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
@@ -25,6 +27,9 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
 
     @Override
     public void generate(){
+        // Some vanilla recipes need to be disabled when Spelunkery is installed
+        ResourceCondition noSpelunkery = new ModLoadedResourceCondition("spelunkery").negate();
+
         // ----- Vanilla -----
         // Coal ore
         this.recipe("coal_ore_growth", Blocks.COAL_ORE, 4, 0.3, 0.4, Items.COAL);
@@ -38,19 +43,19 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Gold ore
         this.recipe("gold_ore_growth", Blocks.GOLD_ORE, 4, 0.2, 0.2, Items.RAW_GOLD);
         this.recipe("deepslate_gold_ore_growth", Blocks.DEEPSLATE_GOLD_ORE, 4, 0.2, 0.2, Items.RAW_GOLD);
-        this.recipe("nether_gold_ore_growth", Blocks.NETHER_GOLD_ORE, 4, 0.3, 0.5, Items.GOLD_NUGGET);
+        this.recipe("nether_gold_ore_growth", Blocks.NETHER_GOLD_ORE, 4, 0.3, 0.5, Items.GOLD_NUGGET).condition(noSpelunkery);
         // Lapis ore
-        this.recipe("lapis_ore_growth", Blocks.LAPIS_ORE, 4, 0.3, 0.3, Items.LAPIS_LAZULI);
-        this.recipe("deepslate_lapis_ore_growth", Blocks.DEEPSLATE_LAPIS_ORE, 4, 0.3, 0.3, Items.LAPIS_LAZULI);
+        this.recipe("lapis_ore_growth", Blocks.LAPIS_ORE, 4, 0.3, 0.3, Items.LAPIS_LAZULI).condition(noSpelunkery);
+        this.recipe("deepslate_lapis_ore_growth", Blocks.DEEPSLATE_LAPIS_ORE, 4, 0.3, 0.3, Items.LAPIS_LAZULI).condition(noSpelunkery);
         // Redstone ore
-        this.recipe("redstone_ore_growth", Blocks.REDSTONE_ORE, 4, 0.3, 0.3, Items.REDSTONE);
-        this.recipe("deepslate_redstone_ore_growth", Blocks.DEEPSLATE_REDSTONE_ORE, 4, 0.3, 0.3, Items.REDSTONE);
+        this.recipe("redstone_ore_growth", Blocks.REDSTONE_ORE, 4, 0.3, 0.3, Items.REDSTONE).condition(noSpelunkery);
+        this.recipe("deepslate_redstone_ore_growth", Blocks.DEEPSLATE_REDSTONE_ORE, 4, 0.3, 0.3, Items.REDSTONE).condition(noSpelunkery);
         // Emerald ore
-        this.recipe("emerald_ore_growth", Blocks.EMERALD_ORE, 4, 0.1, 0.15, Items.EMERALD);
-        this.recipe("deepslate_emerald_ore_growth", Blocks.DEEPSLATE_EMERALD_ORE, 4, 0.15, 0.1, Items.EMERALD);
+        this.recipe("emerald_ore_growth", Blocks.EMERALD_ORE, 4, 0.1, 0.15, Items.EMERALD).condition(noSpelunkery);
+        this.recipe("deepslate_emerald_ore_growth", Blocks.DEEPSLATE_EMERALD_ORE, 4, 0.1, 0.15, Items.EMERALD).condition(noSpelunkery);
         // Diamond ore
-        this.recipe("diamond_ore_growth", Blocks.DIAMOND_ORE, 4, 0.1, 0.1, Items.DIAMOND);
-        this.recipe("deepslate_diamond_ore_growth", Blocks.DEEPSLATE_DIAMOND_ORE, 4, 0.1, 0.1, Items.DIAMOND);
+        this.recipe("diamond_ore_growth", Blocks.DIAMOND_ORE, 4, 0.1, 0.1, Items.DIAMOND).condition(noSpelunkery);
+        this.recipe("deepslate_diamond_ore_growth", Blocks.DEEPSLATE_DIAMOND_ORE, 4, 0.1, 0.1, Items.DIAMOND).condition(noSpelunkery);
         // Quartz ore
         this.recipe("nether_quartz_ore_growth", Blocks.NETHER_QUARTZ_ORE, 4, 0.2, 0.3, Items.QUARTZ);
         // Netherite scrap
@@ -273,6 +278,61 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(rftools, "dimensionalshard_overworld", 4, 0.15, 0.2, "dimensionalshard");
         this.modIntegration(rftools, "dimensionalshard_nether", 4, 0.15, 0.2, "dimensionalshard");
         this.modIntegration(rftools, "dimensionalshard_end", 4, 0.15, 0.2, "dimensionalshard");
+
+        // ----- Spelunkery -----
+        String spelunkery = "spelunkery";
+        // Coal ore
+        this.modIntegration(spelunkery, "andesite_coal_ore", 4, 0.3, 0.4, Items.COAL);
+        this.modIntegration(spelunkery, "diorite_coal_ore", 4, 0.3, 0.4, Items.COAL);
+        this.modIntegration(spelunkery, "granite_coal_ore", 4, 0.3, 0.4, Items.COAL);
+        this.modIntegration(spelunkery, "tuff_coal_ore", 4, 0.3, 0.4, Items.COAL);
+        // Iron ore
+        this.modIntegration(spelunkery, "andesite_iron_ore", 4, 0.2, 0.25, Items.RAW_IRON);
+        this.modIntegration(spelunkery, "diorite_iron_ore", 4, 0.2, 0.25, Items.RAW_IRON);
+        this.modIntegration(spelunkery, "granite_iron_ore", 4, 0.2, 0.25, Items.RAW_IRON);
+        this.modIntegration(spelunkery, "tuff_iron_ore", 4, 0.2, 0.25, Items.RAW_IRON);
+        // Copper ore
+        this.modIntegration(spelunkery, "andesite_copper_ore", 4, 0.2, 0.3, Items.RAW_COPPER);
+        this.modIntegration(spelunkery, "diorite_copper_ore", 4, 0.2, 0.3, Items.RAW_COPPER);
+        this.modIntegration(spelunkery, "granite_copper_ore", 4, 0.2, 0.3, Items.RAW_COPPER);
+        this.modIntegration(spelunkery, "tuff_copper_ore", 4, 0.2, 0.3, Items.RAW_COPPER);
+        // Gold ore
+        this.modIntegration(spelunkery, "minecraft:nether_gold_ore", 4, 0.3, 0.5, "raw_gold_nugget");
+        this.modIntegration(spelunkery, "andesite_gold_ore", 4, 0.2, 0.2, Items.RAW_GOLD);
+        this.modIntegration(spelunkery, "diorite_gold_ore", 4, 0.2, 0.2, Items.RAW_GOLD);
+        this.modIntegration(spelunkery, "granite_gold_ore", 4, 0.2, 0.2, Items.RAW_GOLD);
+        this.modIntegration(spelunkery, "tuff_gold_ore", 4, 0.2, 0.2, Items.RAW_GOLD);
+        // Redstone ore
+        this.modIntegration(spelunkery, "minecraft:redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        this.modIntegration(spelunkery, "minecraft:deepslate_redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        this.modIntegration(spelunkery, "andesite_redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        this.modIntegration(spelunkery, "diorite_redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        this.modIntegration(spelunkery, "granite_redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        this.modIntegration(spelunkery, "tuff_redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        this.modIntegration(spelunkery, "calcite_redstone_ore", 4, 0.3, 0.3, "rough_cinnabar");
+        // Emerald ore
+        this.modIntegration(spelunkery, "minecraft:emerald_ore", 4, 0.1, 0.15, "rough_emerald");
+        this.modIntegration(spelunkery, "minecraft:deepslate_emerald_ore", 4, 0.1, 0.15, "rough_emerald");
+        this.modIntegration(spelunkery, "andesite_emerald_ore", 4, 0.1, 0.15, "rough_emerald");
+        this.modIntegration(spelunkery, "diorite_emerald_ore", 4, 0.1, 0.15, "rough_emerald");
+        this.modIntegration(spelunkery, "granite_emerald_ore", 4, 0.1, 0.15, "rough_emerald");
+        this.modIntegration(spelunkery, "tuff_emerald_ore", 4, 0.1, 0.15, "rough_emerald");
+        // Lapis ore
+        this.modIntegration(spelunkery, "minecraft:lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        this.modIntegration(spelunkery, "minecraft:deepslate_lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        this.modIntegration(spelunkery, "andesite_lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        this.modIntegration(spelunkery, "diorite_lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        this.modIntegration(spelunkery, "granite_lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        this.modIntegration(spelunkery, "tuff_lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        this.modIntegration(spelunkery, "sandstone_lapis_ore", 4, 0.3, 0.3, "rough_lazurite");
+        // Diamond ore
+        this.modIntegration(spelunkery, "minecraft:diamond_ore", 4, 0.1, 0.1, "rough_diamond");
+        this.modIntegration(spelunkery, "minecraft:deepslate_diamond_ore", 4, 0.1, 0.1, "rough_diamond");
+        this.modIntegration(spelunkery, "andesite_diamond_ore", 4, 0.1, 0.1, "rough_diamond");
+        this.modIntegration(spelunkery, "diorite_diamond_ore", 4, 0.1, 0.1, "rough_diamond");
+        this.modIntegration(spelunkery, "granite_diamond_ore", 4, 0.1, 0.1, "rough_diamond");
+        this.modIntegration(spelunkery, "tuff_diamond_ore", 4, 0.1, 0.1, "rough_diamond");
+        this.modIntegration(spelunkery, "smooth_basalt_diamond_ore", 4, 0.1, 0.1, "rough_diamond");
 
         // ----- The Aether -----
         String aether = "aether";
