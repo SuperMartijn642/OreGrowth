@@ -5,11 +5,8 @@
       "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:not",
-      "value": {
-        "modid": "spelunkery",
-        "condition": "supermartijn642corelib:mod_loaded"
-      }
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "spelunkery"
     }
   ],
   "recipe": {
@@ -19,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "minecraft:lapis_lazuli",
+      "item": "spelunkery:rough_lazurite",
       "count": 1
     }
   }
