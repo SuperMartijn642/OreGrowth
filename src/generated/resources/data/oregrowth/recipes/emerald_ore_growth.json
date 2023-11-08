@@ -3,6 +3,13 @@
   "conditions": [
     {
       "type": "oregrowth:default_recipes"
+    },
+    {
+      "condition": {
+        "modid": "spelunkery",
+        "type": "supermartijn642corelib:mod_loaded"
+      },
+      "type": "supermartijn642corelib:not"
     }
   ],
   "recipe": {

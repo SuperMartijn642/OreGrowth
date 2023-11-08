@@ -5,21 +5,18 @@
       "type": "oregrowth:default_recipes"
     },
     {
-      "condition": {
-        "modid": "spelunkery",
-        "type": "supermartijn642corelib:mod_loaded"
-      },
-      "type": "supermartijn642corelib:not"
+      "modid": "spelunkery",
+      "type": "supermartijn642corelib:mod_loaded"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:deepslate_diamond_ore",
+    "base": "spelunkery:andesite_diamond_ore",
     "stages": 4,
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "minecraft:diamond",
+      "item": "spelunkery:rough_diamond",
       "count": 1
     }
   }
