@@ -57,12 +57,14 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, ResourceLocation result, int resultCount){
-        return this.recipe(this.modid, modid + "_" + base + "_growth", new ResourceLocation(modid, base), stages, spawnChance, growthChance, result, resultCount)
+        ResourceLocation baseIdentifier = base.contains(":") ? new ResourceLocation(base) : new ResourceLocation(modid, base);
+        return this.recipe(this.modid, modid + "_" + baseIdentifier.getPath() + "_growth", baseIdentifier, stages, spawnChance, growthChance, result, resultCount)
             .modLoadedCondition(modid);
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, String result, int resultCount){
-        return this.modIntegration(modid, base, stages, spawnChance, growthChance, new ResourceLocation(modid, result), resultCount);
+        ResourceLocation resultIdentifier = result.contains(":") ? new ResourceLocation(result) : new ResourceLocation(modid, result);
+        return this.modIntegration(modid, base, stages, spawnChance, growthChance, resultIdentifier, resultCount);
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, String result){
