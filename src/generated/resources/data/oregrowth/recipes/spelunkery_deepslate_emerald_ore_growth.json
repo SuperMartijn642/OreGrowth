@@ -6,17 +6,17 @@
     },
     {
       "type": "supermartijn642corelib:mod_loaded",
-      "modid": "mythicmetals"
+      "modid": "spelunkery"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:unobtainium_ore",
+    "base": "minecraft:deepslate_emerald_ore",
     "stages": 4,
     "spawn_chance": 0.1,
-    "growth_chance": 0.05,
+    "growth_chance": 0.15,
     "result": {
-      "item": "mythicmetals:unobtainium",
+      "item": "spelunkery:rough_emerald",
       "count": 1
     }
   }

@@ -6,17 +6,17 @@
     },
     {
       "type": "supermartijn642corelib:mod_loaded",
-      "modid": "mythicmetals"
+      "modid": "spelunkery"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:unobtainium_ore",
+    "base": "spelunkery:tuff_gold_ore",
     "stages": 4,
-    "spawn_chance": 0.1,
-    "growth_chance": 0.05,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
     "result": {
-      "item": "mythicmetals:unobtainium",
+      "item": "minecraft:raw_gold",
       "count": 1
     }
   }
