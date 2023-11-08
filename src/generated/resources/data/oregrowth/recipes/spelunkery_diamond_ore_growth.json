@@ -6,14 +6,9 @@
       "value": {}
     },
     {
-      "type": "supermartijn642corelib:not",
+      "type": "supermartijn642corelib:mod_loaded",
       "value": {
-        "condition": {
-          "type": "supermartijn642corelib:mod_loaded",
-          "value": {
-            "modid": "spelunkery"
-          }
-        }
+        "modid": "spelunkery"
       }
     }
   ],
@@ -24,7 +19,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "minecraft:diamond",
+      "item": "spelunkery:rough_diamond",
       "count": 1
     }
   }

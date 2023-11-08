@@ -4,6 +4,17 @@
     {
       "type": "oregrowth:default_recipes",
       "value": {}
+    },
+    {
+      "type": "supermartijn642corelib:not",
+      "value": {
+        "condition": {
+          "type": "supermartijn642corelib:mod_loaded",
+          "value": {
+            "modid": "spelunkery"
+          }
+        }
+      }
     }
   ],
   "recipe": {

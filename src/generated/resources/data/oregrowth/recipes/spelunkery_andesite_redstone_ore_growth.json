@@ -6,25 +6,20 @@
       "value": {}
     },
     {
-      "type": "supermartijn642corelib:not",
+      "type": "supermartijn642corelib:mod_loaded",
       "value": {
-        "condition": {
-          "type": "supermartijn642corelib:mod_loaded",
-          "value": {
-            "modid": "spelunkery"
-          }
-        }
+        "modid": "spelunkery"
       }
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:deepslate_redstone_ore",
+    "base": "spelunkery:andesite_redstone_ore",
     "stages": 4,
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "minecraft:redstone",
+      "item": "spelunkery:rough_cinnabar",
       "count": 1
     }
   }

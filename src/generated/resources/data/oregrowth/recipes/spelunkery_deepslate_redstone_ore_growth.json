@@ -6,14 +6,9 @@
       "value": {}
     },
     {
-      "type": "supermartijn642corelib:not",
+      "type": "supermartijn642corelib:mod_loaded",
       "value": {
-        "condition": {
-          "type": "supermartijn642corelib:mod_loaded",
-          "value": {
-            "modid": "spelunkery"
-          }
-        }
+        "modid": "spelunkery"
       }
     }
   ],
@@ -24,7 +19,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "minecraft:redstone",
+      "item": "spelunkery:rough_cinnabar",
       "count": 1
     }
   }
