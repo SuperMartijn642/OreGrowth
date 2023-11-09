@@ -1,3 +1,6 @@
+### Ore Growth 1.0.8
+- Added compatibility for ores from Industrial Revolution
+
 ### Ore Growth 1.0.7
 - Added compatibility for ores from Spelunkery
 
