@@ -1,0 +1,23 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "indrev"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "indrev:deepslate_tungsten_ore",
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "indrev:raw_tungsten",
+      "count": 1
+    }
+  }
+}
