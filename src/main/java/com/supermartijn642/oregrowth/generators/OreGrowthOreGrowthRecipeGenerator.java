@@ -111,6 +111,29 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Benitoite ore
         this.modIntegration(extremeReactors, "benitoite_ore", 4, 0.1, 0.1, "benitoite_crystal");
 
+        // ----- Industrial Revolution -----
+        String industrialRevolution = "indrev";
+        // Tungsten ore
+        this.modIntegration(industrialRevolution, "tungsten_ore", 4, 0.15, 0.2, "raw_tungsten");
+        // Deepslate tungsten ore
+        this.modIntegration(industrialRevolution, "deepslate_tungsten_ore", 4, 0.15, 0.2, "raw_tungsten");
+        // Tin ore
+        this.modIntegration(industrialRevolution, "tin_ore", 4, 0.2, 0.25, "raw_tin");
+        // Deepslate tin ore
+        this.modIntegration(industrialRevolution, "deepslate_tin_ore", 4, 0.2, 0.25, "raw_tin");
+        // Silver ore
+        this.modIntegration(industrialRevolution, "silver_ore", 4, 0.25, 0.25, "raw_silver");
+        // Deepslate silver ore
+        this.modIntegration(industrialRevolution, "deepslate_silver_ore", 4, 0.25, 0.25, "raw_silver");
+        // Nikolite ore
+        this.modIntegration(industrialRevolution, "nikolite_ore", 4, 0.3, 0.35, "nikolite_dust");
+        // deepslate nikolite ore
+        this.modIntegration(industrialRevolution, "deepslate_nikolite_ore", 4, 0.3, 0.35, "nikolite_dust");
+        // Lead ore
+        this.modIntegration(industrialRevolution, "lead_ore", 4, 0.2, 0.2, "raw_lead");
+        // Deepslate lead ore
+        this.modIntegration(industrialRevolution, "deepslate_lead_ore", 4, 0.2, 0.2, "raw_lead");
+
         // ----- Mekanism -----
         String mekanism = "mekanism";
         // Tin ore
