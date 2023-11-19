@@ -285,6 +285,15 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Deepslate unobtanium ore
         this.modIntegration(mythicMetals, "deepslate_unobtainium_ore", 4, 0.1, 0.05, "unobtainium");
 
+        // ----- Pigsteel -----
+        String pigsteel = "pigsteel";
+        // Pigsteel ore
+        this.modIntegration(pigsteel, "pigsteel_ore", 3, 0.3, 0.35, "pigsteel_nugget");
+        // Stone pigsteel ore
+        this.modIntegration(pigsteel, "stone_pigsteel_ore", 3, 0.3, 0.35, "pigsteel_nugget");
+        // Deepslate pigsteel ore
+        this.modIntegration(pigsteel, "deepslate_pigsteel_ore", 3, 0.3, 0.35, "pigsteel_nugget");
+
         // ----- Powah -----
         String powah = "powah";
         // Unraninite ore poor
