@@ -367,7 +367,7 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(aether, "gravitite_ore", 4, 0.1, 0.1, "enchanted_gravitite");
 
         // ----- Thermal Foundation -----
-        String thermalFoundation = "thermalfoundation";
+        String thermalFoundation = "thermal";
         // Niter ore
         this.modIntegration(thermalFoundation, "niter_ore", 2, 0.15, 0.2, "niter");
         // Deepslate niter ore
