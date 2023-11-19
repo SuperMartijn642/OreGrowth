@@ -107,6 +107,13 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Skyjade ore
         this.modIntegration(deepAether, "skyjade_ore", 4, 0.1, 0.15, "skyjade");
 
+        // ----- Enderscape -----
+        String enderscape = "enderscape";
+        // Nebulite ore
+        this.modIntegration(enderscape, "nebulite_ore", 3, 0.3, 0.3, "nebulite_shards");
+        // Shadow quartz ore
+        this.modIntegration(enderscape, "shadow_quartz_ore", 4, 0.2, 0.3, "shadow_quartz");
+
         // ----- Extreme Reactors -----
         String extremeReactors = "bigreactors";
         // Yellorite ore
