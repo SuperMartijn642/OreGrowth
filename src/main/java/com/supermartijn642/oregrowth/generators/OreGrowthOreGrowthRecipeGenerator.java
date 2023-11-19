@@ -139,6 +139,141 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Deepslate lead ore
         this.modIntegration(industrialRevolution, "deepslate_lead_ore", 4, 0.2, 0.2, "raw_lead");
 
+        // ----- Gems & Jewels -----
+        String gemsNJewels = "gemsnjewels";
+        // Pale diamond ore block
+        this.modIntegration(gemsNJewels, "pale_diamond_ore_block", 4, 0.1, 0.1, "pale_diamond");
+        // Deepslate pale diamond ore block
+        this.modIntegration(gemsNJewels, "pale_diamond_deepslate_ore_block", 4, 0.1, 0.1, "pale_diamond");
+        // Pale diamond nether ore block
+        this.modIntegration(gemsNJewels, "pale_diamond_nether_ore_block", 4, 0.1, 0.1, "pale_diamond");
+        // Dusk emerald ore block
+        this.modIntegration(gemsNJewels, "dusk_emerald_ore_block", 4, 0.1, 0.15, "emerald");
+        // Deepslate dusk emerald ore block
+        this.modIntegration(gemsNJewels, "emerald_deepslate_ore_block", 4, 0.1, 0.15, "emerald");
+        // Dusk emerald nether ore block
+        this.modIntegration(gemsNJewels, "emerald_nether_ore_block", 4, 0.1, 0.15, "emerald");
+        // Ruby ore block
+        this.modIntegration(gemsNJewels, "ruby_ore_block", 4, 0.1, 0.1, "ruby");
+        // Deepslate ruby ore block
+        this.modIntegration(gemsNJewels, "ruby_deepslate_ore_block", 4, 0.1, 0.1, "ruby");
+        // Ruby nether ore block
+        this.modIntegration(gemsNJewels, "ruby_nether_ore_block", 4, 0.1, 0.1, "ruby");
+        // Sapphire ore block
+        this.modIntegration(gemsNJewels, "sapphire_ore_block", 4, 0.15, 0.15, "sapphire");
+        // Deepslate sapphire ore block
+        this.modIntegration(gemsNJewels, "sapphire_deepslate_ore_block", 4, 0.15, 0.15, "sapphire");
+        // Sapphire nether ore block
+        this.modIntegration(gemsNJewels, "sapphire_nether_ore_block", 4, 0.15, 0.15, "sapphire");
+        // Amethyst ore block
+        this.modIntegration(gemsNJewels, "amethyst_ore_block", 4, 0.15, 0.15, "amethyst");
+        // Deepslate amethyst ore block
+        this.modIntegration(gemsNJewels, "amethyst_deepslate_ore_block", 4, 0.15, 0.15, "amethyst");
+        // Amethyst nether ore block
+        this.modIntegration(gemsNJewels, "amethyst_nether_ore_block", 4, 0.15, 0.15, "amethyst");
+        // Opal ore block
+        this.modIntegration(gemsNJewels, "opal_ore_block", 4, 0.2, 0.15, "opal");
+        // Bright opal ore block
+        this.modIntegration(gemsNJewels, "bright_opal_ore_block", 4, 0.2, 0.15, "opal");
+        // Deepslate opal ore block
+        this.modIntegration(gemsNJewels, "opal_deepslate_ore_block", 4, 0.2, 0.15, "opal");
+        // Opal nether ore block
+        this.modIntegration(gemsNJewels, "opal_nether_ore_block", 4, 0.2, 0.15, "opal");
+        // Garnet ore block
+        this.modIntegration(gemsNJewels, "garnet_ore_block", 4, 0.15, 0.15, "garnet");
+        // Deepslate garnet ore block
+        this.modIntegration(gemsNJewels, "garnet_deepslate_ore_block", 4, 0.15, 0.15, "garnet");
+        // Garnet nether ore block
+        this.modIntegration(gemsNJewels, "garnet_nether_ore_block", 4, 0.15, 0.15, "garnet");
+        // Topaz ore block
+        this.modIntegration(gemsNJewels, "topaz_ore_block", 4, 0.1, 0.1, "topaz");
+        // Deepslate topaz ore block
+        this.modIntegration(gemsNJewels, "topaz_deepslate_ore_block", 4, 0.1, 0.1, "topaz");
+        // Topaz nether ore block
+        this.modIntegration(gemsNJewels, "topaz_nether_ore_block", 4, 0.1, 0.1, "topaz");
+        // Peridot ore block
+        this.modIntegration(gemsNJewels, "peridot_ore_block", 4, 0.15, 0.15, "peridot");
+        // Deepslate peridot ore block
+        this.modIntegration(gemsNJewels, "peridot_deepslate_ore_block", 4, 0.15, 0.15, "peridot");
+        // Peridot nether ore block
+        this.modIntegration(gemsNJewels, "peridot_nether_ore_block", 4, 0.15, 0.15, "peridot");
+        // Aquamarine ore block
+        this.modIntegration(gemsNJewels, "aquamarine_ore_block", 4, 0.15, 0.15, "aquamarine");
+        // Deepslate aquamarine ore block
+        this.modIntegration(gemsNJewels, "aquamarine_deepslate_ore_block", 4, 0.15, 0.15, "aquamarine");
+        // Aquamarine nether ore block
+        this.modIntegration(gemsNJewels, "aquamarine_nether_ore_block", 4, 0.15, 0.15, "aquamarine");
+        // Zircon ore block
+        this.modIntegration(gemsNJewels, "zircon_ore_block", 4, 0.15, 0.15, "zircon");
+        // Deepslate zircon ore block
+        this.modIntegration(gemsNJewels, "zircon_deepslate_ore_block", 4, 0.15, 0.15, "zircon");
+        // Zircon nether ore block
+        this.modIntegration(gemsNJewels, "zircon_nether_ore_block", 4, 0.15, 0.15, "zircon");
+        // Alexandrite ore block
+        this.modIntegration(gemsNJewels, "alexandrite_ore_block", 4, 0.15, 0.15, "alexandrite");
+        // Deepslate alexandrite ore block
+        this.modIntegration(gemsNJewels, "alexandrite_deepslate_ore_block", 4, 0.15, 0.15, "alexandrite");
+        // Alexandrite nether ore block
+        this.modIntegration(gemsNJewels, "alexandrite_nether_ore_block", 4, 0.15, 0.15, "alexandrite");
+        // Tanzanite ore block
+        this.modIntegration(gemsNJewels, "tanzanite_ore_block", 4, 0.2, 0.15, "tanzanite");
+        // Deepslate tanzanite ore block
+        this.modIntegration(gemsNJewels, "tanzanite_deepslate_ore_block", 4, 0.2, 0.15, "tanzanite");
+        // Tanzanite nether ore block
+        this.modIntegration(gemsNJewels, "tanzanite_nether_ore_block", 4, 0.2, 0.15, "tanzanite");
+        // Tourmaline ore block
+        this.modIntegration(gemsNJewels, "tourmaline_ore_block", 4, 0.15, 0.15, "tourmaline");
+        // Deepslate tourmaline ore block
+        this.modIntegration(gemsNJewels, "tourmaline_deepslate_ore_block", 4, 0.15, 0.15, "tourmaline");
+        // Tourmaline nether ore block
+        this.modIntegration(gemsNJewels, "tourmaline_nether_ore_block", 4, 0.15, 0.15, "tourmaline");
+        // Spinel ore block
+        this.modIntegration(gemsNJewels, "spinel_ore_block", 4, 0.1, 0.1, "spinel");
+        // Deepslate spinel ore block
+        this.modIntegration(gemsNJewels, "spinel_deepslate_ore_block", 4, 0.1, 0.1, "spinel");
+        // Spinel nether ore block
+        this.modIntegration(gemsNJewels, "spinel_nether_ore_block", 4, 0.1, 0.1, "spinel");
+        // Black opal ore block
+        this.modIntegration(gemsNJewels, "black_opal_ore_block", 4, 0.2, 0.15, "black_opal");
+        // Deepslate black opal ore block
+        this.modIntegration(gemsNJewels, "black_opal_deepslate_ore_block", 4, 0.2, 0.15, "black_opal");
+        // Black opal nether ore block
+        this.modIntegration(gemsNJewels, "black_opal_nether_ore_block", 4, 0.2, 0.15, "black_opal");
+        // Citrine ore block
+        this.modIntegration(gemsNJewels, "citrine_ore_block", 4, 0.15, 0.15, "citrine");
+        // Deepslate citrine ore block
+        this.modIntegration(gemsNJewels, "citrine_deepslate_ore_block", 4, 0.15, 0.15, "citrine");
+        // Citrine nether ore block
+        this.modIntegration(gemsNJewels, "citrine_nether_ore_block", 4, 0.15, 0.15, "citrine");
+        // Morganite ore block
+        this.modIntegration(gemsNJewels, "morganite_ore_block", 4, 0.15, 0.15, "morganite");
+        // Deepslate morganite ore block
+        this.modIntegration(gemsNJewels, "morganite_deepslate_ore_block", 4, 0.15, 0.15, "morganite");
+        // Morganite nether ore block
+        this.modIntegration(gemsNJewels, "morganite_nether_ore_block", 4, 0.15, 0.15, "morganite");
+        // Ametrine ore block
+        this.modIntegration(gemsNJewels, "ametrine_ore_block", 4, 0.15, 0.15, "ametrine");
+        // Deepslate ametrine ore block
+        this.modIntegration(gemsNJewels, "ametrine_deepslate_ore_block", 4, 0.15, 0.15, "ametrine");
+        // Ametrine nether ore block
+        this.modIntegration(gemsNJewels, "ametrine_nether_ore_block", 4, 0.15, 0.15, "ametrine");
+        // Kunzite ore block
+        this.modIntegration(gemsNJewels, "kunzite_ore_block", 4, 0.15, 0.15, "kunzite");
+        // Deepslate kunzite ore block
+        this.modIntegration(gemsNJewels, "kunzite_deepslate_ore_block", 4, 0.15, 0.15, "kunzite");
+        // Kunzite nether ore block
+        this.modIntegration(gemsNJewels, "kunzite_nether_ore_block", 4, 0.15, 0.15, "kunzite");
+        // Iolite ore block
+        this.modIntegration(gemsNJewels, "iolite_ore_block", 4, 0.15, 0.15, "iolite");
+        // Deepslate iolite ore block
+        this.modIntegration(gemsNJewels, "iolite_deepslate_ore_block", 4, 0.15, 0.15, "iolite");
+        // Iolite nether ore block
+        this.modIntegration(gemsNJewels, "iolite_nether_ore_block", 4, 0.15, 0.15, "iolite");
+        // Diamond nether ore block
+        this.modIntegration(gemsNJewels, "diamond_nether_ore_block", 4, 0.1, 0.1, Items.DIAMOND);
+        // Emerald nether ore block
+        this.modIntegration(gemsNJewels, "v_emerald_nether_ore_block", 4, 0.1, 0.15, Items.EMERALD);
+
         // ----- Mekanism -----
         String mekanism = "mekanism";
         // Tin ore
