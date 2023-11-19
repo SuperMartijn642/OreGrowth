@@ -1,3 +1,8 @@
+### Ore Growth 1.0.9
+- Added compatibility for ores from Deep Aether, Enderscape, Gems & Jewels, Pigsteel \[FORGE\]
+- Fixed integration with Thermal Foundation
+- Fixed yellorite ore recipe from Extreme Reactors
+
 ### Ore Growth 1.0.8
 - Added compatibility for ores from Industrial Revolution
 
