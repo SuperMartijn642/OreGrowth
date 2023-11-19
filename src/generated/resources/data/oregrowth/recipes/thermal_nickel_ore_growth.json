@@ -5,18 +5,18 @@
       "type": "oregrowth:default_recipes"
     },
     {
-      "modid": "bigreactors",
+      "modid": "thermal",
       "type": "supermartijn642corelib:mod_loaded"
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "bigreactors:yellorite_ore",
+    "base": "thermal:nickel_ore",
     "stages": 4,
-    "spawn_chance": 0.15,
+    "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "bigreactors:yellorium_nugget",
+      "item": "thermal:raw_nickel",
       "count": 1
     }
   }
