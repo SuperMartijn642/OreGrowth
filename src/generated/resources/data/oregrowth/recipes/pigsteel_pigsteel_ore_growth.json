@@ -8,18 +8,18 @@
     {
       "type": "supermartijn642corelib:mod_loaded",
       "value": {
-        "modid": "bigreactors"
+        "modid": "pigsteel"
       }
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "bigreactors:yellorite_ore",
-    "stages": 4,
-    "spawn_chance": 0.15,
-    "growth_chance": 0.2,
+    "base": "pigsteel:pigsteel_ore",
+    "stages": 3,
+    "spawn_chance": 0.3,
+    "growth_chance": 0.35,
     "result": {
-      "item": "bigreactors:yellorium_nugget",
+      "item": "pigsteel:pigsteel_nugget",
       "count": 1
     }
   }

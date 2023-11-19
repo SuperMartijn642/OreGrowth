@@ -8,18 +8,18 @@
     {
       "type": "supermartijn642corelib:mod_loaded",
       "value": {
-        "modid": "bigreactors"
+        "modid": "gemsnjewels"
       }
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "bigreactors:yellorite_ore",
+    "base": "gemsnjewels:iolite_ore_block",
     "stages": 4,
     "spawn_chance": 0.15,
-    "growth_chance": 0.2,
+    "growth_chance": 0.15,
     "result": {
-      "item": "bigreactors:yellorium_nugget",
+      "item": "gemsnjewels:iolite",
       "count": 1
     }
   }

@@ -8,18 +8,18 @@
     {
       "type": "supermartijn642corelib:mod_loaded",
       "value": {
-        "modid": "bigreactors"
+        "modid": "thermal"
       }
     }
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "bigreactors:yellorite_ore",
-    "stages": 4,
+    "base": "thermal:niter_ore",
+    "stages": 2,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
     "result": {
-      "item": "bigreactors:yellorium_nugget",
+      "item": "thermal:niter",
       "count": 1
     }
   }
