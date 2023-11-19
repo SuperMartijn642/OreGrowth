@@ -105,7 +105,7 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // ----- Extreme Reactors -----
         String extremeReactors = "bigreactors";
         // Yellorite ore
-        this.modIntegration(extremeReactors, "yellorite_ore", 4, 0.15, 0.2, "yellorite_nugget");
+        this.modIntegration(extremeReactors, "yellorite_ore", 4, 0.15, 0.2, "yellorium_nugget");
         // Anglesite ore
         this.modIntegration(extremeReactors, "anglesite_ore", 4, 0.1, 0.1, "anglesite_crystal");
         // Benitoite ore
