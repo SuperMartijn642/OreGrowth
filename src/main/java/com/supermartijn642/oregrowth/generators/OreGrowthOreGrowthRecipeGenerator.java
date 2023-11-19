@@ -102,6 +102,11 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Deepslate zinc ore
         this.modIntegration(create, "deepslate_zinc_ore", 4, 0.2, 0.25, "raw_zinc");
 
+        // ----- Deep Aether -----
+        String deepAether = "deep_aether";
+        // Skyjade ore
+        this.modIntegration(deepAether, "skyjade_ore", 4, 0.1, 0.15, "skyjade");
+
         // ----- Extreme Reactors -----
         String extremeReactors = "bigreactors";
         // Yellorite ore
