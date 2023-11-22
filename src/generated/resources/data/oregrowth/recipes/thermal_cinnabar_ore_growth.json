@@ -1,0 +1,23 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "modid": "thermal",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "thermal:cinnabar_ore",
+    "stages": 3,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
+    "result": {
+      "item": "thermal:cinnabar",
+      "count": 1
+    }
+  }
+}
