@@ -1,3 +1,8 @@
+### Ore Growth 1.0.10
+- Added ore growth recipe for cinnabar from Thermal Foundation
+- Fixed dusk emerald recipe for Gems & Jewels
+- Fixed the game crashing when there's an invalid ore growth recipe
+
 ### Ore Growth 1.0.9
 - Added compatibility for ores from Deep Aether, Enderscape, Gems & Jewels, Pigsteel \[FORGE\]
 - Fixed integration with Thermal Foundation
