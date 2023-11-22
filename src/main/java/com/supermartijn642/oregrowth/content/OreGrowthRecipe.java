@@ -1,6 +1,7 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.supermartijn642.core.registry.Registries;
 import com.supermartijn642.oregrowth.OreGrowth;
 import net.minecraft.core.RegistryAccess;
@@ -116,22 +117,22 @@ public class OreGrowthRecipe implements Recipe<Container> {
         public OreGrowthRecipe fromJson(ResourceLocation identifier, JsonObject json){
             ResourceLocation blockIdentifier = new ResourceLocation(GsonHelper.getAsString(json, "base"));
             if(!Registries.BLOCKS.hasIdentifier(blockIdentifier))
-                throw new RuntimeException("Unknown block '" + blockIdentifier + "'!");
+                throw new JsonParseException("Unknown block '" + blockIdentifier + "'!");
             Block base = Registries.BLOCKS.getValue(blockIdentifier);
             if(base == Blocks.AIR || base == Blocks.CAVE_AIR || base == Blocks.VOID_AIR)
-                throw new RuntimeException("Got AIR block for identifier '" + blockIdentifier + "'!");
+                throw new JsonParseException("Got AIR block for identifier '" + blockIdentifier + "'!");
             int stages = GsonHelper.getAsInt(json, "stages");
             if(stages < 1 || stages > OreGrowthBlock.MAX_STAGES)
-                throw new RuntimeException("Invalid number of stages: '" + stages + "'!");
+                throw new JsonParseException("Invalid number of stages: '" + stages + "'!");
             double spawnChance = GsonHelper.getAsDouble(json, "spawn_chance");
             if(spawnChance <= 0 || spawnChance > 1)
-                throw new RuntimeException("Invalid spawn chance: '" + spawnChance + "'!");
+                throw new JsonParseException("Invalid spawn chance: '" + spawnChance + "'!");
             double growthChance = GsonHelper.getAsDouble(json, "growth_chance");
             if(growthChance <= 0 || growthChance > 1)
-                throw new RuntimeException("Invalid growth chance: '" + growthChance + "'!");
+                throw new JsonParseException("Invalid growth chance: '" + growthChance + "'!");
             ItemStack output = ShapedRecipe.itemStackFromJson(json.getAsJsonObject("result"));
             if(output.isEmpty())
-                throw new RuntimeException("Invalid output '" + output + "'!");
+                throw new JsonParseException("Invalid output '" + output + "'!");
             return new OreGrowthRecipe(identifier, base, stages, spawnChance, growthChance, output);
         }
 
@@ -139,22 +140,22 @@ public class OreGrowthRecipe implements Recipe<Container> {
         public OreGrowthRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf buffer){
             ResourceLocation blockIdentifier = buffer.readResourceLocation();
             if(!Registries.BLOCKS.hasIdentifier(blockIdentifier))
-                throw new RuntimeException("Unknown block '" + blockIdentifier + "'!");
+                throw new IllegalArgumentException("Unknown block '" + blockIdentifier + "'!");
             Block base = Registries.BLOCKS.getValue(blockIdentifier);
             if(base == Blocks.AIR || base == Blocks.CAVE_AIR || base == Blocks.VOID_AIR)
-                throw new RuntimeException("Got AIR block for identifier '" + blockIdentifier + "'!");
+                throw new IllegalArgumentException("Got AIR block for identifier '" + blockIdentifier + "'!");
             int stages = buffer.readInt();
             if(stages < 1 || stages > OreGrowthBlock.MAX_STAGES)
-                throw new RuntimeException("Invalid number of stages: '" + stages + "'!");
+                throw new IllegalArgumentException("Invalid number of stages: '" + stages + "'!");
             double spawnChance = buffer.readDouble();
             if(spawnChance <= 0 || spawnChance > 1)
-                throw new RuntimeException("Invalid spawn chance: '" + spawnChance + "'!");
+                throw new IllegalArgumentException("Invalid spawn chance: '" + spawnChance + "'!");
             double growthChance = buffer.readDouble();
             if(growthChance <= 0 || growthChance > 1)
-                throw new RuntimeException("Invalid growth chance: '" + growthChance + "'!");
+                throw new IllegalArgumentException("Invalid growth chance: '" + growthChance + "'!");
             ItemStack output = buffer.readItem();
             if(output.isEmpty())
-                throw new RuntimeException("Invalid output '" + output + "'!");
+                throw new IllegalArgumentException("Invalid output '" + output + "'!");
             return new OreGrowthRecipe(identifier, base, stages, spawnChance, growthChance, output);
         }
 
