@@ -548,5 +548,7 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(thermalFoundation, "nickel_ore", 4, 0.2, 0.2, "raw_nickel");
         // Deepslate nickel ore
         this.modIntegration(thermalFoundation, "deepslate_nickel_ore", 4, 0.2, 0.2, "raw_nickel");
+        // Cinnabar
+        this.modIntegration(thermalFoundation, "cinnabar_ore", 3, 0.2, 0.2, "cinnabar");
     }
 }
