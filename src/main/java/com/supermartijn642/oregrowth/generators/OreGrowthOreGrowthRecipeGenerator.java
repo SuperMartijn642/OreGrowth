@@ -155,7 +155,7 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         // Pale diamond nether ore block
         this.modIntegration(gemsNJewels, "pale_diamond_nether_ore_block", 4, 0.1, 0.1, "pale_diamond");
         // Dusk emerald ore block
-        this.modIntegration(gemsNJewels, "dusk_emerald_ore_block", 4, 0.1, 0.15, "emerald");
+        this.modIntegration(gemsNJewels, "emerald_ore_block", 4, 0.1, 0.15, "emerald");
         // Deepslate dusk emerald ore block
         this.modIntegration(gemsNJewels, "emerald_deepslate_ore_block", 4, 0.1, 0.15, "emerald");
         // Dusk emerald nether ore block
