@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -115,7 +114,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
                 Codec.intRange(1, 4).fieldOf("stages").forGetter(OreGrowthRecipe::stages),
                 Codec.doubleRange(0, 1).fieldOf("spawn_chance").forGetter(OreGrowthRecipe::spawnChance),
                 Codec.doubleRange(0, 1).fieldOf("growth_chance").forGetter(OreGrowthRecipe::growthChance),
-                CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC.fieldOf("result").forGetter(OreGrowthRecipe::output)
+                ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(OreGrowthRecipe::output)
             ).apply(instance, OreGrowthRecipe::new));
         }
 
