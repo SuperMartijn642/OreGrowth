@@ -140,6 +140,21 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
+    public boolean hasAnalogOutputSignal(BlockState state){
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos){
+        Block base = level.getBlockState(pos.relative(state.getValue(FACE))).getBlock();
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
+        if(recipe == null)
+            return 0;
+        int stage = state.getValue(STAGE);
+        return (int)Math.floor((double)stage / recipe.stages() * 15);
+    }
+
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context){
         return SHAPES_ROTATED[(state.getValue(STAGE) - 1) * 6 + state.getValue(FACE).ordinal()].getUnderlying();
     }
