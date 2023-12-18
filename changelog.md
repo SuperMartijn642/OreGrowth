@@ -1,3 +1,6 @@
+### Ore Growth 1.0.11
+- Comparators will now give a redstone signal depending on how much a crystal has grown
+
 ### Ore Growth 1.0.10
 - Added ore growth recipe for cinnabar from Thermal Foundation
 - Fixed dusk emerald recipe for Gems & Jewels
