@@ -524,6 +524,10 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
 
         // ----- Thermal Foundation -----
         String thermalFoundation = "thermal";
+        // Apatite ore
+        this.modIntegration(thermalFoundation, "apatite_ore", 3, 0.15, 0.3, "apatite");
+        // Deepslate apatite ore
+        this.modIntegration(thermalFoundation, "deepslate_apatite_ore", 3, 0.15, 0.3, "apatite");
         // Niter ore
         this.modIntegration(thermalFoundation, "niter_ore", 2, 0.15, 0.2, "niter");
         // Deepslate niter ore
@@ -548,7 +552,17 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(thermalFoundation, "nickel_ore", 4, 0.2, 0.2, "raw_nickel");
         // Deepslate nickel ore
         this.modIntegration(thermalFoundation, "deepslate_nickel_ore", 4, 0.2, 0.2, "raw_nickel");
-        // Cinnabar
+        // Cinnabar ore
         this.modIntegration(thermalFoundation, "cinnabar_ore", 3, 0.2, 0.2, "cinnabar");
+        // Deepslate cinnabar ore
+        this.modIntegration(thermalFoundation, "deepslate_cinnabar_ore", 3, 0.2, 0.2, "cinnabar");
+        // Ruby ore
+        this.modIntegration(thermalFoundation, "ruby_ore", 4, 0.1, 0.1, "ruby");
+        // Deepslate ruby ore
+        this.modIntegration(thermalFoundation, "deepslate_ruby_ore", 4, 0.1, 0.1, "ruby");
+        // Sapphire ore
+        this.modIntegration(thermalFoundation, "sapphire_ore", 4, 0.15, 0.15, "sapphire");
+        // Deepslate sapphire ore
+        this.modIntegration(thermalFoundation, "deepslate_sapphire_ore", 4, 0.15, 0.15, "sapphire");
     }
 }
