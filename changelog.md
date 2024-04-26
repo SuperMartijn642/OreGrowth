@@ -1,3 +1,6 @@
+### Ore Growth 1.0.11a
+- Added ore growth recipes for apatite, ruby, and sapphire ore from Thermal Foundation
+
 ### Ore Growth 1.0.11
 - Comparators will now give a redstone signal depending on how much a crystal has grown
 
