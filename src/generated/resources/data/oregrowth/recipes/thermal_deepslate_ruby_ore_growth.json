@@ -1,0 +1,23 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "modid": "thermal",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "thermal:deepslate_ruby_ore",
+    "stages": 4,
+    "spawn_chance": 0.1,
+    "growth_chance": 0.1,
+    "result": {
+      "item": "thermal:ruby",
+      "count": 1
+    }
+  }
+}
