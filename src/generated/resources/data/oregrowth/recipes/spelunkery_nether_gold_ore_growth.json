@@ -16,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.5,
     "result": {
-      "item": "spelunkery:raw_gold_nugget",
+      "id": "spelunkery:raw_gold_nugget",
       "count": 1
     }
   }

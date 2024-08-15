@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
     "result": {
-      "item": "more_gems:spinal",
+      "id": "more_gems:spinal",
       "count": 1
     }
   }

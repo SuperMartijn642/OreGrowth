@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "mysticalagriculture:prosperity_shard",
+      "id": "mysticalagriculture:prosperity_shard",
       "count": 1
     }
   }

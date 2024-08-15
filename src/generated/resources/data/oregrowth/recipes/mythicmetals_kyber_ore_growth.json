@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "mythicmetals:raw_kyber",
+      "id": "mythicmetals:raw_kyber",
       "count": 1
     }
   }

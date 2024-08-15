@@ -16,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "spelunkery:rough_cinnabar",
+      "id": "spelunkery:rough_cinnabar",
       "count": 1
     }
   }

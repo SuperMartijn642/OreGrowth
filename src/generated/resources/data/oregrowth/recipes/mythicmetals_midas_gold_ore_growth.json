@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "mythicmetals:raw_midas_gold",
+      "id": "mythicmetals:raw_midas_gold",
       "count": 1
     }
   }

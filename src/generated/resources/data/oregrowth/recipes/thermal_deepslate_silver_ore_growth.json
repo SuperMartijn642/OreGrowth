@@ -16,7 +16,7 @@
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
     "result": {
-      "item": "thermal:raw_silver",
+      "id": "thermal:raw_silver",
       "count": 1
     }
   }

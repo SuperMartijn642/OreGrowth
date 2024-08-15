@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "indrev:raw_lead",
+      "id": "indrev:raw_lead",
       "count": 1
     }
   }

@@ -16,7 +16,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "aether:enchanted_gravitite",
+      "id": "aether:enchanted_gravitite",
       "count": 1
     }
   }

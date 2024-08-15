@@ -1,6 +1,7 @@
 accessWidener v1 named
 
-accessible field net/minecraft/world/item/crafting/RecipeManager recipes Ljava/util/Map;
+accessible field net/minecraft/world/item/crafting/RecipeManager byType Lcom/google/common/collect/Multimap;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase isRandomlyTicking Z
 accessible field com/mojang/blaze3d/vertex/VertexFormat offsets Lit/unimi/dsi/fastutil/ints/IntList;
 accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+accessible method net/minecraft/world/item/ItemStack validateStrict (Lnet/minecraft/world/item/ItemStack;)Lcom/mojang/serialization/DataResult;

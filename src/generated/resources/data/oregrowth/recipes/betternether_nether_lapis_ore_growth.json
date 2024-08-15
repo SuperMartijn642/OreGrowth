@@ -16,7 +16,7 @@
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
     "result": {
-      "item": "betternether:lapis_pile",
+      "id": "betternether:lapis_pile",
       "count": 1
     }
   }

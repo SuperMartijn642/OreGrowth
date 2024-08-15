@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
     "result": {
-      "item": "indrev:raw_tungsten",
+      "id": "indrev:raw_tungsten",
       "count": 1
     }
   }

@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
     "result": {
-      "item": "gemsnjewels:zircon",
+      "id": "gemsnjewels:zircon",
       "count": 1
     }
   }

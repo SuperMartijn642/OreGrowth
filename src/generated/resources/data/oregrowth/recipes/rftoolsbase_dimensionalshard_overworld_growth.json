@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
     "result": {
-      "item": "rftoolsbase:dimensionalshard",
+      "id": "rftoolsbase:dimensionalshard",
       "count": 1
     }
   }

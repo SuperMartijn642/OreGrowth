@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "mythicmetals:raw_quadrillum",
+      "id": "mythicmetals:raw_quadrillum",
       "count": 1
     }
   }

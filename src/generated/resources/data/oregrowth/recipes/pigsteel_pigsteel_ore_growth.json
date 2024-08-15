@@ -16,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.35,
     "result": {
-      "item": "pigsteel:pigsteel_nugget",
+      "id": "pigsteel:pigsteel_nugget",
       "count": 1
     }
   }

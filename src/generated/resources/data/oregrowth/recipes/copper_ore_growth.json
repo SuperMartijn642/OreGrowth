@@ -12,7 +12,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.3,
     "result": {
-      "item": "minecraft:raw_copper",
+      "id": "minecraft:raw_copper",
       "count": 1
     }
   }

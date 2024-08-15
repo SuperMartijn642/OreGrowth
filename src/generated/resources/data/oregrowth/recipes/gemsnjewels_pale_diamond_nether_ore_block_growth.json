@@ -16,7 +16,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "gemsnjewels:pale_diamond",
+      "id": "gemsnjewels:pale_diamond",
       "count": 1
     }
   }

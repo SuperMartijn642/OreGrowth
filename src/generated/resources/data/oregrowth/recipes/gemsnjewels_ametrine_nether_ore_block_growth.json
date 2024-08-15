@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
     "result": {
-      "item": "gemsnjewels:ametrine",
+      "id": "gemsnjewels:ametrine",
       "count": 1
     }
   }

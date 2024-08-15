@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
     "result": {
-      "item": "mythicmetals:raw_prometheum",
+      "id": "mythicmetals:raw_prometheum",
       "count": 1
     }
   }

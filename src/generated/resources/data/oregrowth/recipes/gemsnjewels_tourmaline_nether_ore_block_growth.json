@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
     "result": {
-      "item": "gemsnjewels:tourmaline",
+      "id": "gemsnjewels:tourmaline",
       "count": 1
     }
   }

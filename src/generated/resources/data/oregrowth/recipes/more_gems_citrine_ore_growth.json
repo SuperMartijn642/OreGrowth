@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
     "result": {
-      "item": "more_gems:citrine",
+      "id": "more_gems:citrine",
       "count": 1
     }
   }

@@ -16,7 +16,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "betternether:nether_ruby",
+      "id": "betternether:nether_ruby",
       "count": 1
     }
   }

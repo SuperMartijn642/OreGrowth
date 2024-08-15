@@ -16,7 +16,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "spelunkery:rough_diamond",
+      "id": "spelunkery:rough_diamond",
       "count": 1
     }
   }

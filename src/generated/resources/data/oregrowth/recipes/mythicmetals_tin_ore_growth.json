@@ -16,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.25,
     "result": {
-      "item": "mythicmetals:raw_tin",
+      "id": "mythicmetals:raw_tin",
       "count": 1
     }
   }

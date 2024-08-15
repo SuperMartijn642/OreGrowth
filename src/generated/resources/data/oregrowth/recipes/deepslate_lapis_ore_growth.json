@@ -19,7 +19,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "minecraft:lapis_lazuli",
+      "id": "minecraft:lapis_lazuli",
       "count": 1
     }
   }

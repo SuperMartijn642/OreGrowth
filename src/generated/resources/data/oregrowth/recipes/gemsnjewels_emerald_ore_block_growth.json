@@ -16,7 +16,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.15,
     "result": {
-      "item": "gemsnjewels:emerald",
+      "id": "gemsnjewels:emerald",
       "count": 1
     }
   }

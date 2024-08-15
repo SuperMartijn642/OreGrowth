@@ -16,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.35,
     "result": {
-      "item": "indrev:nikolite_dust",
+      "id": "indrev:nikolite_dust",
       "count": 1
     }
   }

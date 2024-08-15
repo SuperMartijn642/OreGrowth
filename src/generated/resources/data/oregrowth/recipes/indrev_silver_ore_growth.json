@@ -16,7 +16,7 @@
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
     "result": {
-      "item": "indrev:raw_silver",
+      "id": "indrev:raw_silver",
       "count": 1
     }
   }

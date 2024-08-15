@@ -16,7 +16,7 @@
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
     "result": {
-      "item": "bigreactors:anglesite_crystal",
+      "id": "bigreactors:anglesite_crystal",
       "count": 1
     }
   }

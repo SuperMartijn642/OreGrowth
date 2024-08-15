@@ -16,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
     "result": {
-      "item": "bigreactors:yellorium_nugget",
+      "id": "bigreactors:yellorium_nugget",
       "count": 1
     }
   }

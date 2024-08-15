@@ -16,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "spelunkery:rough_lazurite",
+      "id": "spelunkery:rough_lazurite",
       "count": 1
     }
   }
