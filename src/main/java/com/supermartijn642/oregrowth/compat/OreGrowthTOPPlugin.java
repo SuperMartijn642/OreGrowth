@@ -13,7 +13,7 @@ import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -75,7 +75,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
         });
         theOneProbe.registerElementFactory(new IElementFactory() {
             @Override
-            public IElement createElement(FriendlyByteBuf buffer){
+            public IElement createElement(RegistryFriendlyByteBuf buffer){
                 return new WrappedItemStackElement(buffer);
             }
 
@@ -103,7 +103,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
             return new ResourceLocation(OreGrowth.MODID, "ore_growth_icon");
         }
 
-        public WrappedItemStackElement(FriendlyByteBuf buf){
+        public WrappedItemStackElement(RegistryFriendlyByteBuf buf){
             super(buf);
             this.wrapped = null;
             this.base = Registries.BLOCKS.getValue(buf.readResourceLocation());
@@ -121,7 +121,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
         }
 
         @Override
-        public void toBytes(FriendlyByteBuf buf){
+        public void toBytes(RegistryFriendlyByteBuf buf){
             if(this.wrapped != null)
                 this.wrapped.toBytes(buf);
             else

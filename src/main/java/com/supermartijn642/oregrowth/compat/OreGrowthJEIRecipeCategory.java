@@ -132,7 +132,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack.pushPose();
         poseStack.translate(x + 8, y + 8, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
-        poseStack.mulPoseMatrix(new Matrix4f().scaling(1, -1, 1));
+        poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
         poseStack.scale(16, 16, 16);
         BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
         boolean blockLight = !model.usesBlockLight();

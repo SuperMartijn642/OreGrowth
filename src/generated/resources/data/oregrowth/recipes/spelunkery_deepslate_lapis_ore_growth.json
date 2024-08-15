@@ -2,14 +2,11 @@
   "type": "supermartijn642corelib:conditional",
   "conditions": [
     {
-      "type": "oregrowth:default_recipes",
-      "value": {}
+      "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:mod_loaded",
-      "value": {
-        "modid": "spelunkery"
-      }
+      "modid": "spelunkery",
+      "type": "supermartijn642corelib:mod_loaded"
     }
   ],
   "recipe": {
@@ -19,7 +16,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "spelunkery:rough_lazurite",
+      "id": "spelunkery:rough_lazurite",
       "count": 1
     }
   }

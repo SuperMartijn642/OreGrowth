@@ -2,19 +2,14 @@
   "type": "supermartijn642corelib:conditional",
   "conditions": [
     {
-      "type": "oregrowth:default_recipes",
-      "value": {}
+      "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:not",
-      "value": {
-        "condition": {
-          "type": "supermartijn642corelib:mod_loaded",
-          "value": {
-            "modid": "spelunkery"
-          }
-        }
-      }
+      "condition": {
+        "modid": "spelunkery",
+        "type": "supermartijn642corelib:mod_loaded"
+      },
+      "type": "supermartijn642corelib:not"
     }
   ],
   "recipe": {
@@ -24,7 +19,7 @@
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
     "result": {
-      "item": "minecraft:lapis_lazuli",
+      "id": "minecraft:lapis_lazuli",
       "count": 1
     }
   }

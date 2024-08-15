@@ -2,14 +2,11 @@
   "type": "supermartijn642corelib:conditional",
   "conditions": [
     {
-      "type": "oregrowth:default_recipes",
-      "value": {}
+      "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:mod_loaded",
-      "value": {
-        "modid": "enderscape"
-      }
+      "modid": "enderscape",
+      "type": "supermartijn642corelib:mod_loaded"
     }
   ],
   "recipe": {
@@ -19,7 +16,7 @@
     "spawn_chance": 0.2,
     "growth_chance": 0.3,
     "result": {
-      "item": "enderscape:shadow_quartz",
+      "id": "enderscape:shadow_quartz",
       "count": 1
     }
   }
