@@ -20,7 +20,7 @@ public class OreGrowthJEIPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid(){
-        return new ResourceLocation(OreGrowth.MODID, "ore_growth_plugin");
+        return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_plugin");
     }
 
     @Override

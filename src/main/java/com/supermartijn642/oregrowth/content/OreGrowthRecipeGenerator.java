@@ -38,13 +38,13 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         if(resultCount <= 0)
             throw new RuntimeException("Invalid result count '" + resultCount + "'!");
 
-        ResourceLocation identifier = new ResourceLocation(namespace, location);
+        ResourceLocation identifier = ResourceLocation.fromNamespaceAndPath(namespace, location);
         if(this.recipes.containsKey(identifier))
             throw new RuntimeException("Duplicate recipe for location '" + identifier + "'!");
 
         OreGrowthRecipeBuilder recipe = new OreGrowthRecipeBuilder(base, stages, spawnChance, growthChance, resultItem, resultCount);
         this.recipes.put(identifier, recipe);
-        this.cache.trackToBeGeneratedResource(ResourceType.DATA, namespace, "recipes", location, ".json");
+        this.cache.trackToBeGeneratedResource(ResourceType.DATA, namespace, "recipe", location, ".json");
         return recipe;
     }
 
@@ -57,13 +57,13 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, ResourceLocation result, int resultCount){
-        ResourceLocation baseIdentifier = base.contains(":") ? new ResourceLocation(base) : new ResourceLocation(modid, base);
+        ResourceLocation baseIdentifier = base.contains(":") ? ResourceLocation.parse(base) : ResourceLocation.fromNamespaceAndPath(modid, base);
         return this.recipe(this.modid, modid + "_" + baseIdentifier.getPath() + "_growth", baseIdentifier, stages, spawnChance, growthChance, result, resultCount)
             .modLoadedCondition(modid);
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance, String result, int resultCount){
-        ResourceLocation resultIdentifier = result.contains(":") ? new ResourceLocation(result) : new ResourceLocation(modid, result);
+        ResourceLocation resultIdentifier = result.contains(":") ? ResourceLocation.parse(result) : ResourceLocation.fromNamespaceAndPath(modid, result);
         return this.modIntegration(modid, base, stages, spawnChance, growthChance, resultIdentifier, resultCount);
     }
 
@@ -98,7 +98,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
                 json = ConditionalRecipeSerializer.wrapRecipe(json, conditions);
 
             ResourceLocation location = entry.getKey();
-            this.cache.saveJsonResource(ResourceType.DATA, json, location.getNamespace(), "recipes", location.getPath() + ".json");
+            this.cache.saveJsonResource(ResourceType.DATA, json, location.getNamespace(), "recipe", location.getPath() + ".json");
         }
     }
 

@@ -35,7 +35,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
         theOneProbe.registerProvider(new IProbeInfoProvider() {
             @Override
             public ResourceLocation getID(){
-                return new ResourceLocation(OreGrowth.MODID, "ore_growth_hint");
+                return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_hint");
             }
 
             @Override
@@ -81,7 +81,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
 
             @Override
             public ResourceLocation getId(){
-                return new ResourceLocation(OreGrowth.MODID, "ore_growth_icon");
+                return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_icon");
             }
         });
         return null;
@@ -100,7 +100,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
 
         @Override
         public ResourceLocation getID(){
-            return new ResourceLocation(OreGrowth.MODID, "ore_growth_icon");
+            return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_icon");
         }
 
         public WrappedItemStackElement(RegistryFriendlyByteBuf buf){
