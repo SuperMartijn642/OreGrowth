@@ -13,6 +13,9 @@ import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthModelGenerator;
 import com.supermartijn642.oregrowth.generators.OreGrowthOreGrowthRecipeGenerator;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 
 /**
@@ -22,7 +25,11 @@ public class OreGrowth implements ModInitializer {
 
     public static final String MODID = "oregrowth";
 
-    public static final RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = RecipeType.register("oregrowth:ore_growth");
+    public static final RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = Registry.register(BuiltInRegistries.RECIPE_TYPE, ResourceLocation.fromNamespaceAndPath("oregrowth", "ore_growth"), new RecipeType<>() {
+        public String toString(){
+            return "oregrowth:ore_growth";
+        }
+    });
     public static OreGrowthBlock ORE_GROWTH_BLOCK;
     public static BaseBlockItem ORE_GROWTH_ITEM;
 

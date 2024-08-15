@@ -145,7 +145,7 @@ public class OreGrowthBlockBakedModel implements BakedModel {
         vertexData = Arrays.copyOf(vertexData, vertexData.length);
 
         // Adjust the uv
-        int vertexSize = DefaultVertexFormat.BLOCK.getIntegerSize();
+        int vertexSize = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
         int vertices = vertexData.length / vertexSize;
         int uvOffset = BLOCK_VERTEX_DATA_UV_OFFSET / 4;
         int tintOffset = BLOCK_VERTEX_DATA_TINT_OFFSET / 4;
@@ -170,7 +170,7 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     private static int[] adjustVertexDataUV(int[] vertexData, int newU, int newV, TextureAtlasSprite sprite){
-        int vertexSize = DefaultVertexFormat.BLOCK.getIntegerSize();
+        int vertexSize = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
         int vertices = vertexData.length / vertexSize;
         int uvOffset = BLOCK_VERTEX_DATA_UV_OFFSET / 4;
 
@@ -188,19 +188,18 @@ public class OreGrowthBlockBakedModel implements BakedModel {
         return vertexData;
     }
 
-    private static int findUVOffset(VertexFormat vertexFormat, VertexFormatElement.Usage vertexFormatElement){
-        int index;
+    private static int findUVOffset(VertexFormat vertexFormat, VertexFormatElement.Usage usage){
         VertexFormatElement element = null;
-        for(index = 0; index < vertexFormat.getElements().size(); index++){
+        for(int index = 0; index < vertexFormat.getElements().size(); index++){
             VertexFormatElement el = vertexFormat.getElements().get(index);
-            if(el.getUsage() == vertexFormatElement){
+            if(el.usage() == usage){
                 element = el;
                 break;
             }
         }
-        if(index == vertexFormat.getElements().size() || element == null)
+        if(element == null)
             throw new RuntimeException("Expected vertex format to have a '" + vertexFormat + "' attribute");
-        return vertexFormat.offsets.getInt(index);
+        return vertexFormat.getOffset(element);
     }
 
     @Override

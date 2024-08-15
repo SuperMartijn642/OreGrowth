@@ -10,6 +10,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -45,7 +46,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     private final IIngredientManager ingredientManager;
 
     public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper, IIngredientManager ingredientManager){
-        this.background = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 10, 93, 52);
+        this.background = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 10, 93, 52);
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.ORE_GROWTH_BLOCK));
         this.ingredientManager = ingredientManager;
     }
@@ -82,8 +83,14 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
                 }
 
                 @Override
+                public void getTooltip(ITooltipBuilder tooltip, ItemStack ingredient, TooltipFlag tooltipFlag){
+                    originalRenderer.getTooltip(tooltip, ingredient, tooltipFlag);
+                }
+
+                @SuppressWarnings("removal") // Method is marked for removal, but also abstract, so I have to implement it
+                @Override
                 public List<Component> getTooltip(ItemStack stack, TooltipFlag flag){
-                    return originalRenderer.getTooltip(stack, flag);
+                    return List.of();
                 }
 
                 @Override

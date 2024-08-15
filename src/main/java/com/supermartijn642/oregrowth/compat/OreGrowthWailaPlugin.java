@@ -43,7 +43,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
                 Block base = accessor.getLevel().getBlockState(accessor.getPosition().relative(facing)).getBlock();
 
                 // Replace the block name
-                tooltip.remove(Identifiers.CORE_OBJECT_NAME);
+                tooltip.remove(JadeIds.CORE_OBJECT_NAME);
                 tooltip.add(0, IThemeHelper.get().title(TextComponents.translation("oregrowth.ore_growth_block.adjusted_name", base.getName()).get()));
 
                 // Add the growth tooltip
@@ -57,7 +57,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
             @Override
             public ResourceLocation getUid(){
-                return new ResourceLocation(OreGrowth.MODID, "ore_growth_hint");
+                return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_hint");
             }
         }, OreGrowthBlock.class);
         registration.registerBlockIcon(new IBlockComponentProvider() {
@@ -94,7 +94,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
             @Override
             public ResourceLocation getUid(){
-                return new ResourceLocation(OreGrowth.MODID, "ore_growth_icon");
+                return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_icon");
             }
         }, OreGrowthBlock.class);
     }
