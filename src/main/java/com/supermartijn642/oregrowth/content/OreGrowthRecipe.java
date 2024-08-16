@@ -16,10 +16,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -31,7 +31,7 @@ import java.util.Optional;
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
-public class OreGrowthRecipe implements Recipe<Container> {
+public class OreGrowthRecipe implements Recipe<RecipeInput> {
 
     public static final Serializer SERIALIZER = new Serializer();
 
@@ -69,12 +69,12 @@ public class OreGrowthRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level){
+    public boolean matches(RecipeInput input, Level level){
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container container, HolderLookup.Provider provider){
+    public ItemStack assemble(RecipeInput input, HolderLookup.Provider provider){
         return ItemStack.EMPTY;
     }
 
