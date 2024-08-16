@@ -88,7 +88,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             json.addProperty("spawn_chance", recipe.spawnChance);
             json.addProperty("growth_chance", recipe.growthChance);
             JsonObject itemJson = new JsonObject();
-            itemJson.addProperty("item", recipe.output.toString());
+            itemJson.addProperty("id", recipe.output.toString());
             itemJson.addProperty("count", recipe.outputCount);
             json.add("result", itemJson);
 

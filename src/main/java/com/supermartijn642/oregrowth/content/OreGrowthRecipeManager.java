@@ -39,7 +39,7 @@ public class OreGrowthRecipeManager {
 
     private static synchronized void cacheRecipes(){
         if(reload && recipeManager != null){
-            recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
+            recipesByBlock = recipeManager.byType.get(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
                 .stream()
                 .map(RecipeHolder::value)
                 .map(OreGrowthRecipe.class::cast)

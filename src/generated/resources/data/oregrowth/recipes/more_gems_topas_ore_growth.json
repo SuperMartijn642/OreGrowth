@@ -2,14 +2,11 @@
   "type": "supermartijn642corelib:conditional",
   "conditions": [
     {
-      "type": "oregrowth:default_recipes",
-      "value": {}
+      "type": "oregrowth:default_recipes"
     },
     {
-      "type": "supermartijn642corelib:mod_loaded",
-      "value": {
-        "modid": "more_gems"
-      }
+      "modid": "more_gems",
+      "type": "supermartijn642corelib:mod_loaded"
     }
   ],
   "recipe": {
@@ -19,7 +16,7 @@
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
     "result": {
-      "item": "more_gems:topas",
+      "id": "more_gems:topas",
       "count": 1
     }
   }
