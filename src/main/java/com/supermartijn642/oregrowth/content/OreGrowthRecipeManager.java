@@ -1,14 +1,11 @@
 package com.supermartijn642.oregrowth.content;
 
+import com.supermartijn642.core.util.Pair;
 import com.supermartijn642.oregrowth.OreGrowth;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +38,9 @@ public class OreGrowthRecipeManager {
             recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
                 .stream()
                 .map(OreGrowthRecipe.class::cast)
-                .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity(), (recipe, recipe2) -> recipe));
+                .sorted(Comparator.comparing(recipe -> recipe.getId().toString()))
+                .flatMap(recipe -> recipe.bases().stream().map(block -> Pair.of(block, recipe)))
+                .collect(Collectors.toUnmodifiableMap(Pair::left, Pair::right, (recipe, recipe2) -> recipe));
             reload = false;
         }
     }

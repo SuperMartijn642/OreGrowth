@@ -16,6 +16,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredientRenderer;
@@ -24,6 +25,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.common.render.ItemStackRenderer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,14 +33,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,11 +49,15 @@ import java.util.List;
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
 
     private final IDrawable background;
+    private final IDrawable arrow;
+    private final IDrawable slotBackground;
     private final IDrawable icon;
     private final ItemStackRenderer itemStackRenderer = new ItemStackRenderer();
 
     public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper){
-        this.background = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 10, 93, 52);
+        this.background = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 8, 111, 56);
+        this.arrow = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 111, 0, 32, 15);
+        this.slotBackground = guiHelper.getSlotDrawable();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.ORE_GROWTH_BLOCK));
     }
 
@@ -89,9 +95,41 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder layoutBuilder, OreGrowthRecipe recipe, IFocusGroup focusGroup){
+        // Add the ore growth block as catalyst, just so it is easier to look up all ore growth recipes
+        layoutBuilder.addInvisibleIngredients(RecipeIngredientRole.CATALYST).addItemStack(OreGrowth.ORE_GROWTH_ITEM.getDefaultInstance());
+        // Outputs
+        int outputs = Math.min(recipe.getRecipeViewerDrops().size(), 6);
+        int columns = outputs > 1 ? 2 : 1;
+        int rows = (outputs + 1) / 2;
+        for(int i = 0; i < outputs; i++){
+            OreGrowthRecipe.RecipeViewerDrop drop = recipe.getRecipeViewerDrops().get(i);
+            int x = 93 - columns * 9 + (i % columns) * 18;
+            int y = 29 - rows * 9 + i / columns * 18;
+            List<Component> tooltips = new ArrayList<>(3);
+            tooltips.add(TextComponents.empty().get());
+            Component minGrowth = TextComponents.number((int)Math.round((double)drop.minStage() / recipe.stages() * 100)).color(ChatFormatting.GOLD).string("%").color(ChatFormatting.GOLD).get();
+            Component maxGrowth = TextComponents.number((int)Math.round((double)drop.maxStage() / recipe.stages() * 100)).color(ChatFormatting.GOLD).string("%").color(ChatFormatting.GOLD).get();
+            if(drop.maxStage() > 1 || drop.maxStage() < recipe.stages()){
+                if(drop.minStage() == drop.maxStage())
+                    tooltips.add(TextComponents.translation("oregrowth.jei_category.growth", minGrowth).get());
+                else
+                    tooltips.add(TextComponents.translation("oregrowth.jei_category.growth.range", minGrowth, maxGrowth).get());
+            }
+            if(drop.chance() < 1)
+                tooltips.add(TextComponents.translation("oregrowth.jei_category.chance", TextComponents.number(drop.chance() * 100).color(ChatFormatting.GOLD).string("%").color(ChatFormatting.GOLD).get()).get());
+            if(!drop.tooltip().isEmpty()){
+                tooltips.add(TextComponents.translation("oregrowth.jei_category.conditions").get());
+                tooltips.addAll(drop.tooltip());
+            }
+            layoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
+                .setBackground(this.slotBackground, -1, -1)
+                .addTooltipCallback((slotView, list) -> list.addAll(tooltips))
+                .addItemStack(drop.result());
+        }
         // Base block
-        layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, 2, 22)
-            .addItemStack(new ItemStack(recipe.base()))
+        layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, columns == 1 ? 11 : 2, 24)
+            .setSlotName("base")
+            .addItemStacks(recipe.bases().stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
                 @Override
                 public void render(PoseStack poseStack, ItemStack stack){
@@ -99,12 +137,12 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
                 @Override
                 public List<Component> getTooltip(ItemStack stack, TooltipFlag flag){
-                    return itemStackRenderer.getTooltip(stack, flag);
+                    return OreGrowthJEIRecipeCategory.this.itemStackRenderer.getTooltip(stack, flag);
                 }
 
                 @Override
                 public Font getFontRenderer(Minecraft minecraft, ItemStack ingredient){
-                    return itemStackRenderer.getFontRenderer(minecraft, ingredient);
+                    return OreGrowthJEIRecipeCategory.this.itemStackRenderer.getFontRenderer(minecraft, ingredient);
                 }
 
                 @Override
@@ -117,46 +155,61 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
                     return 30;
                 }
             });
-        // Output
-        layoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, 75, 18).addItemStack(recipe.output());
     }
 
     @Override
     public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, PoseStack poseStack, double mouseX, double mouseY){
+        poseStack.pushPose();
+        if(slotsView.getSlotViews(RecipeIngredientRole.OUTPUT).size() <= 1)
+            poseStack.translate(9, 0, 0);
+
+        // Arrow
+        this.arrow.draw(poseStack, 37, 20);
+
+        // Pickaxe
         PoseStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushPose();
         modelViewStack.mulPoseMatrix(poseStack.last().pose());
-
-        // Pickaxe
         RenderSystem.enableDepthTest();
-        ClientUtils.getItemRenderer().renderAndDecorateFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 16);
+        ClientUtils.getItemRenderer().renderAndDecorateFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 18);
         RenderSystem.disableDepthTest();
-
-        // Base block
-        renderModel(recipe.base().defaultBlockState(), 9, 29, 0, EmptyModelData.INSTANCE);
-
-        // Ore growth block
-        int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
-        BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
-        IModelData modelData = new ModelDataMap.Builder().withInitial(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, recipe.base()).build();
-        renderModel(state, 9, 13, 10, modelData);
-
         modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
+
+        // Base block
+        Block base = slotsView.findSlotByName("base")
+            .flatMap(IRecipeSlotView::getDisplayedItemStack)
+            .map(ItemStack::getItem)
+            .filter(BlockItem.class::isInstance)
+            .map(item -> ((BlockItem)item).getBlock())
+            .orElse(null);
+        if(base != null)
+            renderModel(poseStack, base.defaultBlockState(), 9, 31, 0, EmptyModelData.INSTANCE);
+
+        // Ore growth block
+        if(base != null){
+            int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
+            BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
+            IModelData modelData = new ModelDataMap.Builder().withInitial(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, base).build();
+            renderModel(poseStack, state, 9, 15, 10, modelData);
+        }
+
+        poseStack.popPose();
     }
 
-    private static void renderModel(BlockState state, int x, int y, int offset, IModelData modelData){
+    private static void renderModel(PoseStack poseStack, BlockState state, int x, int y, int offset, IModelData modelData){
         ClientUtils.getTextureManager().getTexture(TextureAtlases.getBlocks()).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlases.getBlocks());
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        PoseStack poseStack = RenderSystem.getModelViewStack();
-        poseStack.pushPose();
-        poseStack.translate(x + 8, y + 8, 150 + offset);
-        poseStack.scale(1.85f, 1.85f, 1.85f);
-        poseStack.scale(1, -1, 1);
-        poseStack.scale(16, 16, 16);
+        PoseStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushPose();
+        modelViewStack.mulPoseMatrix(poseStack.last().pose());
+        modelViewStack.translate(x + 8, y + 8, 150 + offset);
+        modelViewStack.scale(1.85f, 1.85f, 1.85f);
+        modelViewStack.scale(1, -1, 1);
+        modelViewStack.scale(16, 16, 16);
         RenderSystem.applyModelViewMatrix();
         BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
         boolean blockLight = !model.usesBlockLight();
@@ -173,6 +226,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         bufferSource.endBatch();
         if(blockLight)
             Lighting.setupFor3DItems();
-        poseStack.popPose();
+        modelViewStack.popPose();
+        RenderSystem.applyModelViewMatrix();
     }
 }
