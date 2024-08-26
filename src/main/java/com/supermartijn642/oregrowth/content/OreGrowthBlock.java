@@ -8,7 +8,6 @@ import com.supermartijn642.oregrowth.OreGrowthConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,6 +31,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -113,19 +113,18 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
-        Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
-        if(entity == null)
+        Level level = builder.getLevel();
+        if(level == null)
             return Collections.emptyList();
         Vec3 origin = builder.getParameter(LootContextParams.ORIGIN);
-        BlockPos pos = new BlockPos((int)origin.x, (int)origin.y, (int)origin.z);
-        return this.getDrops(state, entity.getLevel(), pos);
-    }
-
-    public List<ItemStack> getDrops(BlockState state, Level level, BlockPos pos){
+        BlockPos pos = new BlockPos((int)Math.floor(origin.x), (int)Math.floor(origin.y), (int)Math.floor(origin.z));
         Direction facing = state.getValue(FACE);
         Block base = level.getBlockState(pos.relative(facing)).getBlock();
         OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
-        return recipe != null && state.getValue(STAGE) == recipe.stages() ? List.of(recipe.output()) : Collections.emptyList();
+        if(recipe == null)
+            return Collections.emptyList();
+        LootContext lootParams = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
+        return recipe.generateDrops(state, state.getValue(STAGE), lootParams);
     }
 
     @Override
