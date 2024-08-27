@@ -11,13 +11,32 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "spelunkery:andesite_copper_ore",
+    "base": [
+      "spelunkery:andesite_copper_ore",
+      "spelunkery:diorite_copper_ore",
+      "spelunkery:granite_copper_ore",
+      "spelunkery:tuff_copper_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.3,
-    "result": {
-      "item": "minecraft:raw_copper",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "minecraft:raw_copper",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "minecraft:raw_copper",
+          "count": 1
+        }
+      }
+    ]
   }
 }
