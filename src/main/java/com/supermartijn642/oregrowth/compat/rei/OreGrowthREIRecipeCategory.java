@@ -1,4 +1,4 @@
-package com.supermartijn642.oregrowth.compat;
+package com.supermartijn642.oregrowth.compat.rei;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -8,21 +8,16 @@ import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotView;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredientRenderer;
-import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.runtime.IIngredientManager;
+import me.shedaniel.math.Point;
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
+import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.*;
+import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.entry.EntryStack;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -32,41 +27,33 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
- * Created 05/10/2023 by SuperMartijn642
+ * Created 26/08/2024 by SuperMartijn642
  */
-public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
+public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREIDisplay> {
 
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png");
     private static final RandomSource RANDOM = RandomSource.create();
 
-    private final IDrawable background;
-    private final IDrawable arrow;
-    private final IDrawable slotBackground;
-    private final IDrawable icon;
-    private final IIngredientManager ingredientManager;
-
-    public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper, IIngredientManager ingredientManager){
-        this.background = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 8, 111, 56);
-        this.arrow = guiHelper.createDrawable(new ResourceLocation(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 111, 0, 32, 15);
-        this.slotBackground = guiHelper.getSlotDrawable();
-        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.ORE_GROWTH_BLOCK));
-        this.ingredientManager = ingredientManager;
-    }
-
     @Override
-    public RecipeType<OreGrowthRecipe> getRecipeType(){
-        return OreGrowthJEIPlugin.ORE_GROWTH_RECIPE_TYPE;
+    public CategoryIdentifier<? extends OreGrowthREIDisplay> getCategoryIdentifier(){
+        return OreGrowthREIPlugin.ORE_GROWTH_CATEGORY;
     }
 
     @Override
@@ -75,20 +62,28 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     }
 
     @Override
-    public IDrawable getBackground(){
-        return this.background;
+    public Renderer getIcon(){
+        return EntryStacks.of(OreGrowth.ORE_GROWTH_ITEM);
     }
 
     @Override
-    public IDrawable getIcon(){
-        return this.icon;
+    public int getDisplayWidth(OreGrowthREIDisplay display){
+        return 111 + 10;
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder layoutBuilder, OreGrowthRecipe recipe, IFocusGroup focusGroup){
-        // Add the ore growth block as catalyst, just so it is easier to look up all ore growth recipes
-        layoutBuilder.addInvisibleIngredients(RecipeIngredientRole.CATALYST).addItemStack(OreGrowth.ORE_GROWTH_ITEM.getDefaultInstance());
+    public int getDisplayHeight(){
+        return 56 + 10;
+    }
+
+    @Override
+    public List<Widget> setupDisplay(OreGrowthREIDisplay display, Rectangle bounds){
+        List<Widget> widgets = new ArrayList<>();
+        widgets.add(Widgets.createRecipeBase(bounds));
+        int startX = bounds.x + 5, startY = bounds.y + 5;
+
         // Outputs
+        OreGrowthRecipe recipe = display.getRecipe();
         int outputs = Math.min(recipe.getRecipeViewerDrops().size(), 6);
         int columns = outputs > 1 ? 2 : 1;
         int rows = (outputs + 1) / 2;
@@ -112,74 +107,80 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
                 tooltips.add(TextComponents.translation("oregrowth.jei_category.conditions").get());
                 tooltips.addAll(drop.tooltip());
             }
-            layoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
-                .setBackground(this.slotBackground, -1, -1)
-                .addTooltipCallback((slotView, list) -> list.addAll(tooltips))
-                .addItemStack(drop.result());
+            widgets.add(
+                Widgets.createSlot(new Point(startX + x, startY + y))
+                    .entries(List.of(EntryStacks.of(drop.result()).tooltip(tooltips)))
+                    .markOutput()
+            );
         }
-        // Base block
-        IIngredientRenderer<ItemStack> originalRenderer = this.ingredientManager.getIngredientRenderer(VanillaTypes.ITEM_STACK);
-        layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, columns == 1 ? 11 : 2, 24)
-            .setSlotName("base")
-            .addItemStacks(recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
-            .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
-                @Override
-                public void render(GuiGraphics guiGraphics, ItemStack stack){
-                }
-
-                @Override
-                public List<Component> getTooltip(ItemStack stack, TooltipFlag flag){
-                    return originalRenderer.getTooltip(stack, flag);
-                }
-
-                @Override
-                public Font getFontRenderer(Minecraft minecraft, ItemStack ingredient){
-                    return originalRenderer.getFontRenderer(minecraft, ingredient);
-                }
-
-                @Override
-                public int getWidth(){
-                    return 30;
-                }
-
-                @Override
-                public int getHeight(){
-                    return 30;
-                }
-            });
-    }
-
-    @Override
-    public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY){
-        guiGraphics.pose().pushPose();
-        if(slotsView.getSlotViews(RecipeIngredientRole.OUTPUT).size() <= 1)
-            guiGraphics.pose().translate(9, 0, 0);
+        if(outputs <= 1)
+            startX += 9;
 
         // Arrow
-        this.arrow.draw(guiGraphics, 37, 20);
+        widgets.add(Widgets.createTexturedWidget(BACKGROUND, startX + 37, startY + 20, 111, 0, 32, 15));
 
         // Pickaxe
-        guiGraphics.renderFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 18);
+        widgets.add(
+            Widgets.createSlot(new Point(startX + 43, startY + 18))
+                .entry(EntryStacks.of(Items.DIAMOND_PICKAXE))
+                .notInteractable()
+                .disableBackground()
+                .disableHighlight()
+                .disableTooltips()
+        );
 
         // Base block
-        Block base = slotsView.findSlotByName("base")
-            .flatMap(IRecipeSlotView::getDisplayedItemStack)
+        Function<EntryStack<ItemStack>,Block> baseGetter = entry -> Optional.ofNullable(entry)
+            .map(EntryStack::getValue)
             .map(ItemStack::getItem)
             .filter(BlockItem.class::isInstance)
             .map(item -> ((BlockItem)item).getBlock())
             .orElse(null);
-        if(base != null)
-            renderModel(guiGraphics, base.defaultBlockState(), 9, 31, 0, ModelData.EMPTY);
+        Slot baseSlot = Widgets.createSlot(new Rectangle(startX + 2, startY + 24, 30, 30))
+            .entries(
+                recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream()
+                    .map(EntryStacks::of)
+                    .map(entry -> {
+                        EntryRenderer<ItemStack> originalRenderer = entry.getRenderer();
+                        return entry.withRenderer(new EntryRenderer<>() {
+                            @Override
+                            public void render(EntryStack<ItemStack> entry, GuiGraphics graphics, Rectangle bounds, int mouseX, int mouseY, float delta){
+                                Block base = baseGetter.apply(entry);
+                                if(base != null){
+                                    graphics.pose().pushPose();
+                                    graphics.pose().translate(bounds.x, bounds.y, -100);
+                                    renderModel(graphics, base.defaultBlockState(), 6, 6, 0, ModelData.EMPTY);
+                                    graphics.pose().popPose();
+                                }
+                            }
+
+                            @Override
+                            public @Nullable Tooltip getTooltip(EntryStack<ItemStack> entry, TooltipContext context){
+                                return originalRenderer.getTooltip(entry, context);
+                            }
+                        });
+                    })
+                    .toList()
+            )
+            .disableBackground()
+            .markInput();
+        widgets.add(baseSlot);
 
         // Ore growth block
-        if(base != null){
-            int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
-            BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
-            ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, base).build();
-            renderModel(guiGraphics, state, 9, 15, 10, modelData);
-        }
+        widgets.add(Widgets.wrapRenderer(new Rectangle(startX + 2, startY + 8, 30, 30), (graphics, bounds1, mouseX, mouseY, delta) -> {
+            Block base = baseGetter.apply(baseSlot.getCurrentEntry().cast());
+            if(base != null){
+                graphics.pose().pushPose();
+                graphics.pose().translate(bounds1.x, bounds1.y, 0);
+                int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
+                BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
+                ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, base).build();
+                renderModel(graphics, state, 7, 7, 10, modelData);
+                graphics.pose().popPose();
+            }
+        }));
 
-        guiGraphics.pose().popPose();
+        return widgets;
     }
 
     private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset, ModelData modelData){
