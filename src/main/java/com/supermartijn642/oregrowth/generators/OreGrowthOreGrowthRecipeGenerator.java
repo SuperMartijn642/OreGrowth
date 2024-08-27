@@ -388,6 +388,91 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
             .itemDrop(4, 0.1, "lead_nugget")
             .itemDrop(1, 3, 0.1, "raw_lead");
 
+        // ----- Modern Industrialization ----- //
+        String modernIndustrialization = "modern_industrialization";
+        // Quartz ore
+        this.modIntegration(modernIndustrialization, "quartz_ore", 4, 0.2, 0.3)
+            .itemDrop(4, Items.QUARTZ)
+            .itemDrop(4, 0.2, Items.QUARTZ)
+            .itemDrop(3, 0.8, Items.QUARTZ)
+            .itemDrop(1, 2, 0.3, Items.QUARTZ);
+        // Tin ore
+        this.modIntegration(modernIndustrialization, "tin_ore", 4, 0.2, 0.25)
+            .baseBlock("deepslate_tin_ore")
+            .itemDrop(4, "raw_tin")
+            .itemDrop(4, 0.1, "tin_nugget")
+            .itemDrop(1, 3, 0.1, "raw_tin");
+        // Lignite coal ore
+        this.modIntegration(modernIndustrialization, "lignite_coal_ore", 4, 0.3, 0.4)
+            .baseBlock("deepslate_lignite_coal_ore")
+            .itemDrop(4, "lignite_coal")
+            .itemDrop(1, 3, 0.1, "lignite_coal");
+        // Bauxite ore
+        this.modIntegration(modernIndustrialization, "bauxite_ore", 4, 0.15, 0.25)
+            .baseBlock("deepslate_bauxite_ore")
+            .itemDrop(4, "bauxite_dust")
+            .itemDrop(3, 0.7, "bauxite_dust")
+            .itemDrop(1, 2, 0.3, "bauxite_dust");
+        // Lead ore
+        this.modIntegration(modernIndustrialization, "lead_ore", 4, 0.2, 0.2)
+            .baseBlock("deepslate_lead_ore")
+            .itemDrop(4, "raw_lead")
+            .itemDrop(4, 0.1, "lead_nugget")
+            .itemDrop(1, 3, 0.1, "raw_lead");
+        // Antimony ore
+        this.modIntegration(modernIndustrialization, "antimony_ore", 4, 0.15, 0.2)
+            .baseBlock("deepslate_antimony_ore")
+            .itemDrop(4, "raw_antimony")
+            .itemDrop(4, 0.1, "antimony_nugget")
+            .itemDrop(1, 3, 0.1, "raw_antimony");
+        // Nickel ore
+        this.modIntegration(modernIndustrialization, "nickel_ore", 4, 0.2, 0.2)
+            .baseBlock("deepslate_nickel_ore")
+            .itemDrop(4, "raw_nickel")
+            .itemDrop(4, 0.1, "nickel_nugget")
+            .itemDrop(1, 3, 0.1, "raw_nickel");
+        // Salt ore
+        this.modIntegration(modernIndustrialization, "salt_ore", 2, 0.2, 0.3)
+            .baseBlock("deepslate_salt_ore")
+            .itemDrop(2, 0.2, "salt_dust")
+            .itemDrop(1, 2, 1, "salt_tiny_dust");
+        // Titanium ore
+        this.modIntegration(modernIndustrialization, "titanium_ore", 4, 0.1, 0.1)
+            .itemDrop(4, 0.8, "raw_titanium")
+            .itemDrop(3, 4, 0.1, "titanium_dust")
+            .itemDrop(3, 0.2, "raw_titanium")
+            .itemDrop(1, 2, 0.05, "raw_titanium");
+        // Uranium ore
+        this.modIntegration(modernIndustrialization, "uranium_ore", 4, 0.15, 0.2)
+            .baseBlock("deepslate_uranium_ore")
+            .itemDrop(4, "raw_uranium")
+            .itemDrop(4, 0.1, "uranium_nugget")
+            .itemDrop(1, 3, 0.1, "raw_uranium");
+        // Platinum ore
+        this.modIntegration(modernIndustrialization, "platinum_ore", 4, 0.2, 0.2)
+            .itemDrop(4, "raw_platinum")
+            .itemDrop(4, 0.1, "platinum_nugget")
+            .itemDrop(1, 3, 0.1, "raw_platinum");
+        // Iridium ore
+        this.modIntegration(modernIndustrialization, "iridium_ore", 4, 0.1, 0.1)
+            .baseBlock("deepslate_iridium_ore")
+            .itemDrop(4, 0.7, "raw_iridium")
+            .itemDrop(4, 0.1, "iridium_nugget")
+            .itemDrop(3, 0.2, "raw_iridium")
+            .itemDrop(1, 2, 0.05, "raw_iridium");
+        // Monazite ore
+        this.modIntegration(modernIndustrialization, "monazite_ore", 4, 0.15, 0.25)
+            .baseBlock("deepslate_monazite_ore")
+            .itemDrop(4, "monazite_dust")
+            .itemDrop(3, 0.7, "monazite_dust")
+            .itemDrop(1, 2, 0.3, "monazite_dust");
+        // Tungsten ore
+        this.modIntegration(modernIndustrialization, "tungsten_ore", 4, 0.15, 0.2)
+            .baseBlock("deepslate_tungsten_ore")
+            .itemDrop(4, "raw_tungsten")
+            .itemDrop(4, 0.1, "tungsten_nugget")
+            .itemDrop(1, 3, 0.1, "raw_tungsten");
+
         // ----- More Gems [FABRIC] ----- //
         String moreGems = "more_gems";
         // Citrine ore
