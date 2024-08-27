@@ -11,13 +11,40 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "spelunkery:andesite_iron_ore",
+    "base": [
+      "spelunkery:andesite_iron_ore",
+      "spelunkery:diorite_iron_ore",
+      "spelunkery:granite_iron_ore",
+      "spelunkery:tuff_iron_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.25,
-    "result": {
-      "item": "minecraft:raw_iron",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "minecraft:raw_iron",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "minecraft:iron_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "minecraft:raw_iron",
+          "count": 1
+        }
+      }
+    ]
   }
 }
