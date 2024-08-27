@@ -1,4 +1,4 @@
-package com.supermartijn642.oregrowth.compat;
+package com.supermartijn642.oregrowth.compat.jei;
 
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
