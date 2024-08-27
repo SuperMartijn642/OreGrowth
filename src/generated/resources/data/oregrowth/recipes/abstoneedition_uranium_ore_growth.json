@@ -15,9 +15,23 @@
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "item": "abstoneedition:raw_uranium",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "abstoneedition:raw_uranium",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "abstoneedition:raw_uranium",
+          "count": 1
+        }
+      }
+    ]
   }
 }

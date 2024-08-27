@@ -15,9 +15,30 @@
     "stages": 2,
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
-    "result": {
-      "item": "betternether:lapis_pile",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 2,
+        "item": {
+          "id": "betternether:lapis_pile",
+          "count": 1
+        }
+      },
+      {
+        "stage": 2,
+        "chance": 0.3,
+        "item": {
+          "id": "betternether:lapis_pile",
+          "count": 1
+        }
+      },
+      {
+        "stage": 1,
+        "chance": 0.9,
+        "item": {
+          "id": "betternether:lapis_pile",
+          "count": 1
+        }
+      }
+    ]
   }
 }
