@@ -11,13 +11,31 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "spelunkery:andesite_gold_ore",
+    "base": [
+      "spelunkery:andesite_gold_ore",
+      "spelunkery:diorite_gold_ore",
+      "spelunkery:granite_gold_ore",
+      "spelunkery:tuff_gold_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "minecraft:raw_gold",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "minecraft:raw_gold",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "minecraft:gold_nugget",
+          "count": 1
+        }
+      }
+    ]
   }
 }
