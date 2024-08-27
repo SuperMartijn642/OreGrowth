@@ -1,4 +1,4 @@
-package com.supermartijn642.oregrowth.compat;
+package com.supermartijn642.oregrowth.compat.jei;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
