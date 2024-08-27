@@ -11,13 +11,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:stormyx_ore",
+    "base": [
+      "mythicmetals:stormyx_ore",
+      "mythicmetals:blackstone_stormyx_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "mythicmetals:raw_stormyx",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mythicmetals:raw_stormyx",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:stormyx_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:raw_stormyx",
+          "count": 1
+        }
+      }
+    ]
   }
 }

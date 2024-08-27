@@ -14,13 +14,30 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:diamond_ore",
+    "base": [
+      "minecraft:diamond_ore",
+      "minecraft:deepslate_diamond_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
-    "result": {
-      "item": "minecraft:diamond",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "minecraft:diamond",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "minecraft:diamond",
+          "count": 1
+        }
+      }
+    ]
   }
 }

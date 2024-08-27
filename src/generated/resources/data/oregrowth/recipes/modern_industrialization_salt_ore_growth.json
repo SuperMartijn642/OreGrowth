@@ -1,0 +1,40 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "modern_industrialization"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": [
+      "modern_industrialization:salt_ore",
+      "modern_industrialization:deepslate_salt_ore"
+    ],
+    "stages": 2,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.3,
+    "drops": [
+      {
+        "stage": 2,
+        "chance": 0.2,
+        "item": {
+          "id": "modern_industrialization:salt_dust",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "item": {
+          "id": "modern_industrialization:salt_tiny_dust",
+          "count": 1
+        }
+      }
+    ]
+  }
+}

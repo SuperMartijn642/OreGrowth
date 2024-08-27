@@ -15,9 +15,31 @@
     "stages": 4,
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
-    "result": {
-      "item": "mythicmetals:raw_silver",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mythicmetals:raw_silver",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:silver_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:raw_silver",
+          "count": 1
+        }
+      }
+    ]
   }
 }
