@@ -10,10 +10,7 @@ import com.supermartijn642.oregrowth.compat.OreGrowthTOPPlugin;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
-import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
-import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
-import com.supermartijn642.oregrowth.generators.OreGrowthModelGenerator;
-import com.supermartijn642.oregrowth.generators.OreGrowthOreGrowthRecipeGenerator;
+import com.supermartijn642.oregrowth.generators.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.InterModComms;
@@ -62,5 +59,6 @@ public class OreGrowth {
         handler.addGenerator(OreGrowthLanguageGenerator::new);
         handler.addGenerator(OreGrowthModelGenerator::new);
         handler.addGenerator(OreGrowthOreGrowthRecipeGenerator::new);
+        handler.addGenerator(OreGrowthTagGenerator::new);
     }
 }
