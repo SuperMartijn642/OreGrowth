@@ -8,10 +8,7 @@ import com.supermartijn642.core.registry.RegistrationHandler;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
-import com.supermartijn642.oregrowth.generators.OreGrowthBlockStateGenerator;
-import com.supermartijn642.oregrowth.generators.OreGrowthLanguageGenerator;
-import com.supermartijn642.oregrowth.generators.OreGrowthModelGenerator;
-import com.supermartijn642.oregrowth.generators.OreGrowthOreGrowthRecipeGenerator;
+import com.supermartijn642.oregrowth.generators.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -54,5 +51,6 @@ public class OreGrowth implements ModInitializer {
         handler.addGenerator(OreGrowthLanguageGenerator::new);
         handler.addGenerator(OreGrowthModelGenerator::new);
         handler.addGenerator(OreGrowthOreGrowthRecipeGenerator::new);
+        handler.addGenerator(OreGrowthTagGenerator::new);
     }
 }
