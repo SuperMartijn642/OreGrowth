@@ -11,13 +11,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "indrev:tin_ore",
+    "base": [
+      "indrev:tin_ore",
+      "indrev:deepslate_tin_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.25,
-    "result": {
-      "id": "indrev:raw_tin",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "indrev:raw_tin",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "indrev:tin_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "indrev:raw_tin",
+          "count": 1
+        }
+      }
+    ]
   }
 }

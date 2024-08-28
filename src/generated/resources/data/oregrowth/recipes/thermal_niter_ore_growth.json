@@ -11,13 +11,37 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:niter_ore",
+    "base": [
+      "thermal:niter_ore",
+      "thermal:deepslate_niter_ore"
+    ],
     "stages": 2,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "id": "thermal:niter",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 2,
+        "item": {
+          "id": "thermal:niter",
+          "count": 1
+        }
+      },
+      {
+        "stage": 2,
+        "chance": 0.05,
+        "item": {
+          "id": "thermal:niter_dust",
+          "count": 1
+        }
+      },
+      {
+        "stage": 1,
+        "chance": 0.4,
+        "item": {
+          "id": "thermal:niter",
+          "count": 1
+        }
+      }
+    ]
   }
 }

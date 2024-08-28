@@ -15,9 +15,24 @@
     "stages": 4,
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
-    "result": {
-      "id": "aether:enchanted_gravitite",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "aether:enchanted_gravitite",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.02,
+        "item": {
+          "id": "aether:enchanted_gravitite",
+          "count": 1
+        }
+      }
+    ]
   }
 }

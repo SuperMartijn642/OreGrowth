@@ -11,13 +11,30 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "more_gems:corundum_ore",
+    "base": [
+      "more_gems:corundum_ore",
+      "more_gems:corundum_ore_nether"
+    ],
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
-    "result": {
-      "id": "more_gems:corundum",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "more_gems:corundum",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "more_gems:corundum",
+          "count": 1
+        }
+      }
+    ]
   }
 }

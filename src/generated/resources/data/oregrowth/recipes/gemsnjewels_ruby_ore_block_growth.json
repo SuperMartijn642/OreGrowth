@@ -11,13 +11,31 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "gemsnjewels:ruby_ore_block",
+    "base": [
+      "gemsnjewels:ruby_ore_block",
+      "gemsnjewels:ruby_deepslate_ore_block",
+      "gemsnjewels:ruby_nether_ore_block"
+    ],
     "stages": 4,
     "spawn_chance": 0.1,
     "growth_chance": 0.1,
-    "result": {
-      "id": "gemsnjewels:ruby",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "gemsnjewels:ruby",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "gemsnjewels:ruby",
+          "count": 1
+        }
+      }
+    ]
   }
 }
