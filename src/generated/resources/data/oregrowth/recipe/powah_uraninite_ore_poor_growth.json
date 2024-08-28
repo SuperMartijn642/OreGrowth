@@ -11,13 +11,30 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "powah:uraninite_ore_poor",
+    "base": [
+      "powah:uraninite_ore_poor",
+      "powah:deepslate_uraninite_ore_poor"
+    ],
     "stages": 2,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "id": "powah:uraninite",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 2,
+        "chance": 0.7,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 1,
+        "chance": 0.1,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      }
+    ]
   }
 }

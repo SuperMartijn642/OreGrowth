@@ -11,13 +11,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:nickel_ore",
+    "base": [
+      "thermal:nickel_ore",
+      "thermal:deepslate_nickel_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "id": "thermal:raw_nickel",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "thermal:raw_nickel",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "thermal:nickel_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "thermal:raw_nickel",
+          "count": 1
+        }
+      }
+    ]
   }
 }

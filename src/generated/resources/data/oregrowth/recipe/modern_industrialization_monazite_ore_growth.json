@@ -1,0 +1,48 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "modid": "modern_industrialization"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": [
+      "modern_industrialization:monazite_ore",
+      "modern_industrialization:deepslate_monazite_ore"
+    ],
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.25,
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "modern_industrialization:monazite_dust",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.7,
+        "item": {
+          "id": "modern_industrialization:monazite_dust",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.3,
+        "item": {
+          "id": "modern_industrialization:monazite_dust",
+          "count": 1
+        }
+      }
+    ]
+  }
+}

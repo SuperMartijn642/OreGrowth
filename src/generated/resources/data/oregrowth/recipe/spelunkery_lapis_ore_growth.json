@@ -11,13 +11,51 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:lapis_ore",
+    "base": [
+      "minecraft:lapis_ore",
+      "minecraft:deepslate_lapis_ore",
+      "spelunkery:andesite_lapis_ore",
+      "spelunkery:diorite_lapis_ore",
+      "spelunkery:granite_lapis_ore",
+      "spelunkery:tuff_lapis_ore",
+      "spelunkery:sandstone_lapis_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
-    "result": {
-      "id": "spelunkery:rough_lazurite",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "spelunkery:rough_lazurite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.2,
+        "item": {
+          "id": "spelunkery:rough_lazurite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.6,
+        "item": {
+          "id": "spelunkery:rough_lazurite",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.3,
+        "item": {
+          "id": "spelunkery:rough_lazurite",
+          "count": 1
+        }
+      }
+    ]
   }
 }

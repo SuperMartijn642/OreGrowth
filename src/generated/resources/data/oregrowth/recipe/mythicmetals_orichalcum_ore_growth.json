@@ -11,13 +11,40 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:orichalcum_ore",
+    "base": [
+      "mythicmetals:orichalcum_ore",
+      "mythicmetals:tuff_orichalcum_ore",
+      "mythicmetals:smooth_basalt_orichalcum_ore",
+      "mythicmetals:deepslate_orichalcum_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "id": "mythicmetals:raw_orichalcum",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mythicmetals:raw_orichalcum",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:orichalcum_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:raw_orichalcum",
+          "count": 1
+        }
+      }
+    ]
   }
 }

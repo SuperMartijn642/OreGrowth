@@ -15,9 +15,24 @@
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "id": "mysticalagriculture:soulium_dust",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "chance": 0.7,
+        "item": {
+          "id": "mysticalagriculture:soulium_dust",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mysticalagriculture:soulium_dust",
+          "count": 1
+        }
+      }
+    ]
   }
 }
