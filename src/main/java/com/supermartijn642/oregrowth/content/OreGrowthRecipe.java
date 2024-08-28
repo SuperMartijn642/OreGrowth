@@ -375,11 +375,12 @@ public class OreGrowthRecipe implements Recipe<Container> {
 
         @Override
         public OreGrowthRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf buffer){
-            int baseCount = buffer.readVarInt();
+            int baseCount = buffer.readInt();
             List<Either<Block,TagKey<Block>>> bases = new ArrayList<>(baseCount);
             for(int i = 0; i < baseCount; i++){
+                boolean isBlock = buffer.readBoolean();
                 ResourceLocation baseIdentifier = buffer.readResourceLocation();
-                if(buffer.readBoolean()){
+                if(isBlock){
                     if(!Registries.BLOCKS.hasIdentifier(baseIdentifier))
                         throw new IllegalArgumentException("Unknown block '" + baseIdentifier + "'!");
                     Block block = Registries.BLOCKS.getValue(baseIdentifier);
