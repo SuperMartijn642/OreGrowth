@@ -11,13 +11,30 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:morkite_ore",
+    "base": [
+      "mythicmetals:morkite_ore",
+      "mythicmetals:deepslate_morkite_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "id": "mythicmetals:morkite",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mythicmetals:morkite",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:morkite",
+          "count": 1
+        }
+      }
+    ]
   }
 }
