@@ -18,9 +18,22 @@
     "stages": 2,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "minecraft:redstone",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 2,
+        "item": {
+          "id": "minecraft:redstone",
+          "count": 1
+        }
+      },
+      {
+        "stage": 1,
+        "chance": 0.6,
+        "item": {
+          "id": "minecraft:redstone",
+          "count": 1
+        }
+      }
+    ]
   }
 }

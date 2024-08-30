@@ -14,13 +14,46 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "rftoolsbase:dimensionalshard_overworld",
+    "base": [
+      "rftoolsbase:dimensionalshard_overworld",
+      "rftoolsbase:dimensionalshard_nether",
+      "rftoolsbase:dimensionalshard_end"
+    ],
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "item": "rftoolsbase:dimensionalshard",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "rftoolsbase:dimensionalshard",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.8,
+        "item": {
+          "id": "rftoolsbase:dimensionalshard",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "item": {
+          "id": "rftoolsbase:dimensionalshard",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.6,
+        "item": {
+          "id": "rftoolsbase:dimensionalshard",
+          "count": 1
+        }
+      }
+    ]
   }
 }
