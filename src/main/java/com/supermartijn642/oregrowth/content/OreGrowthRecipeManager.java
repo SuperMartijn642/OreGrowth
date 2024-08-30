@@ -1,16 +1,14 @@
 package com.supermartijn642.oregrowth.content;
 
+import com.google.common.collect.ImmutableMap;
 import com.supermartijn642.oregrowth.OreGrowth;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -18,11 +16,13 @@ import java.util.stream.Collectors;
 public class OreGrowthRecipeManager {
 
     private static RecipeManager recipeManager;
+    private static HolderLookup.RegistryLookup<Block> blockLookup;
     private static boolean reload = true;
     private static Map<Block,OreGrowthRecipe> recipesByBlock = Collections.emptyMap();
 
     public static synchronized void reloadRecipes(RecipeManager recipeManager){
         OreGrowthRecipeManager.recipeManager = recipeManager;
+        blockLookup = BuiltInRegistries.BLOCK.asLookup();
         reload = true;
         recipesByBlock = Collections.emptyMap();
     }
@@ -39,11 +39,14 @@ public class OreGrowthRecipeManager {
 
     private static synchronized void cacheRecipes(){
         if(reload && recipeManager != null){
-            recipesByBlock = recipeManager.byType.get(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
+            ImmutableMap.Builder<Block,OreGrowthRecipe> builder = ImmutableMap.builder();
+            recipeManager.byType.get(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
                 .stream()
+                .sorted(Comparator.comparing(holder -> holder.id().toString()))
                 .map(RecipeHolder::value)
                 .map(OreGrowthRecipe.class::cast)
-                .collect(Collectors.toUnmodifiableMap(OreGrowthRecipe::base, Function.identity(), (recipe, recipe2) -> recipe));
+                .forEach(recipe -> recipe.bases(blockLookup).forEach(block -> builder.put(block, recipe)));
+            recipesByBlock = builder.buildKeepingLast();
             reload = false;
         }
     }
