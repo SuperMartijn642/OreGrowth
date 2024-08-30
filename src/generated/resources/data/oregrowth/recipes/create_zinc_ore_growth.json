@@ -11,13 +11,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "create:zinc_ore",
+    "base": [
+      "create:zinc_ore",
+      "create:deepslate_zinc_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.25,
-    "result": {
-      "item": "create:raw_zinc",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "create:raw_zinc",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "create:zinc_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "create:raw_zinc",
+          "count": 1
+        }
+      }
+    ]
   }
 }

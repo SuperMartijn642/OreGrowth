@@ -11,13 +11,30 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:sapphire_ore",
+    "base": [
+      "thermal:sapphire_ore",
+      "thermal:deepslate_sapphire_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
-    "result": {
-      "item": "thermal:sapphire",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "thermal:sapphire",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "thermal:sapphire",
+          "count": 1
+        }
+      }
+    ]
   }
 }

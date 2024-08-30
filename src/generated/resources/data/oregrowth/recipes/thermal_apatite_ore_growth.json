@@ -11,13 +11,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:apatite_ore",
+    "base": [
+      "thermal:apatite_ore",
+      "thermal:deepslate_apatite_ore"
+    ],
     "stages": 3,
     "spawn_chance": 0.15,
     "growth_chance": 0.3,
-    "result": {
-      "item": "thermal:apatite",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 3,
+        "item": {
+          "id": "thermal:apatite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.05,
+        "item": {
+          "id": "thermal:apatite_dust",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.4,
+        "item": {
+          "id": "thermal:apatite",
+          "count": 1
+        }
+      }
+    ]
   }
 }
