@@ -15,9 +15,23 @@
     "stages": 3,
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
-    "result": {
-      "id": "enderscape:nebulite_shards",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 3,
+        "item": {
+          "id": "enderscape:nebulite_shards",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.3,
+        "item": {
+          "id": "enderscape:nebulite_shards",
+          "count": 1
+        }
+      }
+    ]
   }
 }
