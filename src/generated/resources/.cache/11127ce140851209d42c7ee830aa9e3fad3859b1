@@ -1,4 +1,4 @@
-// this.cache.versionId	2024-08-27T15:10:53.5116471	Core Lib Generators
+// this.cache.versionId	2024-08-30T17:18:33.205131	Core Lib Generators
 c34cd86b67b463e0b84dcec3976a21bca456f85d data\oregrowth\recipes\gemsnjewels_amethyst_ore_block_growth.json
 861808f8103c51afd6c35a8b928d0a72655dcab9 data\oregrowth\recipes\betterend_amber_ore_growth.json
 911ff10bb3f8a85659377208ae9e06b4bb814d10 data\oregrowth\recipes\mythicmetals_silver_ore_growth.json
@@ -127,6 +127,7 @@ d7a5178386ba9d36b145b3464b821df5dfa03484 data\oregrowth\recipes\more_gems_citrin
 68daec0f38b2a6c2232232ababa8159814205f2b data\oregrowth\recipes\mekanism_lead_ore_growth.json
 35e491a532fc30bfc61852cd64f811e3e70b0b0a data\oregrowth\recipes\bigreactors_anglesite_ore_growth.json
 b8b6b9d086b83ba9c3d9a9088bf5dbe6888571dd data\oregrowth\recipes\betternether_nether_redstone_ore_growth.json
+8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\ae2\tags\blocks\growth_acceleratable.json
 9bc0fbbee108a1c04d8a75d345f1a3dac555c7f1 data\oregrowth\recipes\mythicmetals_midas_gold_ore_growth.json
 cd054f8b069d8525adeb4615c35b64aa2f9e1ab7 data\oregrowth\recipes\powah_uraninite_ore_poor_growth.json
 186a3c31717d8e9138abbdae7996d9eadc376f94 data\oregrowth\recipes\diamond_ore_growth.json
