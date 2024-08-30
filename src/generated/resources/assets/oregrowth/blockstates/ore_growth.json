@@ -1,107 +1,107 @@
 {
   "variants": {
-    "stage=1,facing=north": {
+    "facing=north,stage=1": {
       "model": "oregrowth:block/ore_growth_stage_1",
       "x": 90,
       "y": 180
     },
-    "stage=2,facing=north": {
+    "facing=north,stage=2": {
       "model": "oregrowth:block/ore_growth_stage_2",
       "x": 90,
       "y": 180
     },
-    "stage=3,facing=north": {
+    "facing=north,stage=3": {
       "model": "oregrowth:block/ore_growth_stage_3",
       "x": 90,
       "y": 180
     },
-    "stage=4,facing=north": {
+    "facing=north,stage=4": {
       "model": "oregrowth:block/ore_growth_stage_4",
       "x": 90,
       "y": 180
     },
-    "stage=1,facing=east": {
+    "facing=east,stage=1": {
       "model": "oregrowth:block/ore_growth_stage_1",
       "x": 90,
       "y": 270
     },
-    "stage=2,facing=east": {
+    "facing=east,stage=2": {
       "model": "oregrowth:block/ore_growth_stage_2",
       "x": 90,
       "y": 270
     },
-    "stage=3,facing=east": {
+    "facing=east,stage=3": {
       "model": "oregrowth:block/ore_growth_stage_3",
       "x": 90,
       "y": 270
     },
-    "stage=4,facing=east": {
+    "facing=east,stage=4": {
       "model": "oregrowth:block/ore_growth_stage_4",
       "x": 90,
       "y": 270
     },
-    "stage=1,facing=south": {
+    "facing=south,stage=1": {
       "model": "oregrowth:block/ore_growth_stage_1",
       "x": 90
     },
-    "stage=2,facing=south": {
+    "facing=south,stage=2": {
       "model": "oregrowth:block/ore_growth_stage_2",
       "x": 90
     },
-    "stage=3,facing=south": {
+    "facing=south,stage=3": {
       "model": "oregrowth:block/ore_growth_stage_3",
       "x": 90
     },
-    "stage=4,facing=south": {
+    "facing=south,stage=4": {
       "model": "oregrowth:block/ore_growth_stage_4",
       "x": 90
     },
-    "stage=1,facing=west": {
+    "facing=west,stage=1": {
       "model": "oregrowth:block/ore_growth_stage_1",
       "x": 90,
       "y": 90
     },
-    "stage=2,facing=west": {
+    "facing=west,stage=2": {
       "model": "oregrowth:block/ore_growth_stage_2",
       "x": 90,
       "y": 90
     },
-    "stage=3,facing=west": {
+    "facing=west,stage=3": {
       "model": "oregrowth:block/ore_growth_stage_3",
       "x": 90,
       "y": 90
     },
-    "stage=4,facing=west": {
+    "facing=west,stage=4": {
       "model": "oregrowth:block/ore_growth_stage_4",
       "x": 90,
       "y": 90
     },
-    "stage=1,facing=up": {
+    "facing=up,stage=1": {
       "model": "oregrowth:block/ore_growth_stage_1",
       "x": 180
     },
-    "stage=2,facing=up": {
+    "facing=up,stage=2": {
       "model": "oregrowth:block/ore_growth_stage_2",
       "x": 180
     },
-    "stage=3,facing=up": {
+    "facing=up,stage=3": {
       "model": "oregrowth:block/ore_growth_stage_3",
       "x": 180
     },
-    "stage=4,facing=up": {
+    "facing=up,stage=4": {
       "model": "oregrowth:block/ore_growth_stage_4",
       "x": 180
     },
-    "stage=1,facing=down": {
+    "facing=down,stage=1": {
       "model": "oregrowth:block/ore_growth_stage_1"
     },
-    "stage=2,facing=down": {
+    "facing=down,stage=2": {
       "model": "oregrowth:block/ore_growth_stage_2"
     },
-    "stage=3,facing=down": {
+    "facing=down,stage=3": {
       "model": "oregrowth:block/ore_growth_stage_3"
     },
-    "stage=4,facing=down": {
+    "facing=down,stage=4": {
       "model": "oregrowth:block/ore_growth_stage_4"
     }
   }

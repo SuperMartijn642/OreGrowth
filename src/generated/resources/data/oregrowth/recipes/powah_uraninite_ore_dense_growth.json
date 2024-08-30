@@ -14,13 +14,60 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "powah:uraninite_ore_dense",
+    "base": [
+      "powah:uraninite_ore_dense",
+      "powah:deepslate_uraninite_ore_dense"
+    ],
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "item": "powah:uraninite",
-      "count": 3
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 3
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.3,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.6,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 2,
+        "chance": 0.7,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      },
+      {
+        "stage": 1,
+        "chance": 0.3,
+        "item": {
+          "id": "powah:uraninite",
+          "count": 1
+        }
+      }
+    ]
   }
 }

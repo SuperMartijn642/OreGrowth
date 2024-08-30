@@ -14,13 +14,46 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mysticalagriculture:prosperity_ore",
+    "base": [
+      "mysticalagriculture:prosperity_ore",
+      "mysticalagriculture:deepslate_prosperity_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "mysticalagriculture:prosperity_shard",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mysticalagriculture:prosperity_shard",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.05,
+        "item": {
+          "id": "mysticalagriculture:prosperity_shard",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.6,
+        "item": {
+          "id": "mysticalagriculture:prosperity_shard",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.1,
+        "item": {
+          "id": "mysticalagriculture:prosperity_shard",
+          "count": 1
+        }
+      }
+    ]
   }
 }

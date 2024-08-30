@@ -18,9 +18,23 @@
     "stages": 3,
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
-    "result": {
-      "item": "aether:ambrosium_shard",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 3,
+        "item": {
+          "id": "aether:ambrosium_shard",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.3,
+        "item": {
+          "id": "aether:ambrosium_shard",
+          "count": 1
+        }
+      }
+    ]
   }
 }

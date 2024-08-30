@@ -14,13 +14,30 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "more_gems:carbonado_ore",
+    "base": [
+      "more_gems:carbonado_ore",
+      "more_gems:carbonado_ore_deepslate"
+    ],
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.15,
-    "result": {
-      "item": "more_gems:carbonado",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "more_gems:carbonado",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "more_gems:carbonado",
+          "count": 1
+        }
+      }
+    ]
   }
 }

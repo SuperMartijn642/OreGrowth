@@ -14,13 +14,37 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:sulfur_ore",
+    "base": [
+      "thermal:sulfur_ore",
+      "thermal:deepslate_sulfur_ore"
+    ],
     "stages": 2,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "item": "thermal:sulfur",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 2,
+        "item": {
+          "id": "thermal:sulfur",
+          "count": 1
+        }
+      },
+      {
+        "stage": 2,
+        "chance": 0.05,
+        "item": {
+          "id": "thermal:sulfur_dust",
+          "count": 1
+        }
+      },
+      {
+        "stage": 1,
+        "chance": 0.4,
+        "item": {
+          "id": "thermal:sulfur",
+          "count": 1
+        }
+      }
+    ]
   }
 }

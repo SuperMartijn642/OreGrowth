@@ -14,13 +14,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:silver_ore",
+    "base": [
+      "thermal:silver_ore",
+      "thermal:deepslate_silver_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
-    "result": {
-      "item": "thermal:raw_silver",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "thermal:raw_silver",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "thermal:silver_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "thermal:raw_silver",
+          "count": 1
+        }
+      }
+    ]
   }
 }

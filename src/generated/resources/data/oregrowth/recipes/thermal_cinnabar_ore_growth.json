@@ -14,13 +14,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "thermal:cinnabar_ore",
+    "base": [
+      "thermal:cinnabar_ore",
+      "thermal:deepslate_cinnabar_ore"
+    ],
     "stages": 3,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "thermal:cinnabar",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 3,
+        "item": {
+          "id": "thermal:cinnabar",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.05,
+        "item": {
+          "id": "thermal:cinnabar_dust",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.4,
+        "item": {
+          "id": "thermal:cinnabar",
+          "count": 1
+        }
+      }
+    ]
   }
 }

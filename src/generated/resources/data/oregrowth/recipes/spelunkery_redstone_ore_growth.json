@@ -14,13 +14,51 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "minecraft:redstone_ore",
+    "base": [
+      "minecraft:redstone_ore",
+      "minecraft:deepslate_redstone_ore",
+      "spelunkery:andesite_redstone_ore",
+      "spelunkery:diorite_redstone_ore",
+      "spelunkery:granite_redstone_ore",
+      "spelunkery:tuff_redstone_ore",
+      "spelunkery:calcite_redstone_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.3,
     "growth_chance": 0.3,
-    "result": {
-      "item": "spelunkery:rough_cinnabar",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "spelunkery:rough_cinnabar",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.4,
+        "item": {
+          "id": "spelunkery:rough_cinnabar",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.8,
+        "item": {
+          "id": "spelunkery:rough_cinnabar",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.4,
+        "item": {
+          "id": "spelunkery:rough_cinnabar",
+          "count": 1
+        }
+      }
+    ]
   }
 }

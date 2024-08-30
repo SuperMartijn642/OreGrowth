@@ -14,13 +14,46 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "bigreactors:yellorite_ore",
+    "base": [
+      "bigreactors:yellorite_ore",
+      "bigreactors:deepslate_yellorite_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.15,
     "growth_chance": 0.2,
-    "result": {
-      "item": "bigreactors:yellorium_nugget",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "bigreactors:yellorium_nugget",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.2,
+        "item": {
+          "id": "bigreactors:yellorium_nugget",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.8,
+        "item": {
+          "id": "bigreactors:yellorium_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.4,
+        "item": {
+          "id": "bigreactors:yellorium_nugget",
+          "count": 1
+        }
+      }
+    ]
   }
 }
