@@ -11,13 +11,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mekanism:lead_ore",
+    "base": [
+      "mekanism:lead_ore",
+      "mekanism:deepslate_lead_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "mekanism:raw_lead",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mekanism:raw_lead",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "mekanism:lead_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mekanism:raw_lead",
+          "count": 1
+        }
+      }
+    ]
   }
 }

@@ -11,13 +11,31 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mythicmetals:starrite_ore",
+    "base": [
+      "mythicmetals:starrite_ore",
+      "mythicmetals:calcite_starrite_ore",
+      "mythicmetals:end_stone_starrite_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.2,
-    "result": {
-      "item": "mythicmetals:starrite",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mythicmetals:starrite",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "mythicmetals:starrite",
+          "count": 1
+        }
+      }
+    ]
   }
 }
