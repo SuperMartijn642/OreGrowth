@@ -1,0 +1,48 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes",
+      "value": {}
+    },
+    {
+      "type": "supermartijn642corelib:mod_loaded",
+      "value": {
+        "modid": "pigsteel"
+      }
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": "pigsteel:porkslag",
+    "stages": 3,
+    "spawn_chance": 0.3,
+    "growth_chance": 0.35,
+    "drops": [
+      {
+        "stage": 3,
+        "item": {
+          "id": "pigsteel:iron_nugget",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.3,
+        "item": {
+          "id": "pigsteel:iron_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.4,
+        "item": {
+          "id": "pigsteel:iron_nugget",
+          "count": 1
+        }
+      }
+    ]
+  }
+}

@@ -18,9 +18,31 @@
     "stages": 4,
     "spawn_chance": 0.2,
     "growth_chance": 0.3,
-    "result": {
-      "item": "enderscape:shadow_quartz",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "enderscape:shadow_quartz",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.4,
+        "item": {
+          "id": "enderscape:shadow_quartz",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.1,
+        "item": {
+          "id": "enderscape:shadow_quartz",
+          "count": 1
+        }
+      }
+    ]
   }
 }

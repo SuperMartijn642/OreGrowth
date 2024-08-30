@@ -14,13 +14,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "mekanism:fluorite_ore",
+    "base": [
+      "mekanism:fluorite_ore",
+      "mekanism:deepslate_fluorite_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.3,
     "growth_chance": 0.4,
-    "result": {
-      "item": "mekanism:fluorite_gem",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "mekanism:fluorite_gem",
+          "count": 1
+        }
+      },
+      {
+        "stage": 3,
+        "chance": 0.7,
+        "item": {
+          "id": "mekanism:fluorite_gem",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 2,
+        "chance": 0.2,
+        "item": {
+          "id": "mekanism:fluorite_gem",
+          "count": 1
+        }
+      }
+    ]
   }
 }

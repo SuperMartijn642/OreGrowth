@@ -14,13 +14,38 @@
   ],
   "recipe": {
     "type": "oregrowth:ore_growth",
-    "base": "indrev:silver_ore",
+    "base": [
+      "indrev:silver_ore",
+      "indrev:deepslate_silver_ore"
+    ],
     "stages": 4,
     "spawn_chance": 0.25,
     "growth_chance": 0.25,
-    "result": {
-      "item": "indrev:raw_silver",
-      "count": 1
-    }
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "indrev:raw_silver",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "indrev:silver_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "indrev:raw_silver",
+          "count": 1
+        }
+      }
+    ]
   }
 }
