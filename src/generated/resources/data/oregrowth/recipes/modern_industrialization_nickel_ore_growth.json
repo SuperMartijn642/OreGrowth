@@ -1,0 +1,48 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "modid": "modern_industrialization",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": [
+      "modern_industrialization:nickel_ore",
+      "modern_industrialization:deepslate_nickel_ore"
+    ],
+    "stages": 4,
+    "spawn_chance": 0.2,
+    "growth_chance": 0.2,
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "modern_industrialization:raw_nickel",
+          "count": 1
+        }
+      },
+      {
+        "stage": 4,
+        "chance": 0.1,
+        "item": {
+          "id": "modern_industrialization:nickel_nugget",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "modern_industrialization:raw_nickel",
+          "count": 1
+        }
+      }
+    ]
+  }
+}

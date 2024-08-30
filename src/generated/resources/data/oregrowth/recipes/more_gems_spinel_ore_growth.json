@@ -1,0 +1,40 @@
+{
+  "type": "supermartijn642corelib:conditional",
+  "conditions": [
+    {
+      "type": "oregrowth:default_recipes"
+    },
+    {
+      "modid": "more_gems",
+      "type": "supermartijn642corelib:mod_loaded"
+    }
+  ],
+  "recipe": {
+    "type": "oregrowth:ore_growth",
+    "base": [
+      "more_gems:spinel_ore",
+      "more_gems:spinel_ore_deepslate"
+    ],
+    "stages": 4,
+    "spawn_chance": 0.15,
+    "growth_chance": 0.15,
+    "drops": [
+      {
+        "stage": 4,
+        "item": {
+          "id": "more_gems:spinel",
+          "count": 1
+        }
+      },
+      {
+        "min_stage": 1,
+        "max_stage": 3,
+        "chance": 0.1,
+        "item": {
+          "id": "more_gems:spinel",
+          "count": 1
+        }
+      }
+    ]
+  }
+}
