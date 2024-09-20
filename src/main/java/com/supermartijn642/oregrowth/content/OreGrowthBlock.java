@@ -8,6 +8,8 @@ import com.supermartijn642.oregrowth.OreGrowthConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -113,14 +115,28 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder){
+        // Find the base block
         Level level = builder.getLevel();
         if(level == null)
             return Collections.emptyList();
         Vec3 origin = builder.getParameter(LootContextParams.ORIGIN);
         BlockPos pos = new BlockPos((int)Math.floor(origin.x), (int)Math.floor(origin.y), (int)Math.floor(origin.z));
         Direction facing = state.getValue(FACE);
-        Block base = level.getBlockState(pos.relative(facing)).getBlock();
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
+        BlockState base = level.getBlockState(pos.relative(facing));
+
+        // Check if the base block would drop anything for the current tool
+        Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        if(entity instanceof Player){
+            if(((Player)entity).hasCorrectToolForDrops(base))
+                return Collections.emptyList();
+        }else if(entity instanceof LivingEntity){
+            if(!((LivingEntity)entity).getMainHandItem().isCorrectToolForDrops(base))
+                return Collections.emptyList();
+        }else if(base.requiresCorrectToolForDrops())
+            return Collections.emptyList();
+
+        // Find the recipe for the base block and generate the drops
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base.getBlock());
         if(recipe == null)
             return Collections.emptyList();
         LootContext lootParams = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
