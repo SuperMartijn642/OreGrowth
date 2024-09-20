@@ -1,3 +1,6 @@
+### Ore Growth 1.1.1
+- Fixed crystals not checking the used tool when giving drops
+
 ### Ore Growth 1.1.0
 - Ore growth recipes have been revamped:
   - A single recipe may now have multiple 'base' blocks
