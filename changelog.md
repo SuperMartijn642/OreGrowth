@@ -1,3 +1,6 @@
+### Ore Growth 1.1.1a
+- Fixed required tool check being inverted for player when giving drops
+
 ### Ore Growth 1.1.1
 - Fixed crystals not checking the used tool when giving drops
 
