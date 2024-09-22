@@ -125,7 +125,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         // Check if the base block would drop anything for the current tool
         Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if(entity instanceof Player){
-            if(((Player)entity).hasCorrectToolForDrops(base))
+            if(!((Player)entity).hasCorrectToolForDrops(base))
                 return Collections.emptyList();
         }else if(entity instanceof LivingEntity){
             if(!((LivingEntity)entity).getMainHandItem().isCorrectToolForDrops(base))
