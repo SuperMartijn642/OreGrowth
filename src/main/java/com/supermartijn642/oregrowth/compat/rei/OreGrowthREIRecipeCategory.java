@@ -25,6 +25,7 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
@@ -208,9 +209,8 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
         PoseStack poseStack2 = new PoseStack();
         poseStack2.mulPose(new Quaternion(30, 225, 0, true));
         poseStack2.scale(0.625f, 0.625f, 0.625f);
-        poseStack2.translate(-0.5f, -0.5f, -0.5f);
         MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack2, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY);
+        ClientUtils.getItemRenderer().render(new ItemStack(state.getBlock()), ItemTransforms.TransformType.NONE, false, poseStack2, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
 
         bufferSource.endBatch();
         if(blockLight)
