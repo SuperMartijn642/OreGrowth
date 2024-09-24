@@ -1,3 +1,6 @@
+### Ore Growth 1.1.1b
+- Fixed crystals showing iron ore texture when a base block's model uses Fabric Rendering API
+
 ### Ore Growth 1.1.1a
 - Fixed required tool check being inverted for player when giving drops
 
