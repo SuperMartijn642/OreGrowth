@@ -1,3 +1,6 @@
+### Ore Growth 1.1.2
+- Fixed recipe result stack being leaked leading to weird drops
+
 ### Ore Growth 1.1.1b
 - Fixed crystals showing iron ore texture when a base block's model uses Fabric Rendering API
 
