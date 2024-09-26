@@ -93,7 +93,7 @@ public class OreGrowthRecipe implements Recipe<Container> {
             if(drop.chance < 1 && context.getLevel().getRandom().nextDouble() > drop.chance)
                 continue;
             if(drop.result.isLeft())
-                drops.add(drop.result.left());
+                drops.add(drop.result.left().copy());
             else
                 context.getLevel().getServer().reloadableRegistries().getLootTable(ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, drop.result.right())).getRandomItems(context, drops::add);
         }
