@@ -30,7 +30,7 @@
         "stage": 4,
         "chance": 0.1,
         "item": {
-          "id": "mekanism:tin_nugget",
+          "id": "mekanism:nugget_tin",
           "count": 1
         }
       },
