@@ -361,19 +361,19 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(mekanism, "tin_ore", 4, 0.2, 0.25)
             .baseBlock("deepslate_tin_ore")
             .itemDrop(4, "raw_tin")
-            .itemDrop(4, 0.1, "tin_nugget")
+            .itemDrop(4, 0.1, "nugget_tin")
             .itemDrop(1, 3, 0.1, "raw_tin");
         // Osmium ore
         this.modIntegration(mekanism, "osmium_ore", 4, 0.15, 0.2)
             .baseBlock("deepslate_osmium_ore")
             .itemDrop(4, "raw_osmium")
-            .itemDrop(4, 0.1, "osmium_nugget")
+            .itemDrop(4, 0.1, "nugget_osmium")
             .itemDrop(1, 3, 0.1, "raw_osmium");
         // Uranium ore
         this.modIntegration(mekanism, "uranium_ore", 4, 0.15, 0.2)
             .baseBlock("deepslate_uranium_ore")
             .itemDrop(4, "raw_uranium")
-            .itemDrop(4, 0.1, "uranium_nugget")
+            .itemDrop(4, 0.1, "nugget_uranium")
             .itemDrop(1, 3, 0.1, "raw_uranium");
         // Fluorite ore
         this.modIntegration(mekanism, "fluorite_ore", 4, 0.3, 0.4)
@@ -385,7 +385,7 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
         this.modIntegration(mekanism, "lead_ore", 4, 0.2, 0.2)
             .baseBlock("deepslate_lead_ore")
             .itemDrop(4, "raw_lead")
-            .itemDrop(4, 0.1, "lead_nugget")
+            .itemDrop(4, 0.1, "nugget_lead")
             .itemDrop(1, 3, 0.1, "raw_lead");
 
         // ----- Modern Industrialization ----- //
