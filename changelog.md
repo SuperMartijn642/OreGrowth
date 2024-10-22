@@ -1,3 +1,6 @@
+### Ore Growth 1.1.2a
+- Fixed Mekanism recipes not working
+
 ### Ore Growth 1.1.2
 - Fixed recipe result stack being leaked leading to weird drops
 
