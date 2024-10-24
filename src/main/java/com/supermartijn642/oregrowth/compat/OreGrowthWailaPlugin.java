@@ -74,7 +74,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
                     @Override
                     public void render(GuiGraphics guiGraphics, float x, float y, float maxX, float maxY){
-                        BakedModel model = ClientUtils.getItemRenderer().getItemModelShaper().getItemModel(OreGrowth.ORE_GROWTH_BLOCK.asItem());
+                        BakedModel model = ClientUtils.getItemRenderer().getModel(OreGrowth.ORE_GROWTH_BLOCK.asItem().getDefaultInstance(), null, null, 0);
                         if(model instanceof OreGrowthBlockBakedModel)
                             ((OreGrowthBlockBakedModel)model).withContext(base, () -> currentIcon.render(guiGraphics, x, y, maxX, maxY));
                         else

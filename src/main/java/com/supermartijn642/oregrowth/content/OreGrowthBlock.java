@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -94,7 +93,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     public OreGrowthBlock(){
-        super(false, BlockProperties.create().lootTable(BuiltInLootTables.EMPTY).randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
+        super(false, BlockProperties.create().noLootTable().randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
         this.registerDefaultState(this.defaultBlockState().setValue(STAGE, 1).setValue(FACE, Direction.DOWN).setValue(WATERLOGGED, false));
     }
 
@@ -182,12 +181,12 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction neighborDirection, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos){
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random){
         if(!this.canSurvive(state, level, pos))
             return Blocks.AIR.defaultBlockState();
         if(state.getValue(WATERLOGGED))
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        return super.updateShape(state, neighborDirection, neighborState, level, pos, neighborPos);
+            tickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        return super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

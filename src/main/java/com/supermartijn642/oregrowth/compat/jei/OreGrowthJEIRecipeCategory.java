@@ -115,7 +115,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         IIngredientRenderer<ItemStack> originalRenderer = this.ingredientManager.getIngredientRenderer(VanillaTypes.ITEM_STACK);
         layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, columns == 1 ? 11 : 2, 24)
             .setSlotName("base")
-            .addItemStacks(recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
+            .addItemStacks(recipe.bases(BuiltInRegistries.BLOCK).stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
                 @Override
                 public void render(GuiGraphics guiGraphics, ItemStack stack){
@@ -199,7 +199,9 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        ClientUtils.getItemRenderer().render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, poseStack, guiGraphics.bufferSource(), 15728880, OverlayTexture.NO_OVERLAY, model);
+        guiGraphics.drawSpecial(bufferSource -> {
+            ClientUtils.getItemRenderer().render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
+        });
 
         guiGraphics.flush();
         if(blockLight)

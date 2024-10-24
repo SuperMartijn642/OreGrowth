@@ -13,8 +13,8 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -217,8 +217,8 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public ItemOverrides getOverrides(){
-        return this.original.getOverrides();
+    public BakedOverrides overrides(){
+        return this.original.overrides();
     }
 
     @Override

@@ -21,13 +21,4 @@ public class RecipeManagerMixin {
         //noinspection DataFlowIssue
         OreGrowthRecipeManager.reloadRecipes((RecipeManager)(Object)this);
     }
-
-    @Inject(
-        method = "replaceRecipes",
-        at = @At("HEAD")
-    )
-    private void replaceRecipes(CallbackInfo ci){
-        //noinspection DataFlowIssue
-        OreGrowthRecipeManager.reloadRecipes((RecipeManager)(Object)this);
-    }
 }

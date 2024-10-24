@@ -19,6 +19,7 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -117,7 +118,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
         widgets.add(Widgets.wrapRenderer(new Rectangle(startX + 37, startY + 20, 32, 15), (graphics, bounds1, mouseX, mouseY, delta) -> {
             graphics.pose().pushPose();
             graphics.pose().translate(bounds1.x, bounds1.y, 0);
-            graphics.blit(BACKGROUND, 0, 0, 111, 0, 32, 15);
+            graphics.blit(RenderType::guiTextured, BACKGROUND, 0, 0, 111, 0, 32, 15, 256, 256);
             graphics.pose().popPose();
         }));
 
@@ -140,7 +141,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
             .orElse(null);
         Slot baseSlot = Widgets.createSlot(new Rectangle(startX + 2, startY + 24, 30, 30))
             .entries(
-                recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream()
+                recipe.bases(BuiltInRegistries.BLOCK).stream()
                     .map(EntryStacks::of)
                     .map(entry -> {
                         EntryRenderer<ItemStack> originalRenderer = entry.getRenderer();
@@ -202,7 +203,9 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        ClientUtils.getItemRenderer().render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, poseStack, guiGraphics.bufferSource(), 15728880, OverlayTexture.NO_OVERLAY, model);
+        guiGraphics.drawSpecial(bufferSource -> {
+            ClientUtils.getItemRenderer().render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
+        });
 
         guiGraphics.flush();
         if(blockLight)
