@@ -122,7 +122,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         IIngredientRenderer<ItemStack> originalRenderer = this.ingredientManager.getIngredientRenderer(VanillaTypes.ITEM_STACK);
         layoutBuilder.addSlot(RecipeIngredientRole.CATALYST, columns == 1 ? 11 : 2, 24)
             .setSlotName("base")
-            .addItemStacks(recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
+            .addItemStacks(recipe.bases(BuiltInRegistries.BLOCK).stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
                 @Override
                 public void render(GuiGraphics guiGraphics, ItemStack stack){
@@ -206,8 +206,10 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         poseStack.translate(-0.5f, -0.5f, -0.5f);
         RANDOM.setSeed(42);
         ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, RANDOM, modelData);
-        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentCullBlockSheet() : Sheets.cutoutBlockSheet();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, guiGraphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
+        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentItemSheet() : Sheets.cutoutBlockSheet();
+        guiGraphics.drawSpecial(bufferSource -> {
+            ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
+        });
 
         guiGraphics.flush();
         if(blockLight)

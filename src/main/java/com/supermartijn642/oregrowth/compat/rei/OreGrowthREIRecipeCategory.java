@@ -138,7 +138,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
             .orElse(null);
         Slot baseSlot = Widgets.createSlot(new Rectangle(startX + 2, startY + 24, 30, 30))
             .entries(
-                recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream()
+                recipe.bases(BuiltInRegistries.BLOCK).stream()
                     .map(EntryStacks::of)
                     .map(entry -> {
                         EntryRenderer<ItemStack> originalRenderer = entry.getRenderer();
@@ -200,8 +200,10 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
         poseStack.translate(-0.5f, -0.5f, -0.5f);
         RANDOM.setSeed(42);
         ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, RANDOM, modelData);
-        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentCullBlockSheet() : Sheets.cutoutBlockSheet();
-        ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, guiGraphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
+        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentItemSheet() : Sheets.cutoutBlockSheet();
+        guiGraphics.drawSpecial(bufferSource -> {
+            ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
+        });
 
         guiGraphics.flush();
         if(blockLight)

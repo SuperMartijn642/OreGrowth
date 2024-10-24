@@ -7,8 +7,8 @@ import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -170,7 +170,7 @@ public class OreGrowthBlockBakedModel implements BakedModel {
         }
 
         // Create a new quad
-        return new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade());
+        return new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade(), quad.getLightEmission(), quad.hasAmbientOcclusion());
     }
 
     private static int[] adjustVertexDataUV(int[] vertexData, int newU, int newV, TextureAtlasSprite sprite){
@@ -217,8 +217,8 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public ItemOverrides getOverrides(){
-        return ItemOverrides.EMPTY;
+    public BakedOverrides overrides(){
+        return this.original.overrides();
     }
 
     @Override

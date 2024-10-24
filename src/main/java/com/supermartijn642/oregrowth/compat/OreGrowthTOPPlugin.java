@@ -113,7 +113,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
 
         @Override
         public void render(GuiGraphics graphics, int x, int y){
-            BakedModel model = ClientUtils.getItemRenderer().getItemModelShaper().getItemModel(OreGrowth.ORE_GROWTH_BLOCK.asItem());
+            BakedModel model = ClientUtils.getItemRenderer().getModel(OreGrowth.ORE_GROWTH_BLOCK.asItem().getDefaultInstance(), null, null, 0);
             if(model instanceof OreGrowthBlockBakedModel)
                 ((OreGrowthBlockBakedModel)model).withContext(this.base, () -> super.render(graphics, x, y));
             else

@@ -28,7 +28,7 @@ public class OreGrowthREIDisplay implements Display {
     @Override
     public List<EntryIngredient> getInputEntries(){
         return List.of(
-            this.recipe.bases(BuiltInRegistries.BLOCK.asLookup()).stream()
+            this.recipe.bases(BuiltInRegistries.BLOCK).stream()
                 .map(EntryStacks::of)
                 .collect(EntryIngredient.collector()),
             EntryIngredient.of(EntryStacks.of(OreGrowth.ORE_GROWTH_ITEM))
