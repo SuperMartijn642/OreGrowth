@@ -1,3 +1,6 @@
+### Ore Growth 1.1.2a
+- Fixed ore growth recipes not caching properly
+
 ### Ore Growth 1.1.2
 - Fixed recipe result stack being leaked leading to weird drops
 
