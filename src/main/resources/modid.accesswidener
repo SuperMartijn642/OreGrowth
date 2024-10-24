@@ -3,7 +3,6 @@ accessWidener v1 named
 accessible field net/minecraft/world/item/crafting/RecipeManager byType Lcom/google/common/collect/Multimap;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase isRandomlyTicking Z
 accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
-accessible field net/minecraft/advancements/critereon/EnchantmentPredicate enchantment Ljava/util/Optional;
 accessible field net/minecraft/advancements/critereon/ItemPredicate items Ljava/util/Optional;
 accessible field net/minecraft/advancements/critereon/ItemEnchantmentsPredicate enchantments Ljava/util/List;
 accessible field net/minecraft/world/level/storage/loot/LootTable pools Ljava/util/List;
