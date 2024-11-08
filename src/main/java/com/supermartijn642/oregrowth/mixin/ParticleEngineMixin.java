@@ -44,8 +44,8 @@ public class ParticleEngineMixin {
         method = "crack",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/particle/TerrainParticle;<init>(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V",
-            shift = At.Shift.BEFORE
+            target = "Lnet/minecraft/world/level/block/state/BlockState;getShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;",
+            shift = At.Shift.AFTER
         ),
         ordinal = 0
     )
