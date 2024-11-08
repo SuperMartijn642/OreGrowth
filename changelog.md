@@ -1,3 +1,6 @@
+### Ore Growth 1.1.3
+- Fixed breaking particles for crystals showing the wrong texture
+
 ### Ore Growth 1.1.2
 - Fixed recipe result stack being leaked leading to weird drops
 
