@@ -90,7 +90,7 @@ public class LootTableHelper {
     }
 
     private static Stream<LootEntry> itemsFromContainer(LootPoolEntryContainer container, int totalWeight, Function<ResourceLocation,LootTable> lookup){
-        List<LootEntryConditions> conditions = Arrays.stream(container.conditions).map(LootTableHelper::formatCondition).toList();
+        List<LootEntryConditions> conditions = Arrays.stream(container.conditions).map(LootTableHelper::formatCondition).filter(Objects::nonNull).toList();
         if(container instanceof AlternativesEntry){
             MutableComponent not = TextComponents.translation("oregrowth.jei_category.conditions.none_of").get();
             Collection<LootEntryConditions> previousConditions = new LinkedHashSet<>();
@@ -100,7 +100,7 @@ public class LootTableHelper {
                 if(!previousConditions.isEmpty())
                     stream = stream.map(entry -> entry.prependConditions(Stream.concat(conditions.stream(), Stream.of(new LootEntryConditions(not, new ArrayList<>(previousConditions)))), conditions.size() + 1));
                 stream.forEach(entries::add);
-                Arrays.stream(child.conditions).map(LootTableHelper::formatCondition).forEach(previousConditions::add);
+                Arrays.stream(child.conditions).map(LootTableHelper::formatCondition).filter(Objects::nonNull).forEach(previousConditions::add);
             }
             return entries.stream();
         }
