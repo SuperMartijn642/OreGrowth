@@ -2,11 +2,13 @@ package com.supermartijn642.oregrowth.content;
 
 import com.google.common.collect.ImmutableMap;
 import com.supermartijn642.oregrowth.OreGrowth;
+import com.supermartijn642.oregrowth.extensions.OreGrowthBlockState;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
@@ -22,9 +24,11 @@ public class OreGrowthRecipeManager {
 
     public static synchronized void reloadRecipes(RecipeManager recipeManager){
         OreGrowthRecipeManager.recipeManager = recipeManager;
-        blockLookup = BuiltInRegistries.BLOCK.asLookup();
+        blockLookup = BuiltInRegistries.BLOCK;
         reload = true;
         recipesByBlock = Collections.emptyMap();
+        for(BlockState state : Block.BLOCK_STATE_REGISTRY)
+            ((OreGrowthBlockState)state).oreGrowthInvalidate();
     }
 
     public static OreGrowthRecipe getRecipeFor(Block block){
@@ -40,7 +44,7 @@ public class OreGrowthRecipeManager {
     private static synchronized void cacheRecipes(){
         if(reload && recipeManager != null){
             ImmutableMap.Builder<Block,OreGrowthRecipe> builder = ImmutableMap.builder();
-            recipeManager.byType.get(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
+            recipeManager.recipes.byType(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
                 .stream()
                 .sorted(Comparator.comparing(holder -> holder.id().toString()))
                 .map(RecipeHolder::value)

@@ -24,10 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -130,6 +127,11 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
+    public boolean isSpecial(){
+        return true;
+    }
+
+    @Override
     public boolean matches(RecipeInput input, Level level){
         return false;
     }
@@ -140,23 +142,23 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height){
-        return false;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider){
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer(){
+    public RecipeSerializer<OreGrowthRecipe> getSerializer(){
         return SERIALIZER;
     }
 
     @Override
-    public RecipeType<?> getType(){
+    public RecipeType<OreGrowthRecipe> getType(){
         return OreGrowth.ORE_GROWTH_RECIPE_TYPE;
+    }
+
+    @Override
+    public PlacementInfo placementInfo(){
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory(){
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
     public JsonObject toJson(){
