@@ -25,6 +25,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -188,7 +191,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset){
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        poseStack.translate(x + 8, y + 8, 150 + offset);
+        poseStack.translate(x + 21, y + 16, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
         poseStack.scale(16, 16, 16);
@@ -199,9 +202,9 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        guiGraphics.drawSpecial(bufferSource -> {
-            ClientUtils.getItemRenderer().render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
-        });
+        guiGraphics.drawSpecial(bufferSource ->
+            ItemRenderer.renderItem(ItemDisplayContext.NONE, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, new int[0], model, ItemBlockRenderTypes.getRenderType(state), ItemStackRenderState.FoilType.NONE)
+        );
 
         guiGraphics.flush();
         if(blockLight)

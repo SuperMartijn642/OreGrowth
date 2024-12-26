@@ -48,8 +48,8 @@ public class OreGrowth implements ModInitializer {
     public static void registerGenerators(){
         GeneratorRegistrationHandler handler = GeneratorRegistrationHandler.get(MODID);
         handler.addGenerator(OreGrowthBlockStateGenerator::new);
+        handler.addGenerator(OreGrowthItemInfoGenerator::new);
         handler.addGenerator(OreGrowthLanguageGenerator::new);
-        handler.addGenerator(OreGrowthModelGenerator::new);
         handler.addGenerator(OreGrowthOreGrowthRecipeGenerator::new);
         handler.addGenerator(OreGrowthTagGenerator::new);
     }
