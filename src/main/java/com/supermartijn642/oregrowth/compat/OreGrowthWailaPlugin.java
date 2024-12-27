@@ -1,15 +1,13 @@
 package com.supermartijn642.oregrowth.compat;
 
-import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.oregrowth.OreGrowth;
+import com.supermartijn642.oregrowth.OreGrowthClient;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
-import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -74,11 +72,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
 
                     @Override
                     public void render(GuiGraphics guiGraphics, float x, float y, float maxX, float maxY){
-                        BakedModel model = ClientUtils.getItemRenderer().getModel(OreGrowth.ORE_GROWTH_BLOCK.asItem().getDefaultInstance(), null, null, 0);
-                        if(model instanceof OreGrowthBlockBakedModel)
-                            ((OreGrowthBlockBakedModel)model).withContext(base, () -> currentIcon.render(guiGraphics, x, y, maxX, maxY));
-                        else
-                            currentIcon.render(guiGraphics, x, y, maxX, maxY);
+                        OreGrowthClient.itemModel.withContext(base, () -> currentIcon.render(guiGraphics, x, y, maxX, maxY));
                     }
 
                     @Override

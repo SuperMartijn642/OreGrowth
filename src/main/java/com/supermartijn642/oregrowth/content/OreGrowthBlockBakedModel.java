@@ -7,7 +7,6 @@ import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -207,18 +206,8 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public boolean isCustomRenderer(){
-        return this.original.isCustomRenderer();
-    }
-
-    @Override
     public ItemTransforms getTransforms(){
         return this.original.getTransforms();
-    }
-
-    @Override
-    public BakedOverrides overrides(){
-        return this.original.overrides();
     }
 
     @Override

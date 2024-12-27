@@ -1,17 +1,15 @@
 package com.supermartijn642.oregrowth.compat;
 
-import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.registry.Registries;
 import com.supermartijn642.oregrowth.OreGrowth;
+import com.supermartijn642.oregrowth.OreGrowthClient;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
-import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.*;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
@@ -113,11 +111,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
 
         @Override
         public void render(GuiGraphics graphics, int x, int y){
-            BakedModel model = ClientUtils.getItemRenderer().getModel(OreGrowth.ORE_GROWTH_BLOCK.asItem().getDefaultInstance(), null, null, 0);
-            if(model instanceof OreGrowthBlockBakedModel)
-                ((OreGrowthBlockBakedModel)model).withContext(this.base, () -> super.render(graphics, x, y));
-            else
-                super.render(graphics, x, y);
+            OreGrowthClient.itemModel.withContext(this.base, () -> super.render(graphics, x, y));
         }
 
         @Override
