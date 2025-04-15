@@ -51,7 +51,7 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
             Block base = accessor.getLevel().getBlockState(accessor.getPosition().relative(facing)).getBlock();
 
             // Add the growth tooltip
-            OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
+            OreGrowthRecipe recipe = OreGrowthRecipeManager.get(true).getRecipeFor(base);
             if(recipe != null){
                 float growth = (float)accessor.getBlockState().getValue(OreGrowthBlock.STAGE) / recipe.stages() * 100;
                 MutableComponent growthText = TextComponents.string(String.format("%.0f%%", growth)).color(growth < 100 ? ChatFormatting.WHITE : ChatFormatting.GREEN).get();
