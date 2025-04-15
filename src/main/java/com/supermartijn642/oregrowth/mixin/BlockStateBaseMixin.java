@@ -31,7 +31,7 @@ public class BlockStateBaseMixin {
     private void initCache(CallbackInfo ci){
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-        this.isRandomlyTicking = OreGrowthRecipeManager.getRecipeFor(state.getBlock()) != null;
+        this.isRandomlyTicking = OreGrowthRecipeManager.get(false).getRecipeFor(state.getBlock()) != null;
     }
 
     @Inject(
@@ -53,7 +53,7 @@ public class BlockStateBaseMixin {
             return;
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(state.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(state.getBlock());
         if(recipe != null)
             OreGrowthBlock.trySpawnOreGrowth(recipe, level, pos, random);
     }
