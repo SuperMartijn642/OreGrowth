@@ -30,7 +30,7 @@
         "stage": 4,
         "chance": 0.1,
         "item": {
-          "id": "mekanism:uranium_nugget",
+          "id": "mekanism:nugget_uranium",
           "count": 1
         }
       },
