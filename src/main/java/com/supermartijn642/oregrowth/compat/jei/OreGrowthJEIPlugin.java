@@ -30,6 +30,6 @@ public class OreGrowthJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration){
-        registration.addRecipes(ORE_GROWTH_RECIPE_TYPE, OreGrowthRecipeManager.getAllRecipes());
+        registration.addRecipes(ORE_GROWTH_RECIPE_TYPE, OreGrowthRecipeManager.get(true).getAllRecipes());
     }
 }
