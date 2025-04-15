@@ -15,37 +15,43 @@ import java.util.stream.Collectors;
  */
 public class OreGrowthRecipeManager {
 
-    private static RecipeManager recipeManager;
-    private static HolderLookup<Block> blockLookup;
-    private static boolean reload = true;
-    private static Map<Block,OreGrowthRecipe> recipesByBlock = Collections.emptyMap();
+    private static final OreGrowthRecipeManager SERVER = new OreGrowthRecipeManager(), CLIENT = new OreGrowthRecipeManager();
 
-    public static synchronized void reloadRecipes(RecipeManager recipeManager){
-        OreGrowthRecipeManager.recipeManager = recipeManager;
-        blockLookup = HolderLookup.forRegistry(Registry.BLOCK);
-        reload = true;
-        recipesByBlock = Collections.emptyMap();
+    public static OreGrowthRecipeManager get(boolean isClient){
+        return isClient ? CLIENT : SERVER;
     }
 
-    public static OreGrowthRecipe getRecipeFor(Block block){
-        cacheRecipes();
-        return recipesByBlock.get(block);
+    private RecipeManager recipeManager;
+    private HolderLookup<Block> blockLookup;
+    private boolean reload = true;
+    private Map<Block,OreGrowthRecipe> recipesByBlock = Collections.emptyMap();
+
+    public synchronized void reloadRecipes(RecipeManager recipeManager){
+        this.recipeManager = recipeManager;
+        this.blockLookup = HolderLookup.forRegistry(Registry.BLOCK);
+        this.reload = true;
+        this.recipesByBlock = Collections.emptyMap();
     }
 
-    public static List<OreGrowthRecipe> getAllRecipes(){
-        cacheRecipes();
-        return Arrays.asList(recipesByBlock.values().toArray(OreGrowthRecipe[]::new));
+    public OreGrowthRecipe getRecipeFor(Block block){
+        this.cacheRecipes();
+        return this.recipesByBlock.get(block);
     }
 
-    private static synchronized void cacheRecipes(){
-        if(reload && recipeManager != null){
-            recipesByBlock = recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
+    public List<OreGrowthRecipe> getAllRecipes(){
+        this.cacheRecipes();
+        return Arrays.asList(this.recipesByBlock.values().toArray(OreGrowthRecipe[]::new));
+    }
+
+    private synchronized void cacheRecipes(){
+        if(this.reload && this.recipeManager != null){
+            this.recipesByBlock = this.recipeManager.recipes.getOrDefault(OreGrowth.ORE_GROWTH_RECIPE_TYPE, Collections.emptyMap()).values()
                 .stream()
                 .map(OreGrowthRecipe.class::cast)
                 .sorted(Comparator.comparing(recipe -> recipe.getId().toString()))
-                .flatMap(recipe -> recipe.bases(blockLookup).stream().map(block -> Pair.of(block, recipe)))
+                .flatMap(recipe -> recipe.bases(this.blockLookup).stream().map(block -> Pair.of(block, recipe)))
                 .collect(Collectors.toUnmodifiableMap(Pair::left, Pair::right, (recipe, recipe2) -> recipe));
-            reload = false;
+            this.reload = false;
         }
     }
 }
