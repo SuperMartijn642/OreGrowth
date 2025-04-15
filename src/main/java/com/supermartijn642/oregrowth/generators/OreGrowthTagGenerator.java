@@ -16,6 +16,6 @@ public class OreGrowthTagGenerator extends TagGenerator {
     @Override
     public void generate(){
         // Allow Applied Energistics 2 growth accelerators to work on ore clusters
-        this.blockTag("ae2", "growth_acceleratable");
+        this.blockTag("ae2", "growth_acceleratable").add(OreGrowth.ORE_GROWTH_BLOCK);
     }
 }
