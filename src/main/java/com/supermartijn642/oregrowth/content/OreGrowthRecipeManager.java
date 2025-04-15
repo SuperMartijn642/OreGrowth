@@ -17,41 +17,47 @@ import java.util.*;
  */
 public class OreGrowthRecipeManager {
 
-    private static RecipeManager recipeManager;
-    private static HolderLookup.RegistryLookup<Block> blockLookup;
-    private static boolean reload = true;
-    private static Map<Block,OreGrowthRecipe> recipesByBlock = Collections.emptyMap();
+    private static final OreGrowthRecipeManager SERVER = new OreGrowthRecipeManager(), CLIENT = new OreGrowthRecipeManager();
 
-    public static synchronized void reloadRecipes(RecipeManager recipeManager){
-        OreGrowthRecipeManager.recipeManager = recipeManager;
-        blockLookup = BuiltInRegistries.BLOCK;
-        reload = true;
-        recipesByBlock = Collections.emptyMap();
+    public static OreGrowthRecipeManager get(boolean isClient){
+        return isClient ? CLIENT : SERVER;
+    }
+
+    private RecipeManager recipeManager;
+    private HolderLookup.RegistryLookup<Block> blockLookup;
+    private boolean reload = true;
+    private Map<Block,OreGrowthRecipe> recipesByBlock = Collections.emptyMap();
+
+    public synchronized void reloadRecipes(RecipeManager recipeManager){
+        this.recipeManager = recipeManager;
+        this.blockLookup = BuiltInRegistries.BLOCK;
+        this.reload = true;
+        this.recipesByBlock = Collections.emptyMap();
         for(BlockState state : Block.BLOCK_STATE_REGISTRY)
             ((OreGrowthBlockState)state).oreGrowthInvalidate();
     }
 
-    public static OreGrowthRecipe getRecipeFor(Block block){
-        cacheRecipes();
-        return recipesByBlock.get(block);
+    public OreGrowthRecipe getRecipeFor(Block block){
+        this.cacheRecipes();
+        return this.recipesByBlock.get(block);
     }
 
-    public static List<OreGrowthRecipe> getAllRecipes(){
-        cacheRecipes();
-        return Arrays.asList(recipesByBlock.values().toArray(OreGrowthRecipe[]::new));
+    public List<OreGrowthRecipe> getAllRecipes(){
+        this.cacheRecipes();
+        return Arrays.asList(this.recipesByBlock.values().toArray(OreGrowthRecipe[]::new));
     }
 
-    private static synchronized void cacheRecipes(){
-        if(reload && recipeManager != null){
+    private synchronized void cacheRecipes(){
+        if(this.reload && this.recipeManager != null){
             ImmutableMap.Builder<Block,OreGrowthRecipe> builder = ImmutableMap.builder();
-            recipeManager.recipes.byType(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
+            this.recipeManager.recipes.byType(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
                 .stream()
                 .sorted(Comparator.comparing(holder -> holder.id().toString()))
                 .map(RecipeHolder::value)
                 .map(OreGrowthRecipe.class::cast)
-                .forEach(recipe -> recipe.bases(blockLookup).forEach(block -> builder.put(block, recipe)));
-            recipesByBlock = builder.buildKeepingLast();
-            reload = false;
+                .forEach(recipe -> recipe.bases(this.blockLookup).forEach(block -> builder.put(block, recipe)));
+            this.recipesByBlock = builder.buildKeepingLast();
+            this.reload = false;
         }
     }
 }

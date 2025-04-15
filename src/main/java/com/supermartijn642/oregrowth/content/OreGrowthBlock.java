@@ -101,7 +101,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random){
         Block base = level.getBlockState(pos.relative(state.getValue(FACE))).getBlock();
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base);
         if(recipe == null){
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             return;
@@ -134,7 +134,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
             return Collections.emptyList();
 
         // Find the recipe for the base block and generate the drops
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base.getBlock());
         if(recipe == null)
             return Collections.emptyList();
         LootParams lootParams = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
@@ -162,7 +162,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos){
         Block base = level.getBlockState(pos.relative(state.getValue(FACE))).getBlock();
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base);
         if(recipe == null)
             return 0;
         int stage = state.getValue(STAGE);
@@ -200,7 +200,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos){
         Direction facing = state.getValue(FACE);
-        return OreGrowthRecipeManager.getRecipeFor(level.getBlockState(pos.relative(facing)).getBlock()) != null;
+        return OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(level.getBlockState(pos.relative(facing)).getBlock()) != null;
     }
 
     @Override
