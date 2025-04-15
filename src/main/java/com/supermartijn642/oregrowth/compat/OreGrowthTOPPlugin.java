@@ -65,7 +65,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
                 }
 
                 // Add the growth tooltip
-                OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(base);
+                OreGrowthRecipe recipe = OreGrowthRecipeManager.get(false).getRecipeFor(base);
                 if(recipe != null){
                     float growth = (float)state.getValue(OreGrowthBlock.STAGE) / recipe.stages() * 100;
                     MutableComponent growthText = TextComponents.string(growth < 100 ? TextStyleClass.WARNING.toString() : TextStyleClass.OK.toString()).string(String.format("%.0f%%", growth)).get();
