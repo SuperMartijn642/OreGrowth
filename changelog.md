@@ -1,3 +1,7 @@
+### Ore Growth 1.1.5
+- Added compatibility for Applied Energistics 2 growth accelerators
+- Fixed ore growth recipes sometimes being null when loading single player worlds, leading to no ore clusters
+
 ### Ore Growth 1.1.4
 - Fixed packet error when an ore growth recipe loot table condition could not be formatted
 
