@@ -19,7 +19,7 @@ public class RecipeManagerMixin {
     )
     private void apply(CallbackInfo ci){
         //noinspection DataFlowIssue
-        OreGrowthRecipeManager.reloadRecipes((RecipeManager)(Object)this);
+        OreGrowthRecipeManager.get(false).reloadRecipes((RecipeManager)(Object)this);
     }
 
     @Inject(
@@ -28,6 +28,6 @@ public class RecipeManagerMixin {
     )
     private void replaceRecipes(CallbackInfo ci){
         //noinspection DataFlowIssue
-        OreGrowthRecipeManager.reloadRecipes((RecipeManager)(Object)this);
+        OreGrowthRecipeManager.get(true).reloadRecipes((RecipeManager)(Object)this);
     }
 }
