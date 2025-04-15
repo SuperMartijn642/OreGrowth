@@ -1,4 +1,4 @@
-// this.cache.versionId	2024-10-24T23:19:48.3854957	Core Lib Generators
+// this.cache.versionId	2025-04-16T01:24:49.0644306	Core Lib Generators
 58ead98b6c2d6cc94fd2dc4dfff5367ef427d997 data\oregrowth\recipe\indrev_nikolite_ore_growth.json
 919d831ce3822c7e205ef8a047fc94586662159c data\oregrowth\recipe\more_gems_carbonado_ore_growth.json
 793a1b7c74ba5c05a7b25a805031ddd1dbd7eb2a data\oregrowth\recipe\betterend_thallasium_ore_growth.json
@@ -127,7 +127,7 @@ e69dbb11eae6f7d09ec68dbefb9ef19180e566ca assets\oregrowth\models\item\ore_growth
 1b0d7ff80be85eedbb448bb42db1c28dfcdae19f data\oregrowth\recipe\mythicmetals_adamantite_ore_growth.json
 09ec0bb4288820727c081b14a0fdefc3d9115882 data\oregrowth\recipe\mythicmetals_stormyx_ore_growth.json
 a6482148cec772ff126dc5ad4b6e8c912e68e417 data\oregrowth\recipe\modern_industrialization_tin_ore_growth.json
-8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\ae2\tags\block\growth_acceleratable.json
+057a4e97a499f8978a1c34a5fc9196f98a6b226d data\ae2\tags\block\growth_acceleratable.json
 8d510044cddbb6116452b9faeee56dbe891aa023 data\oregrowth\recipe\thermal_sulfur_ore_growth.json
 88d48017f86a63717401b4b87eaf6a4b3c57fcb2 data\oregrowth\recipe\mythicmetals_banglum_ore_growth.json
 e607ebc2a0e6fd4ac194081c57207096f2eb19c3 data\oregrowth\recipe\nether_quartz_ore_growth.json
