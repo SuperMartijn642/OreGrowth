@@ -22,7 +22,7 @@ public class OreGrowthREIPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry){
-        OreGrowthRecipeManager.getAllRecipes().stream()
+        OreGrowthRecipeManager.get(true).getAllRecipes().stream()
             .map(OreGrowthREIDisplay::new)
             .forEach(registry::add);
     }
