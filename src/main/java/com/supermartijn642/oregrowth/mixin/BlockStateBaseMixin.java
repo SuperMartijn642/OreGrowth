@@ -40,7 +40,7 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
         if(!this.recipeCached){
             //noinspection DataFlowIssue
             BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-            this.hasOreGrowthRecipe = OreGrowthRecipeManager.getRecipeFor(state.getBlock()) != null;
+            this.hasOreGrowthRecipe = OreGrowthRecipeManager.get(false).getRecipeFor(state.getBlock()) != null;
             this.recipeCached = true;
         }
         if(this.hasOreGrowthRecipe)
@@ -56,7 +56,7 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
             return;
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.getRecipeFor(state.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(state.getBlock());
         if(recipe != null)
             OreGrowthBlock.trySpawnOreGrowth(recipe, level, pos, random);
     }
