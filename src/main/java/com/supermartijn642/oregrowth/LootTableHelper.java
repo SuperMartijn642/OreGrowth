@@ -5,10 +5,11 @@ import com.supermartijn642.core.util.Triple;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -189,17 +190,22 @@ public class LootTableHelper {
 
     private static MutableComponent formatItemPredicate(ItemPredicate predicate){
         MutableComponent enchantments = null;
-        List<Enchantment> actualEnchants = predicate.subPredicates().values().stream()
-            .filter(ItemEnchantmentsPredicate.Enchantments.class::isInstance)
-            .map(ItemEnchantmentsPredicate.Enchantments.class::cast)
-            .flatMap(p -> p.enchantments.stream())
-            .map(EnchantmentPredicate::enchantments)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .flatMap(HolderSet::stream)
-            .map(Holder::value)
-            .distinct()
-            .toList();
+        List<Enchantment> actualEnchants = Stream.concat(
+            predicate.components().exact().asPatch().get(DataComponents.ENCHANTMENTS)
+                .map(c -> c.keySet().stream()).orElseGet(Stream::of)
+                .filter(Holder::isBound)
+                .map(Holder::value),
+            predicate.components().partial().values().stream()
+                .filter(EnchantmentsPredicate.Enchantments.class::isInstance)
+                .map(EnchantmentsPredicate.Enchantments.class::cast)
+                .flatMap(p -> p.enchantments.stream())
+                .map(EnchantmentPredicate::enchantments)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(HolderSet::stream)
+                .filter(Holder::isBound)
+                .map(Holder::value)
+        ).distinct().toList();
         if(actualEnchants.size() == 1)
             enchantments = TextComponents.fromTextComponent(actualEnchants.get(0).description()).color(ChatFormatting.GOLD).get();
         else if(actualEnchants.size() == 2){

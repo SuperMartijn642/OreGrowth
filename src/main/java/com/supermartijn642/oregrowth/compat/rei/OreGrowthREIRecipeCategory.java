@@ -1,6 +1,5 @@
 package com.supermartijn642.oregrowth.compat.rei;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
@@ -19,18 +18,17 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -155,7 +153,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
                                 if(base != null){
                                     graphics.pose().pushPose();
                                     graphics.pose().translate(bounds.x, bounds.y, -100);
-                                    renderModel(graphics, base.defaultBlockState(), 6, 6, 0);
+                                    renderModel(graphics, base.defaultBlockState(), 19, 14, 0);
                                     graphics.pose().popPose();
                                 }
                             }
@@ -180,11 +178,11 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
                 graphics.pose().translate(bounds1.x, bounds1.y, 0);
                 int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
                 BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
-                BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
+                BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
                 if(model instanceof OreGrowthBlockBakedModel)
-                    ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(graphics, state, 7, 7, 10));
+                    ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(graphics, state, 20, 15, 10));
                 else
-                    renderModel(graphics, state, 7, 7, 10);
+                    renderModel(graphics, state, 20, 15, 10);
                 graphics.pose().popPose();
             }
         }));
@@ -199,20 +197,15 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
         poseStack.scale(16, 16, 16);
-        BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
-        boolean blockLight = !model.usesBlockLight();
-        if(blockLight)
-            Lighting.setupForFlatItems();
+        BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
         guiGraphics.drawSpecial(bufferSource ->
-            ItemRenderer.renderItem(ItemDisplayContext.NONE, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, new int[0], model, ItemBlockRenderTypes.getRenderType(state), ItemStackRenderState.FoilType.NONE)
+            ModelBlockRenderer.renderModel(poseStack.last(), bufferSource.getBuffer(Sheets.translucentItemSheet()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY)
         );
 
         guiGraphics.flush();
-        if(blockLight)
-            Lighting.setupFor3DItems();
         poseStack.popPose();
     }
 }

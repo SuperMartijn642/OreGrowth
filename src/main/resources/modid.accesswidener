@@ -1,9 +1,12 @@
 accessWidener v1 named
 
+accessible field net/minecraft/advancements/critereon/ItemPredicate items Ljava/util/Optional;
+accessible field net/minecraft/client/renderer/item/BlockModelWrapper extents Ljava/util/function/Supplier;
+accessible field net/minecraft/client/renderer/item/BlockModelWrapper properties Lnet/minecraft/client/renderer/item/ModelRenderProperties;
+accessible field net/minecraft/client/renderer/item/BlockModelWrapper tints Ljava/util/List;
+accessible field net/minecraft/core/component/predicates/EnchantmentsPredicate enchantments Ljava/util/List;
 accessible field net/minecraft/world/item/crafting/RecipeManager recipes Lnet/minecraft/world/item/crafting/RecipeMap;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase isRandomlyTicking Z
-accessible field net/minecraft/advancements/critereon/ItemPredicate items Ljava/util/Optional;
-accessible field net/minecraft/advancements/critereon/ItemEnchantmentsPredicate enchantments Ljava/util/List;
 accessible field net/minecraft/world/level/storage/loot/LootTable pools Ljava/util/List;
 accessible field net/minecraft/world/level/storage/loot/entries/CompositeEntryBase children Ljava/util/List;
 accessible field net/minecraft/world/level/storage/loot/entries/LootItem item Lnet/minecraft/core/Holder;

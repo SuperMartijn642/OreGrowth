@@ -3,11 +3,13 @@ package com.supermartijn642.oregrowth;
 import com.supermartijn642.core.item.BaseBlockItem;
 import com.supermartijn642.core.item.CreativeItemGroup;
 import com.supermartijn642.core.item.ItemProperties;
+import com.supermartijn642.core.network.PacketChannel;
 import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
+import com.supermartijn642.oregrowth.content.SyncOreGrowthRecipesPacket;
 import com.supermartijn642.oregrowth.generators.*;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
@@ -21,6 +23,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 public class OreGrowth implements ModInitializer {
 
     public static final String MODID = "oregrowth";
+    public static final PacketChannel CHANNEL = PacketChannel.create(MODID);
 
     public static final RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = Registry.register(BuiltInRegistries.RECIPE_TYPE, ResourceLocation.fromNamespaceAndPath("oregrowth", "ore_growth"), new RecipeType<>() {
         public String toString(){
@@ -32,6 +35,8 @@ public class OreGrowth implements ModInitializer {
 
     @Override
     public void onInitialize(){
+        CHANNEL.registerMessage(SyncOreGrowthRecipesPacket.class, SyncOreGrowthRecipesPacket::new, false);
+
         OreGrowthConfig.init();
         register();
         registerGenerators();
