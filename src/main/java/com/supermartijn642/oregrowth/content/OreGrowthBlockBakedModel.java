@@ -5,8 +5,6 @@ import com.supermartijn642.core.render.TextureAtlases;
 import com.supermartijn642.core.util.Pair;
 import com.supermartijn642.oregrowth.OreGrowth;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
-import net.fabricmc.fabric.api.renderer.v1.material.ShadeMode;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableMesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
@@ -38,14 +36,12 @@ import java.util.function.Predicate;
 public class OreGrowthBlockBakedModel implements BlockStateModel {
 
     private static final Direction[] MODEL_DIRECTIONS = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, null};
-    private static final RenderMaterial DEFAULT_MATERIAL = Renderer.get().materialFinder().shadeMode(ShadeMode.VANILLA).find();
-    private static final RenderMaterial DEFAULT_MATERIAL_NO_AO = Renderer.get().materialFinder().shadeMode(ShadeMode.VANILLA).ambientOcclusion(TriState.FALSE).find();
 
     private final BlockStateModel original;
     private final Mesh mesh;
     private final TextureAtlasSprite[] meshSprites;
-    private final Map<Block,Pair<TextureAtlasSprite,RenderMaterial>> blockMaterialCache = new HashMap<>();
-    private final Map<Block,Pair<TextureAtlasSprite,RenderMaterial>> itemMaterialCache = new HashMap<>();
+    private final Map<Block,MaterialEntry> blockMaterialCache = new HashMap<>();
+    private final Map<Block,MaterialEntry> itemMaterialCache = new HashMap<>();
 
     private Block baseBlockContext;
 
@@ -62,8 +58,8 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
             for(Direction cullFace : MODEL_DIRECTIONS){
                 List<BakedQuad> quads = part.getQuads(cullFace);
                 for(BakedQuad quad : quads){
-                    RenderMaterial material = quad.shade() ? DEFAULT_MATERIAL : DEFAULT_MATERIAL_NO_AO;
-                    emitter.fromVanilla(quad, material, cullFace);
+                    emitter.fromBakedQuad(quad);
+                    emitter.cullFace(cullFace);
                     int spriteIndex = sprites.indexOf(quad.sprite());
                     if(spriteIndex == -1){
                         spriteIndex = sprites.size();
@@ -124,9 +120,9 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         }, renderLayer.emitter());
     }
 
-    private void emitQuads(Block base, Map<Block,Pair<TextureAtlasSprite,RenderMaterial>> materialCache, BiConsumer<BlockStateModel,QuadEmitter> modelEmitter, QuadEmitter emitter){
+    private void emitQuads(Block base, Map<Block,MaterialEntry> materialCache, BiConsumer<BlockStateModel,QuadEmitter> modelEmitter, QuadEmitter emitter){
         // Get the texture and material to use for the base block
-        Pair<TextureAtlasSprite,RenderMaterial> material;
+        MaterialEntry material;
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
         synchronized(materialCache){
             material = materialCache.get(base);
@@ -152,8 +148,10 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         }
 
         // Push a transform which changes the quad's uv and material
-        TextureAtlasSprite newSprite = material.left();
-        RenderMaterial newMaterial = material.right();
+        TextureAtlasSprite newSprite = material.sprite;
+        boolean shading = material.shading;
+        boolean emissive = material.emissive;
+        TriState ambientOcclusion = material.ambientOcclusion;
         emitter.pushTransform(quad -> {
             TextureAtlasSprite originalSprite = this.meshSprites[quad.tag()];
             for(int i = 0; i < 4; i++){
@@ -161,7 +159,9 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
                     newSprite.getU0() + (quad.u(i) - originalSprite.getU0()) / (originalSprite.getU1() - originalSprite.getU0()) * (newSprite.getU1() - newSprite.getU0()),
                     newSprite.getV0() + (quad.v(i) - originalSprite.getV0()) / (originalSprite.getV1() - originalSprite.getV0()) * (newSprite.getV1() - newSprite.getV0())
                 );
-                quad.material(newMaterial);
+                quad.diffuseShade(shading);
+                quad.emissive(emissive);
+                quad.ambientOcclusion(ambientOcclusion);
             }
             return true;
         });
@@ -171,12 +171,12 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         emitter.popTransform();
     }
 
-    private static Pair<TextureAtlasSprite,RenderMaterial> findMaterial(Block baseBlock, BiConsumer<BlockStateModel,QuadEmitter> modelEmitter){
+    private static MaterialEntry findMaterial(Block baseBlock, BiConsumer<BlockStateModel,QuadEmitter> modelEmitter){
         BlockState baseState = baseBlock.defaultBlockState();
         BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
 
         // Keep track of how many times a sprite occurs along with the material used
-        Map<TextureAtlasSprite,Pair<Integer,RenderMaterial>> materials = new HashMap<>();
+        Map<TextureAtlasSprite,Pair<Integer,MaterialEntry>> materials = new HashMap<>();
 
         // Create a dummy mesh to emit the model to
         MutableMesh dummyMesh = Renderer.get().mutableMesh();
@@ -187,7 +187,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         emitter.pushTransform(quad -> {
             TextureAtlasSprite sprite = spriteFinder.find(quad);
             if(sprite != null)
-                materials.compute(sprite, (s, pair) -> pair == null ? Pair.of(1, quad.material()) : pair.mapLeft(i -> i + 1));
+                materials.compute(sprite, (s, pair) -> pair == null ? Pair.of(1, new MaterialEntry(s, quad.diffuseShade(), quad.emissive(), quad.ambientOcclusion())) : pair.mapLeft(i -> i + 1));
             // Cancel all quads
             return false;
         });
@@ -201,11 +201,11 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
             return null;
 
         // Get the sprite which occurred most
-        Pair<TextureAtlasSprite,RenderMaterial> material = null;
+        MaterialEntry material = null;
         int count = 0;
-        for(Map.Entry<TextureAtlasSprite,Pair<Integer,RenderMaterial>> entry : materials.entrySet()){
+        for(Map.Entry<TextureAtlasSprite,Pair<Integer,MaterialEntry>> entry : materials.entrySet()){
             if(entry.getValue().left() > count){
-                material = Pair.of(entry.getKey(), entry.getValue().right());
+                material = entry.getValue().right();
                 count = entry.getValue().left();
             }
         }
@@ -235,5 +235,8 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     @Override
     public TextureAtlasSprite particleIcon(){
         return this.original.particleIcon();
+    }
+
+    private record MaterialEntry(TextureAtlasSprite sprite, boolean shading, boolean emissive, TriState ambientOcclusion) {
     }
 }

@@ -9,17 +9,16 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
 import snownee.jade.api.ui.Element;
-import snownee.jade.api.ui.IElement;
 
 /**
  * Created 05/10/2023 by SuperMartijn642
@@ -60,24 +59,26 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
         }, OreGrowthBlock.class);
         registration.registerBlockIcon(new IBlockComponentProvider() {
             @Override
-            public @Nullable IElement getIcon(BlockAccessor accessor, IPluginConfig config, IElement currentIcon){
+            public Element getIcon(BlockAccessor accessor, IPluginConfig config, Element currentIcon){
                 BlockState state = accessor.getBlockState();
                 Direction facing = state.getValue(OreGrowthBlock.FACE);
                 Block base = accessor.getLevel().getBlockState(accessor.getPosition().relative(facing)).getBlock();
                 return new Element() {
-                    @Override
-                    public Vec2 getSize(){
-                        return currentIcon.getSize();
+                    {
+                        this.width = currentIcon.getWidth();
+                        this.height = currentIcon.getHeight();
                     }
 
                     @Override
-                    public void render(GuiGraphics guiGraphics, float x, float y, float maxX, float maxY){
-                        OreGrowthClient.itemModel.withContext(base, () -> currentIcon.render(guiGraphics, x, y, maxX, maxY));
+                    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
+                        currentIcon.setX(this.getX());
+                        currentIcon.setY(this.getY());
+                        OreGrowthClient.itemModel.withContext(base, () -> currentIcon.render(guiGraphics, mouseX, mouseY, partialTicks));
                     }
 
                     @Override
-                    public @Nullable String getMessage(){
-                        return currentIcon.getMessage();
+                    public @Nullable Component getNarration(){
+                        return currentIcon.getNarration();
                     }
                 };
             }
