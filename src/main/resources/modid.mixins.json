@@ -5,6 +5,7 @@
   "compatibilityLevel": "${mixin_compatibility_level}",
   "mixins": [
     "BlockStateBaseMixin",
+    "PlayerListMixin",
     "RecipeManagerMixin"
   ],
   "client": [

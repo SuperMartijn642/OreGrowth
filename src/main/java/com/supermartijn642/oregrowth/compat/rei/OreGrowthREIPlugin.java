@@ -6,7 +6,6 @@ import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.forge.REIPluginClient;
 
 /**
@@ -27,10 +26,5 @@ public class OreGrowthREIPlugin implements REIClientPlugin {
         OreGrowthRecipeManager.get(true).getAllRecipes().stream()
             .map(OreGrowthREIDisplay::new)
             .forEach(registry::add);
-    }
-
-    @Override
-    public void registerDisplaySerializer(DisplaySerializerRegistry registry){
-        REIClientPlugin.super.registerDisplaySerializer(registry); // TODO
     }
 }
