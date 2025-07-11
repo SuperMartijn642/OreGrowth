@@ -7,10 +7,10 @@ import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
 import com.supermartijn642.oregrowth.OreGrowth;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -58,6 +58,10 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
         }else
             base = this.baseBlockContext;
         return base;
+    }
+
+    public Block getItemBaseBlockContext(){
+        return this.baseBlockContext;
     }
 
     @Override
@@ -136,7 +140,7 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
 
         // Create new model part
         TextureAtlasSprite sprite = material.sprite;
-        RenderType renderType = material.renderType;
+        ChunkSectionLayer layer = material.layer;
         TriState ambientOcclusion = material.ambientOcclusion;
         return List.of(new BlockModelPart() {
             @Override
@@ -150,8 +154,8 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
             }
 
             @Override
-            public RenderType getRenderType(BlockState state){
-                return renderType;
+            public ChunkSectionLayer getRenderType(BlockState state){
+                return layer;
             }
 
             @Override
@@ -228,6 +232,6 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
         return this.original.particleIcon();
     }
 
-    private record MaterialEntry(TextureAtlasSprite sprite, RenderType renderType, boolean shading, int lightEmission, TriState ambientOcclusion) {
+    private record MaterialEntry(TextureAtlasSprite sprite, ChunkSectionLayer layer, boolean shading, int lightEmission, TriState ambientOcclusion) {
     }
 }
