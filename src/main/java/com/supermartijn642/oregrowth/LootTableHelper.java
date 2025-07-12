@@ -5,10 +5,11 @@ import com.supermartijn642.core.util.Triple;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -153,22 +154,20 @@ public class LootTableHelper {
             return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.any_of").get(), subs);
         }
         if(condition instanceof InvertedLootItemCondition){
-            LootEntryConditions sub = formatCondition(((InvertedLootItemCondition)condition).term);
+            LootEntryConditions sub = formatCondition(((InvertedLootItemCondition)condition).term());
             if(sub == null)
                 return null;
             return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.not").get(), List.of(sub));
         }
         if(condition instanceof WeatherCheck){
-            if(((WeatherCheck)condition).isRaining.isPresent()){
-                //noinspection OptionalGetWithoutIsPresent
-                if(((WeatherCheck)condition).isRaining.get())
+            if(((WeatherCheck)condition).isRaining().isPresent()){
+                if(((WeatherCheck)condition).isRaining().get())
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.raining").get(), List.of());
                 else
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.raining.not").get(), List.of());
             }
-            if(((WeatherCheck)condition).isThundering.isPresent()){
-                //noinspection OptionalGetWithoutIsPresent
-                if(((WeatherCheck)condition).isThundering.get())
+            if(((WeatherCheck)condition).isThundering().isPresent()){
+                if(((WeatherCheck)condition).isThundering().get())
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.thundering").get(), List.of());
                 else
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.thundering.not").get(), List.of());
@@ -176,10 +175,9 @@ public class LootTableHelper {
             return null;
         }
         if(condition instanceof MatchTool){
-            if(((MatchTool)condition).predicate.isEmpty())
+            if(((MatchTool)condition).predicate().isEmpty())
                 return null;
-            //noinspection OptionalGetWithoutIsPresent
-            MutableComponent predicate = formatItemPredicate(((MatchTool)condition).predicate.get());
+            MutableComponent predicate = formatItemPredicate(((MatchTool)condition).predicate().get());
             if(predicate == null)
                 return null;
             return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.match_tool").append(predicate).get(), List.of());
@@ -189,17 +187,22 @@ public class LootTableHelper {
 
     private static MutableComponent formatItemPredicate(ItemPredicate predicate){
         MutableComponent enchantments = null;
-        List<Enchantment> actualEnchants = predicate.subPredicates().values().stream()
-            .filter(ItemEnchantmentsPredicate.Enchantments.class::isInstance)
-            .map(ItemEnchantmentsPredicate.Enchantments.class::cast)
-            .flatMap(p -> p.enchantments.stream())
-            .map(EnchantmentPredicate::enchantments)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .flatMap(HolderSet::stream)
-            .map(Holder::value)
-            .distinct()
-            .toList();
+        List<Enchantment> actualEnchants = Stream.concat(
+            predicate.components().exact().asPatch().get(DataComponents.ENCHANTMENTS)
+                .map(c -> c.keySet().stream()).orElseGet(Stream::of)
+                .filter(Holder::isBound)
+                .map(Holder::value),
+            predicate.components().partial().values().stream()
+                .filter(EnchantmentsPredicate.Enchantments.class::isInstance)
+                .map(EnchantmentsPredicate.Enchantments.class::cast)
+                .flatMap(p -> p.enchantments.stream())
+                .map(EnchantmentPredicate::enchantments)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(HolderSet::stream)
+                .filter(Holder::isBound)
+                .map(Holder::value)
+        ).distinct().toList();
         if(actualEnchants.size() == 1)
             enchantments = TextComponents.fromTextComponent(actualEnchants.get(0).description()).color(ChatFormatting.GOLD).get();
         else if(actualEnchants.size() == 2){
@@ -213,25 +216,25 @@ public class LootTableHelper {
             Component lastEnchant = TextComponents.fromTextComponent(actualEnchants.get(actualEnchants.size() - 1).description()).color(ChatFormatting.GOLD).get();
             enchantments = TextComponents.translation("oregrowth.jei_category.conditions.match_tool.more_items", builder.get(), lastEnchant).get();
         }
-        if(predicate.items.isPresent() && predicate.items.get() instanceof HolderSet.Named){
-            ResourceLocation tag = ((HolderSet.Named<Item>)predicate.items.get()).key().location();
+        if(predicate.items().isPresent() && predicate.items().get() instanceof HolderSet.Named){
+            ResourceLocation tag = ((HolderSet.Named<Item>)predicate.items().get()).key().location();
             if(enchantments == null)
                 return TextComponents.translation("oregrowth.jei_category.conditions.match_tool.tag", tag).get();
             else
                 return TextComponents.translation("oregrowth.jei_category.conditions.match_tool.tag", tag).translation("oregrowth.jei_category.conditions.match_tool.enchanted", enchantments).get();
         }
-        if(predicate.items.isPresent()){
-            if(predicate.items.get().size() == 0)
+        if(predicate.items().isPresent()){
+            if(predicate.items().get().size() == 0)
                 return null;
             TextComponents.TextComponentBuilder itemsFormatted;
-            List<TextComponents.TextComponentBuilder> items = predicate.items.get().stream().map(Holder::value).map(TextComponents::item).map(b -> b.color(ChatFormatting.GOLD)).sorted(Comparator.comparing(TextComponents.TextComponentBuilder::format)).toList();
-            if(predicate.items.get().size() == 1)
+            List<TextComponents.TextComponentBuilder> items = predicate.items().get().stream().map(Holder::value).map(TextComponents::item).map(b -> b.color(ChatFormatting.GOLD)).sorted(Comparator.comparing(TextComponents.TextComponentBuilder::format)).toList();
+            if(predicate.items().get().size() == 1)
                 itemsFormatted = items.get(0);
-            else if(predicate.items.get().size() == 2)
+            else if(predicate.items().get().size() == 2)
                 itemsFormatted = TextComponents.translation("oregrowth.jei_category.conditions.match_tool.two_items", items.get(0), items.get(1));
-            else if(predicate.items.get().size() > 2){
+            else if(predicate.items().get().size() > 2){
                 TextComponents.TextComponentBuilder builder = items.get(0);
-                for(int i = 1; i < predicate.items.get().size() - 1; i++)
+                for(int i = 1; i < predicate.items().get().size() - 1; i++)
                     builder = builder.string(", ").append(items.get(i).get());
                 itemsFormatted = TextComponents.translation("oregrowth.jei_category.conditions.match_tool.more_items", builder.get(), items.get(items.size() - 1));
             }else
@@ -245,11 +248,11 @@ public class LootTableHelper {
 
     private static float averageValue(NumberProvider provider){
         if(provider instanceof BinomialDistributionGenerator)
-            return averageValue(((BinomialDistributionGenerator)provider).n) * averageValue(((BinomialDistributionGenerator)provider).p);
+            return averageValue(((BinomialDistributionGenerator)provider).n()) * averageValue(((BinomialDistributionGenerator)provider).p());
         if(provider instanceof ConstantValue)
-            return ((ConstantValue)provider).value;
+            return ((ConstantValue)provider).value();
         if(provider instanceof UniformGenerator)
-            return (averageValue(((UniformGenerator)provider).min) + averageValue(((UniformGenerator)provider).max)) / 2;
+            return (averageValue(((UniformGenerator)provider).min()) + averageValue(((UniformGenerator)provider).max())) / 2;
         return -1;
     }
 }

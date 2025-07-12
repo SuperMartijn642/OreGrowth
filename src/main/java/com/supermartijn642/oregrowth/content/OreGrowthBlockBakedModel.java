@@ -8,9 +8,9 @@ import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -23,34 +23,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
-public class OreGrowthBlockBakedModel implements BakedModel {
+public class OreGrowthBlockBakedModel implements BlockStateModel {
 
     public static final ModelProperty<Block> BASE_BLOCK_PROPERTY = new ModelProperty<>();
 
     private static final int BLOCK_VERTEX_DATA_UV_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.UV);
-    private static final int BLOCK_VERTEX_DATA_TINT_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.COLOR);
     private static final Direction[] MODEL_DIRECTIONS = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, null};
 
-    private final BakedModel original;
-    private final Map<Direction,Map<Block,List<BakedQuad>>> quadCache = new HashMap<>();
-    private final Map<Block,List<BakedQuad>> directionlessQuadCache = new HashMap<>();
-    private final ThreadLocal<Block> baseBlock = new ThreadLocal<>();
+    private final BlockStateModel original;
+    private final Map<Block,List<BlockModelPart>> meshCache = new HashMap<>();
 
-    public OreGrowthBlockBakedModel(BakedModel original){
+    public OreGrowthBlockBakedModel(BlockStateModel original){
         this.original = original;
-        for(Direction direction : Direction.values())
-            this.quadCache.put(direction, new HashMap<>());
-    }
-
-    public void withContext(Block baseBlock, Runnable runnable){
-        this.baseBlock.set(baseBlock);
-        runnable.run();
-        this.baseBlock.set(null);
     }
 
     @Override
@@ -65,85 +54,108 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource random, @NotNull ModelData data, @Nullable RenderType renderType){
+    public void collectParts(RandomSource random, List<BlockModelPart> parts, ModelData modelData, @Nullable RenderType renderType){
         // Get the base block
-        Block base = this.baseBlock.get();
-        if(base == null)
-            base = data.get(BASE_BLOCK_PROPERTY);
-        if(base == null)
-            return this.original.getQuads(state, side, random, data, renderType);
-
-        // Get the correct cache and quads
-        Map<Block,List<BakedQuad>> cache = side == null ? this.directionlessQuadCache : this.quadCache.get(side);
-        List<BakedQuad> quads;
-        //noinspection SynchronizationOnLocalVariableOrMethodParameter
-        synchronized(cache){
-            quads = cache.get(base);
+        Block base = modelData.get(BASE_BLOCK_PROPERTY);
+        if(base == null){
+            this.original.collectParts(random, parts, modelData, renderType);
+            return;
         }
 
-        // Compute the quads if they don't exist yet
-        if(quads == null){
-            quads = this.remapQuads(this.original.getQuads(state, side, random), base, random);
-            //noinspection SynchronizationOnLocalVariableOrMethodParameter
-            synchronized(cache){
-                if(!cache.containsKey(base))
-                    cache.put(base, quads);
+        // Get the mesh from cache
+        List<BlockModelPart> mesh;
+        synchronized(this.meshCache){
+            mesh = this.meshCache.get(base);
+        }
+
+        // Compute the mesh if it doesn't exist yet
+        if(mesh == null){
+            mesh = this.computeMesh(
+                model -> model.collectParts(random, ModelData.EMPTY, null),
+                base
+            );
+            synchronized(this.meshCache){
+                if(!this.meshCache.containsKey(base))
+                    this.meshCache.put(base, mesh);
                 else
-                    quads = cache.get(base);
+                    mesh = this.meshCache.get(base);
             }
         }
 
-        // Safety check even though this should never happen
-        if(quads == null)
-            throw new IllegalStateException("Tried returning null list from OreGrowthBlockBakedModel#getQuads for side '" + side + "' and base '" + base + "'!");
-
-        return quads;
+        parts.addAll(mesh);
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource random){
-        return this.getQuads(state, side, random, ModelData.EMPTY, RenderType.solid());
+    public void collectParts(RandomSource random, List<BlockModelPart> parts){
+        this.original.collectParts(random, parts);
     }
 
-    private List<BakedQuad> remapQuads(List<BakedQuad> originalQuads, Block baseBlock, RandomSource random){
+    private List<BlockModelPart> computeMesh(Function<BlockStateModel,List<BlockModelPart>> modelEmitter, Block baseBlock){
         BlockState baseState = baseBlock.defaultBlockState();
-        BakedModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
+        BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
 
-        // Find the most occurring sprite (and sprite color)
-        Map<TextureAtlasSprite,Pair<Holder<Integer>,Integer>> spriteCounts = new HashMap<>();
-        for(Direction cullFace : MODEL_DIRECTIONS){
-            for(RenderType renderType : baseModel.getRenderTypes(baseState, random, ModelData.EMPTY)){
-                baseModel.getQuads(baseState, cullFace, random, ModelData.EMPTY, renderType)
+        // Find the most occurring sprite
+        Map<TextureAtlasSprite,Pair<Holder<Integer>,MaterialEntry>> spriteCounts = new HashMap<>();
+        for(BlockModelPart part : modelEmitter.apply(baseModel)){
+            for(Direction cullFace : MODEL_DIRECTIONS){
+                part.getQuads(cullFace)
                     .forEach(quad -> {
-                        TextureAtlasSprite sprite = quad.getSprite();
-                        Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), quad.getTintIndex())).left();
+                        TextureAtlasSprite sprite = quad.sprite();
+                        Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), new MaterialEntry(sprite, quad.shade(), quad.lightEmission(), quad.ambientOcclusion()))).left();
                         count.set(count.get() + 1);
                     });
             }
         }
         if(spriteCounts.isEmpty())
-            return originalQuads;
+            return modelEmitter.apply(this.original);
 
         // Get the sprite
-        TextureAtlasSprite sprite = null;
-        int tint = 0;
+        MaterialEntry material = null;
         int count = 0;
-        for(Map.Entry<TextureAtlasSprite,Pair<Holder<Integer>,Integer>> entry : spriteCounts.entrySet()){
-            if(entry.getValue().left().get() > count){
-                sprite = entry.getKey();
-                tint = entry.getValue().right();
+        for(Pair<Holder<Integer>,MaterialEntry> entry : spriteCounts.values()){
+            if(entry.left().get() > count)
+                material = entry.right();
+        }
+
+        // Collect and remap all quads
+        Map<Direction,List<BakedQuad>> quads = new EnumMap<>(Direction.class);
+        for(Direction direction : Direction.values()) quads.put(direction, new ArrayList<>());
+        List<BakedQuad> directionLessQuads = new ArrayList<>();
+        for(BlockModelPart part : modelEmitter.apply(this.original)){
+            for(Direction cullDirection : MODEL_DIRECTIONS){
+                for(BakedQuad quad : part.getQuads(cullDirection)){
+                    if(cullDirection == null)
+                        directionLessQuads.add(remapQuad(quad, material));
+                    else
+                        quads.get(cullDirection).add(remapQuad(quad, material));
+                }
             }
         }
 
-        // Remap the quads
-        TextureAtlasSprite finalSprite = sprite;
-        int finalTint = tint;
-        return originalQuads.stream().map(quad -> this.remapQuad(quad, finalSprite, finalTint)).filter(Objects::nonNull).collect(Collectors.toList());
+        // Create new model part
+        TextureAtlasSprite sprite = material.sprite;
+        boolean ambientOcclusion = material.ambientOcclusion;
+        return List.of(new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction cullDirection){
+                return cullDirection == null ? directionLessQuads : quads.get(cullDirection);
+            }
+
+            @Override
+            public TextureAtlasSprite particleIcon(){
+                return sprite;
+            }
+
+            @Override
+            public boolean useAmbientOcclusion(){
+                return ambientOcclusion;
+            }
+        });
     }
 
-    protected BakedQuad remapQuad(BakedQuad quad, TextureAtlasSprite newSprite, int newTint){
-        TextureAtlasSprite sprite = quad.getSprite();
-        int[] vertexData = quad.getVertices();
+    private static BakedQuad remapQuad(BakedQuad quad, MaterialEntry material){
+        TextureAtlasSprite sprite = quad.sprite();
+        int[] vertexData = quad.vertices();
         // Make sure we don't change the original quad
         vertexData = Arrays.copyOf(vertexData, vertexData.length);
 
@@ -151,8 +163,8 @@ public class OreGrowthBlockBakedModel implements BakedModel {
         int vertexSize = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
         int vertices = vertexData.length / vertexSize;
         int uvOffset = BLOCK_VERTEX_DATA_UV_OFFSET / 4;
-        int tintOffset = BLOCK_VERTEX_DATA_TINT_OFFSET / 4;
 
+        TextureAtlasSprite newSprite = material.sprite;
         for(int i = 0; i < vertices; i++){
             int offset = i * vertexSize;
 
@@ -163,32 +175,10 @@ public class OreGrowthBlockBakedModel implements BakedModel {
             float v = Float.intBitsToFloat(vertexData[offset + uvOffset + 1]);
             float newV = newSprite.getV0() + (v - sprite.getV0()) / (sprite.getV1() - sprite.getV0()) * (newSprite.getV1() - newSprite.getV0());
             vertexData[offset + uvOffset + 1] = Float.floatToRawIntBits(newV);
-
-            // Tint
-            vertexData[offset + tintOffset] = newTint;
         }
 
         // Create a new quad
-        return new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade(), quad.getLightEmission(), quad.hasAmbientOcclusion());
-    }
-
-    private static int[] adjustVertexDataUV(int[] vertexData, int newU, int newV, TextureAtlasSprite sprite){
-        int vertexSize = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
-        int vertices = vertexData.length / vertexSize;
-        int uvOffset = BLOCK_VERTEX_DATA_UV_OFFSET / 4;
-
-        for(int i = 0; i < vertices; i++){
-            int offset = i * vertexSize + uvOffset;
-
-            float width = sprite.getU1() - sprite.getU0();
-            float u = Float.intBitsToFloat(vertexData[offset]) + width * newU;
-            vertexData[offset] = Float.floatToRawIntBits(u);
-
-            float height = sprite.getV1() - sprite.getV0();
-            float v = Float.intBitsToFloat(vertexData[offset + 1]) + height * newV;
-            vertexData[offset + 1] = Float.floatToRawIntBits(v);
-        }
-        return vertexData;
+        return new BakedQuad(vertexData, quad.tintIndex(), quad.direction(), newSprite, material.shading, material.lightEmission, material.ambientOcclusion);
     }
 
     private static int findUVOffset(VertexFormat vertexFormat, VertexFormatElement.Usage usage){
@@ -206,27 +196,20 @@ public class OreGrowthBlockBakedModel implements BakedModel {
     }
 
     @Override
-    public ItemTransforms getTransforms(){
-        return this.original.getTransforms();
+    public TextureAtlasSprite particleIcon(ModelData modelData){
+        Block base = modelData.get(BASE_BLOCK_PROPERTY);
+        BlockState baseState;
+        if(base == null || (baseState = base.defaultBlockState()).isAir())
+            return this.original.particleIcon(modelData);
+        BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
+        return baseModel.particleIcon(ModelData.EMPTY);
     }
 
     @Override
-    public boolean useAmbientOcclusion(){
-        return this.original.useAmbientOcclusion();
+    public TextureAtlasSprite particleIcon(){
+        return this.original.particleIcon();
     }
 
-    @Override
-    public boolean isGui3d(){
-        return this.original.isGui3d();
-    }
-
-    @Override
-    public boolean usesBlockLight(){
-        return this.original.usesBlockLight();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon(){
-        return this.original.getParticleIcon();
+    private record MaterialEntry(TextureAtlasSprite sprite, boolean shading, int lightEmission, boolean ambientOcclusion) {
     }
 }

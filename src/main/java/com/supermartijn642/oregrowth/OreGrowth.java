@@ -4,11 +4,13 @@ import com.supermartijn642.core.CommonUtils;
 import com.supermartijn642.core.item.BaseBlockItem;
 import com.supermartijn642.core.item.CreativeItemGroup;
 import com.supermartijn642.core.item.ItemProperties;
+import com.supermartijn642.core.network.PacketChannel;
 import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
+import com.supermartijn642.oregrowth.content.SyncOreGrowthRecipesPacket;
 import com.supermartijn642.oregrowth.generators.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -21,12 +23,15 @@ import net.minecraftforge.fml.common.Mod;
 public class OreGrowth {
 
     public static final String MODID = "oregrowth";
+    public static final PacketChannel CHANNEL = PacketChannel.create(MODID);
 
     public static RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE;
     public static OreGrowthBlock ORE_GROWTH_BLOCK;
     public static BaseBlockItem ORE_GROWTH_ITEM;
 
     public OreGrowth(){
+        CHANNEL.registerMessage(SyncOreGrowthRecipesPacket.class, SyncOreGrowthRecipesPacket::new, false);
+
         OreGrowthConfig.init();
         register();
         if(CommonUtils.getEnvironmentSide().isClient())

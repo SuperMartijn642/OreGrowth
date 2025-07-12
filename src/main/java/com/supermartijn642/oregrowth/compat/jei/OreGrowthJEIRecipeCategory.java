@@ -1,6 +1,5 @@
 package com.supermartijn642.oregrowth.compat.jei;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
@@ -27,8 +26,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +46,7 @@ import java.util.List;
 /**
  * Created 05/10/2023 by SuperMartijn642
  */
+@SuppressWarnings("removal")
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
 
     private static final RandomSource RANDOM = RandomSource.create();
@@ -176,14 +176,14 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             .map(item -> ((BlockItem)item).getBlock())
             .orElse(null);
         if(base != null)
-            renderModel(guiGraphics, base.defaultBlockState(), 9, 31, 0, ModelData.EMPTY);
+            renderModel(guiGraphics, base.defaultBlockState(), 22, 39, 0, ModelData.EMPTY);
 
         // Ore growth block
         if(base != null){
             int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
             BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
             ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, base).build();
-            renderModel(guiGraphics, state, 9, 15, 10, modelData);
+            renderModel(guiGraphics, state, 22, 23, 10, modelData);
         }
 
         guiGraphics.pose().popPose();
@@ -192,14 +192,11 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset, ModelData modelData){
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        poseStack.translate(x + 8, y + 8, 150 + offset);
+        poseStack.translate(x + 21, y + 16, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
         poseStack.scale(16, 16, 16);
-        BakedModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
-        boolean blockLight = !model.usesBlockLight();
-        if(blockLight)
-            Lighting.setupForFlatItems();
+        BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
@@ -212,8 +209,6 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         });
 
         guiGraphics.flush();
-        if(blockLight)
-            Lighting.setupFor3DItems();
         poseStack.popPose();
     }
 }

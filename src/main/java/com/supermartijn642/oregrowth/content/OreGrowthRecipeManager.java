@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -49,15 +50,25 @@ public class OreGrowthRecipeManager {
 
     private synchronized void cacheRecipes(){
         if(this.reload && this.recipeManager != null){
-            ImmutableMap.Builder<Block,OreGrowthRecipe> builder = ImmutableMap.builder();
-            this.recipeManager.recipes.byType(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
-                .stream()
-                .sorted(Comparator.comparing(holder -> holder.id().toString()))
-                .map(RecipeHolder::value)
-                .map(OreGrowthRecipe.class::cast)
-                .forEach(recipe -> recipe.bases(this.blockLookup).forEach(block -> builder.put(block, recipe)));
-            this.recipesByBlock = builder.buildKeepingLast();
-            this.reload = false;
+            this.cacheRecipes(
+                this.recipeManager.recipes.byType(OreGrowth.ORE_GROWTH_RECIPE_TYPE)
+                    .stream()
+                    .sorted(Comparator.comparing(holder -> holder.id().toString()))
+                    .map(RecipeHolder::value)
+            );
         }
+    }
+
+    private synchronized void cacheRecipes(Stream<OreGrowthRecipe> recipes){
+        ImmutableMap.Builder<Block,OreGrowthRecipe> builder = ImmutableMap.builder();
+        recipes.forEach(recipe -> recipe.bases(this.blockLookup).forEach(block -> builder.put(block, recipe)));
+        this.recipesByBlock = builder.buildKeepingLast();
+        this.reload = false;
+    }
+
+    public synchronized void setClientRecipes(Collection<OreGrowthRecipe> recipes){
+        if(this != CLIENT)
+            throw new IllegalStateException("Recipes must only be set directly on the client!");
+        this.cacheRecipes(recipes.stream());
     }
 }
