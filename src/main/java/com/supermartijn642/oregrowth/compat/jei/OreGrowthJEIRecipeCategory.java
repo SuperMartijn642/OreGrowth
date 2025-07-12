@@ -3,6 +3,8 @@ package com.supermartijn642.oregrowth.compat.jei;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
+import com.supermartijn642.core.gui.GuiGraphicsHelper;
+import com.supermartijn642.core.render.RenderUtils;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
@@ -24,9 +26,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -35,9 +39,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ChunkRenderTypeSet;
+import net.minecraftforge.client.RenderTypeHelper;
 import net.minecraftforge.client.model.data.ModelData;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
@@ -158,9 +161,9 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
     @Override
     public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY){
-        guiGraphics.pose().pushPose();
+        guiGraphics.pose().popMatrix();
         if(slotsView.getSlotViews(RecipeIngredientRole.OUTPUT).size() <= 1)
-            guiGraphics.pose().translate(9, 0, 0);
+            guiGraphics.pose().translate(9, 0);
 
         // Arrow
         this.arrow.draw(guiGraphics, 37, 20);
@@ -176,39 +179,36 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             .map(item -> ((BlockItem)item).getBlock())
             .orElse(null);
         if(base != null)
-            renderModel(guiGraphics, base.defaultBlockState(), 22, 39, 0, ModelData.EMPTY);
+            GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
+                22, 39, 40, 40, // TODO
+                poseStack -> renderModel(poseStack, base.defaultBlockState(), 22, 39, 0, ModelData.EMPTY)
+            );
 
         // Ore growth block
         if(base != null){
             int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
             BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
             ModelData modelData = ModelData.builder().with(OreGrowthBlockBakedModel.BASE_BLOCK_PROPERTY, base).build();
-            renderModel(guiGraphics, state, 22, 23, 10, modelData);
+            GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
+                22, 39, 40, 40, // TODO
+                poseStack -> renderModel(poseStack, state, 22, 23, 10, modelData)
+            );
         }
 
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
-    private static void renderModel(GuiGraphics guiGraphics, BlockState state, int x, int y, int offset, ModelData modelData){
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
+    private static void renderModel(PoseStack poseStack, BlockState state, int x, int y, int offset, ModelData modelData){
         poseStack.translate(x + 21, y + 16, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
-        poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
-        poseStack.scale(16, 16, 16);
+        poseStack.scale(16, -16, 16);
         BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        poseStack.translate(-0.5f, -0.5f, -0.5f);
+        MultiBufferSource.BufferSource bufferSource = RenderUtils.getMainBufferSource();
         RANDOM.setSeed(42);
-        ChunkRenderTypeSet renderTypes = model.getRenderTypes(state, RANDOM, modelData);
-        RenderType renderType = renderTypes.contains(RenderType.translucent()) ? Sheets.translucentItemSheet() : Sheets.cutoutBlockSheet();
-        guiGraphics.drawSpecial(bufferSource -> {
-            ClientUtils.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, 0xF000F0, OverlayTexture.NO_OVERLAY, modelData, renderType);
-        });
-
-        guiGraphics.flush();
-        poseStack.popPose();
+        for(ChunkSectionLayer layer : model.getRenderTypes(state, RANDOM, modelData))
+            ModelBlockRenderer.renderModel(poseStack.last(), bufferSource.getBuffer(RenderTypeHelper.getEntityRenderType(layer)), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, layer);
     }
 }

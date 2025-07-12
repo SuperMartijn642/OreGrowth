@@ -6,10 +6,10 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,11 +54,11 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> parts, ModelData modelData, @Nullable RenderType renderType){
+    public void collectParts(RandomSource random, List<BlockModelPart> parts, ModelData modelData, @Nullable ChunkSectionLayer layer){
         // Get the base block
         Block base = modelData.get(BASE_BLOCK_PROPERTY);
         if(base == null){
-            this.original.collectParts(random, parts, modelData, renderType);
+            this.original.collectParts(random, parts, modelData, layer);
             return;
         }
 
