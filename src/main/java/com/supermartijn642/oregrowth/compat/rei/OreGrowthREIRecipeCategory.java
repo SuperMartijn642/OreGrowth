@@ -60,7 +60,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
 
     @Override
     public Renderer getIcon(){
-        return EntryStacks.of(OreGrowth.ORE_GROWTH_ITEM);
+        return EntryStacks.of(OreGrowth.COMPLETE_ORE_GROWTH_ITEM);
     }
 
     @Override
