@@ -32,7 +32,7 @@ public class OreGrowthREIDisplay implements Display {
             this.recipe.bases(HolderLookup.forRegistry(Registry.BLOCK)).stream()
                 .map(EntryStacks::of)
                 .collect(EntryIngredient.collector()),
-            EntryIngredient.of(EntryStacks.of(OreGrowth.ORE_GROWTH_ITEM))
+            EntryIngredient.of(List.of(EntryStacks.of(OreGrowth.ORE_GROWTH_ITEM), EntryStacks.of(OreGrowth.COMPLETE_ORE_GROWTH_ITEM)))
         );
     }
 
