@@ -56,9 +56,10 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         if(!currentState.isAir() && !currentState.is(Blocks.WATER))
             return;
 
+        Block block = recipe.stages() > 1 ? OreGrowth.ORE_GROWTH_BLOCK : OreGrowth.COMPLETE_ORE_GROWTH_BLOCK;
         level.setBlockAndUpdate(
             growthPos,
-            OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState()
+            block.defaultBlockState()
                 .setValue(FACE, side.getOpposite())
                 .setValue(WATERLOGGED, currentState.getFluidState().getType() == Fluids.WATER)
         );
@@ -92,6 +93,13 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         }
     }
 
+    private static BlockState copyProperties(BlockState from, Block to){
+        return to.defaultBlockState()
+            .setValue(STAGE, from.getValue(STAGE))
+            .setValue(FACE, from.getValue(FACE))
+            .setValue(WATERLOGGED, from.getValue(WATERLOGGED));
+    }
+
     public OreGrowthBlock(){
         super(false, BlockProperties.create().noLootTable().randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
         this.registerDefaultState(this.defaultBlockState().setValue(STAGE, 1).setValue(FACE, Direction.DOWN).setValue(WATERLOGGED, false));
@@ -106,8 +114,18 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
             return;
         }
         int stage = state.getValue(STAGE);
-        if(stage < recipe.stages() && random.nextFloat() < recipe.growthChance() * OreGrowthConfig.growthChanceScalar.get())
-            level.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));
+        if(this == OreGrowth.ORE_GROWTH_BLOCK){ // Not-fully-grown
+            if(stage == recipe.stages()){
+                level.setBlockAndUpdate(pos, copyProperties(state, OreGrowth.COMPLETE_ORE_GROWTH_BLOCK));
+                return;
+            }
+            if(stage < recipe.stages() && random.nextFloat() < recipe.growthChance() * OreGrowthConfig.growthChanceScalar.get()){
+                if(stage + 1 == recipe.stages())
+                    state = copyProperties(state, OreGrowth.COMPLETE_ORE_GROWTH_BLOCK);
+                level.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));
+            }
+        }else if(stage < recipe.stages()) // Fully grown
+            level.setBlockAndUpdate(pos, copyProperties(state, OreGrowth.ORE_GROWTH_BLOCK));
     }
 
     @Override
@@ -174,10 +192,17 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context){
+        Direction face = context.getClickedFace().getOpposite();
+        Level level = context.getLevel();
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(level.getBlockState(context.getClickedPos().relative(face)).getBlock());
+        if(recipe == null)
+            return null;
         BlockState state = this.defaultBlockState()
-            .setValue(FACE, context.getClickedFace().getOpposite())
-            .setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
-        return this.canSurvive(state, context.getLevel(), context.getClickedPos()) ? state : null;
+            .setValue(FACE, face)
+            .setValue(WATERLOGGED, level.getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+        if(this == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
+            state = state.setValue(STAGE, recipe.stages());
+        return state;
     }
 
     @Override
