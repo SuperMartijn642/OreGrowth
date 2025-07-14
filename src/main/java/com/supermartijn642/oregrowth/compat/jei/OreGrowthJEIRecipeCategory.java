@@ -64,7 +64,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         this.background = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 8, 111, 56);
         this.arrow = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 111, 0, 32, 15);
         this.slotBackground = guiHelper.getSlotDrawable();
-        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.ORE_GROWTH_BLOCK));
+        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.COMPLETE_ORE_GROWTH_BLOCK));
         this.ingredientManager = ingredientManager;
     }
 
@@ -91,7 +91,9 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     @Override
     public void setRecipe(IRecipeLayoutBuilder layoutBuilder, OreGrowthRecipe recipe, IFocusGroup focusGroup){
         // Add the ore growth block as catalyst, just so it is easier to look up all ore growth recipes
-        layoutBuilder.addInvisibleIngredients(RecipeIngredientRole.CATALYST).addItemStack(OreGrowth.ORE_GROWTH_ITEM.getDefaultInstance());
+        layoutBuilder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
+            .addItemStack(OreGrowth.ORE_GROWTH_ITEM.getDefaultInstance())
+            .addItemStack(OreGrowth.COMPLETE_ORE_GROWTH_ITEM.getDefaultInstance());
         // Outputs
         int outputs = Math.min(recipe.getRecipeViewerDrops().size(), 6);
         int columns = outputs > 1 ? 2 : 1;

@@ -13,5 +13,6 @@ public class OreGrowthClient {
     public static void initializeClient(){
         ClientRegistrationHandler handler = ClientRegistrationHandler.get(OreGrowth.MODID);
         handler.registerBlockModelOverwrite(() -> OreGrowth.ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
+        handler.registerBlockModelOverwrite(() -> OreGrowth.COMPLETE_ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
     }
 }
