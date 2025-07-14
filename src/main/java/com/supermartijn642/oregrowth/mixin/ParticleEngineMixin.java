@@ -31,7 +31,7 @@ public class ParticleEngineMixin {
         ordinal = 0
     )
     private BlockState destroy(BlockState state, BlockPos pos){
-        if(state.is(OreGrowth.ORE_GROWTH_BLOCK)){
+        if(state.is(OreGrowth.ORE_GROWTH_BLOCK) || state.is(OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)){
             Direction facing = state.getValue(OreGrowthBlock.FACE);
             BlockState base = this.level.getBlockState(pos.relative(facing));
             if(!base.isAir())
@@ -50,7 +50,7 @@ public class ParticleEngineMixin {
         ordinal = 0
     )
     private BlockState crack(BlockState state, BlockPos pos){
-        if(state.is(OreGrowth.ORE_GROWTH_BLOCK)){
+        if(state.is(OreGrowth.ORE_GROWTH_BLOCK) || state.is(OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)){
             Direction facing = state.getValue(OreGrowthBlock.FACE);
             BlockState base = this.level.getBlockState(pos.relative(facing));
             if(!base.isAir())
