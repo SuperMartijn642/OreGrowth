@@ -16,5 +16,6 @@ public class OreGrowthItemInfoGenerator extends ItemInfoGenerator {
     @Override
     public void generate(){
         this.simpleInfo(OreGrowth.ORE_GROWTH_ITEM, "block/ore_growth_stage_4");
+        this.simpleInfo(OreGrowth.COMPLETE_ORE_GROWTH_ITEM, "block/ore_growth_stage_4");
     }
 }
