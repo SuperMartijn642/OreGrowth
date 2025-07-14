@@ -92,6 +92,10 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         return base;
     }
 
+    public Block getItemBaseBlockContext(){
+        return this.baseBlockContext;
+    }
+
     @Override
     public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest){
         // Get the base block

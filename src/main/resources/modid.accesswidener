@@ -1,6 +1,7 @@
 accessWidener v1 named
 
 accessible field net/minecraft/advancements/critereon/ItemPredicate items Ljava/util/Optional;
+accessible field net/minecraft/client/renderer/item/BlockModelWrapper animated Z
 accessible field net/minecraft/client/renderer/item/BlockModelWrapper extents Ljava/util/function/Supplier;
 accessible field net/minecraft/client/renderer/item/BlockModelWrapper properties Lnet/minecraft/client/renderer/item/ModelRenderProperties;
 accessible field net/minecraft/client/renderer/item/BlockModelWrapper tints Ljava/util/List;

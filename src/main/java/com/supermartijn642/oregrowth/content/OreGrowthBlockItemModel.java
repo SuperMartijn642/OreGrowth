@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -25,27 +26,41 @@ public class OreGrowthBlockItemModel implements ItemModel {
     private final List<ItemTintSource> tints;
     private final Supplier<Vector3f[]> extents;
     private final ModelRenderProperties properties;
+    private final boolean animated;
 
     public OreGrowthBlockItemModel(BlockModelWrapper original){
         this.tints = original.tints;
         this.extents = original.extents;
         this.properties = original.properties;
+        this.animated = original.animated;
     }
 
     @Override
     public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver modelResolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable LivingEntity entity, int k){
+        renderState.appendModelIdentityElement(this);
         ItemStackRenderState.LayerRenderState layer = renderState.newLayer();
-        if(stack.hasFoil())
+        if(stack.hasFoil()){
             layer.setFoilType(ItemStackRenderState.FoilType.STANDARD);
+            renderState.appendModelIdentityElement(ItemStackRenderState.FoilType.STANDARD);
+            renderState.setAnimated();
+        }
 
         int tintCount = this.tints.size();
         int[] tints = layer.prepareTintLayers(tintCount);
-        for(int i = 0; i < tintCount; i++)
-            tints[i] = this.tints.get(i).calculate(stack, level, entity);
+        for(int i = 0; i < tintCount; i++){
+            int tint = this.tints.get(i).calculate(stack, level, entity);
+            tints[i] = tint;
+            renderState.appendModelIdentityElement(tint);
+        }
 
         layer.setExtents(this.extents);
         layer.setRenderType(ItemBlockRenderTypes.getRenderType(stack));
         this.properties.applyToLayer(layer, displayContext);
         OreGrowthClient.itemModel.emitItemQuads(layer, this.random);
+        Block base = OreGrowthClient.itemModel.getItemBaseBlockContext();
+        if(base != null)
+            renderState.appendModelIdentityElement(base);
+        if(this.animated)
+            renderState.setAnimated();
     }
 }
