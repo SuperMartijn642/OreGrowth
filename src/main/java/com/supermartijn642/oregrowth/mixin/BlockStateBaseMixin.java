@@ -5,6 +5,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -73,6 +74,21 @@ public class BlockStateBaseMixin {
         Block block = state.getBlock();
         if((block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
             && ((OreGrowthBlock)block).is(state, tag))
+            ci.setReturnValue(true);
+    }
+
+    @Inject(
+        method = "is(Lnet/minecraft/core/HolderSet;)Z",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    public void is(HolderSet<Block> tag, CallbackInfoReturnable<Boolean> ci){
+        // Intercept checks for mining tags
+        //noinspection DataFlowIssue
+        BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
+        Block block = state.getBlock();
+        if((block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
+            && tag instanceof HolderSet.Named && ((OreGrowthBlock)block).is(state, ((HolderSet.Named<Block>)tag).key()))
             ci.setReturnValue(true);
     }
 
