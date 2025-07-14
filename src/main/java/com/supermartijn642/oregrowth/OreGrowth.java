@@ -32,6 +32,8 @@ public class OreGrowth {
     public static RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE;
     public static OreGrowthBlock ORE_GROWTH_BLOCK;
     public static BaseBlockItem ORE_GROWTH_ITEM;
+    public static OreGrowthBlock COMPLETE_ORE_GROWTH_BLOCK;
+    public static BaseBlockItem COMPLETE_ORE_GROWTH_ITEM;
 
     public OreGrowth(){
         OreGrowthConfig.init();
@@ -50,6 +52,8 @@ public class OreGrowth {
         handler.registerRecipeSerializer("ore_growth", () -> OreGrowthRecipe.SERIALIZER);
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getDecoration())));
+        handler.registerBlock("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_BLOCK = new OreGrowthBlock());
+        handler.registerItem("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_ITEM = new BaseBlockItem(COMPLETE_ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getDecoration())));
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, (Consumer<RegistryEvent.Register<Block>>)event -> ORE_GROWTH_RECIPE_TYPE = RecipeType.register("oregrowth:ore_growth"));
         handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
