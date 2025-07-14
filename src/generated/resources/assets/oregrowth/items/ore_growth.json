@@ -1,6 +1,6 @@
 {
   "model": {
-    "model": "oregrowth:block/ore_growth_stage_4",
+    "model": "oregrowth:block/ore_growth_stage_2",
     "type": "minecraft:model"
   }
 }
