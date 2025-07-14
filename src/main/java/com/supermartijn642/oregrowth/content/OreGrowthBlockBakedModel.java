@@ -87,7 +87,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     private Block getBase(BlockAndTintGetter blockView, BlockPos pos, BlockState state){
         Block base;
         if(this.baseBlockContext == null){
-            if(!state.is(OreGrowth.ORE_GROWTH_BLOCK))
+            if(!(state.getBlock() instanceof OreGrowthBlock))
                 return null;
             BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
             base = blockView.getBlockState(basePos).getBlock();
@@ -100,6 +100,10 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest){
         // Get the base block
         Block base = this.getBase(blockView, pos, state);
+        if(base == null){
+            this.mesh.outputTo(emitter);
+            return;
+        }
 
         // Emit the quads
         this.emitQuads(base, this.blockMaterialCache, (model, output) -> {
