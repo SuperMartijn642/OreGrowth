@@ -14,6 +14,7 @@ public class OreGrowthClient {
     public static void initializeClient(){
         ClientRegistrationHandler handler = ClientRegistrationHandler.get(OreGrowth.MODID);
         handler.registerBlockModelOverwrite(() -> OreGrowth.ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
+        handler.registerBlockModelOverwrite(() -> OreGrowth.COMPLETE_ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
         handler.registerModelOverwrite(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "block/ore_growth_stage_4"), OreGrowthBlockBakedModel::new);
         handler.registerModelConsumer(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "block/ore_growth_stage_4"), model -> itemModel = (OreGrowthBlockBakedModel)model);
     }
