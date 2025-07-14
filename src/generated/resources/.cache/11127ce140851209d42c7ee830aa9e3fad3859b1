@@ -1,8 +1,10 @@
-// 1.20.4	2025-04-16T00:45:17.7322481	Core Lib Generators
+// 1.20.4	2025-07-14T17:22:56.1400254	Core Lib Generators
 63bf9a5a382caac4d04873aa5e952809a52e4636 assets/minecraft/atlases/blocks.json
+92fb2bb95f593334388d5d2e01de425a3b8cc8e5 assets/oregrowth/blockstates/complete_ore_growth.json
 92fb2bb95f593334388d5d2e01de425a3b8cc8e5 assets/oregrowth/blockstates/ore_growth.json
-3d872df97ffc61e76b077b08e5b9094c81f2fa2a assets/oregrowth/lang/en_us.json
-e69dbb11eae6f7d09ec68dbefb9ef19180e566ca assets/oregrowth/models/item/ore_growth.json
+4654096f9fc0c94a08159911514e03a4bcabb243 assets/oregrowth/lang/en_us.json
+e69dbb11eae6f7d09ec68dbefb9ef19180e566ca assets/oregrowth/models/item/complete_ore_growth.json
+26986736757daddecc687c5a3365314db4a7d7ad assets/oregrowth/models/item/ore_growth.json
 057a4e97a499f8978a1c34a5fc9196f98a6b226d data/ae2/tags/blocks/growth_acceleratable.json
 733704415d27d2759b49c092057fa2f23f6eae96 data/oregrowth/recipes/abstoneedition_bismuth_ore_growth.json
 e21f0a96b8c47e6d4f367e53f59cc32c87b622ab data/oregrowth/recipes/abstoneedition_silver_ore_growth.json
