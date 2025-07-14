@@ -22,6 +22,8 @@ public class OreGrowth implements ModInitializer {
     public static final RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = RecipeType.register("oregrowth:ore_growth");
     public static OreGrowthBlock ORE_GROWTH_BLOCK;
     public static BaseBlockItem ORE_GROWTH_ITEM;
+    public static OreGrowthBlock COMPLETE_ORE_GROWTH_BLOCK;
+    public static BaseBlockItem COMPLETE_ORE_GROWTH_ITEM;
 
     @Override
     public void onInitialize(){
@@ -35,6 +37,8 @@ public class OreGrowth implements ModInitializer {
         handler.registerRecipeSerializer("ore_growth", () -> OreGrowthRecipe.SERIALIZER);
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
+        handler.registerBlock("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_BLOCK = new OreGrowthBlock());
+        handler.registerItem("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_ITEM = new BaseBlockItem(COMPLETE_ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
         handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
 
