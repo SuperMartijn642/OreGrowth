@@ -30,6 +30,6 @@ public class OreGrowthBlockStateGenerator extends BlockStateGenerator {
                 int xRotation = facing == Direction.DOWN ? 0 : facing == Direction.UP ? 180 : 90;
                 int yRotation = facing.getAxis() == Direction.Axis.Y ? 0 : (int)facing.toYRot();
                 variant.model("block/ore_growth_stage_" + stage, xRotation, yRotation);
-            }, OreGrowthBlock.WATERLOGGED);
+            }, OreGrowthBlock.WATERLOGGED, OreGrowthBlock.REQUIRES_TOOL_FOR_DROPS, OreGrowthBlock.HARVEST_TOOL, OreGrowthBlock.TOOL_TIER);
     }
 }
