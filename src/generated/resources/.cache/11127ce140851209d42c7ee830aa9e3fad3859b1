@@ -1,8 +1,8 @@
-// 1.21.5	2025-07-14T17:32:37.9253788	Core Lib Generators
-92fb2bb95f593334388d5d2e01de425a3b8cc8e5 assets/oregrowth/blockstates/complete_ore_growth.json
-92fb2bb95f593334388d5d2e01de425a3b8cc8e5 assets/oregrowth/blockstates/ore_growth.json
+// 1.21.5	2025-07-14T17:40:16.8857882	Core Lib Generators
+82b3b46f8092c36f165c23b5fb0a59eaaa1c07cc assets/oregrowth/blockstates/complete_ore_growth.json
+82b3b46f8092c36f165c23b5fb0a59eaaa1c07cc assets/oregrowth/blockstates/ore_growth.json
 809118e9eebe3d94703f92a21f406cde0e1f3360 assets/oregrowth/items/complete_ore_growth.json
-809118e9eebe3d94703f92a21f406cde0e1f3360 assets/oregrowth/items/ore_growth.json
+1b6959dd3849edcf7d0b5f6e9d8980c1649b6f4a assets/oregrowth/items/ore_growth.json
 4654096f9fc0c94a08159911514e03a4bcabb243 assets/oregrowth/lang/en_us.json
 057a4e97a499f8978a1c34a5fc9196f98a6b226d data/ae2/tags/block/growth_acceleratable.json
 bbfe50c14d9d5d453f7197315dc704ab88be3883 data/oregrowth/recipe/abstoneedition_bismuth_ore_growth.json
