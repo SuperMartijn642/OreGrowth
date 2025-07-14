@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -111,6 +112,14 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
             : base.is(BlockTags.NEEDS_IRON_TOOL) ? ToolTier.IRON
             : base.is(BlockTags.NEEDS_STONE_TOOL) ? ToolTier.STONE
             : ToolTier.NONE;
+        if(toolTier == ToolTier.NONE){
+            if(base.is(BlockTags.INCORRECT_FOR_IRON_TOOL))
+                toolTier = ToolTier.DIAMOND;
+            else if(base.is(BlockTags.INCORRECT_FOR_STONE_TOOL))
+                toolTier = ToolTier.IRON;
+            else if(base.is(BlockTags.INCORRECT_FOR_WOODEN_TOOL))
+                toolTier = ToolTier.STONE;
+        }
         return state
             .setValue(REQUIRES_TOOL_FOR_DROPS, base.requiresCorrectToolForDrops())
             .setValue(HARVEST_TOOL, harvestTool)
@@ -270,7 +279,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     public boolean is(BlockStateBase state, TagKey<Block> tag){
-        return tag.equals(state.getValue(HARVEST_TOOL).tag) || tag.equals(state.getValue(TOOL_TIER).tag);
+        return tag.equals(state.getValue(HARVEST_TOOL).tag) || state.getValue(TOOL_TIER).tags.contains(tag);
     }
 
     public enum HarvestTool implements StringRepresentable {
@@ -293,15 +302,15 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     public enum ToolTier implements StringRepresentable {
-        NONE(null),
-        STONE(BlockTags.NEEDS_STONE_TOOL),
-        IRON(BlockTags.NEEDS_IRON_TOOL),
-        DIAMOND(BlockTags.NEEDS_DIAMOND_TOOL);
+        NONE(),
+        STONE(BlockTags.NEEDS_STONE_TOOL, BlockTags.INCORRECT_FOR_WOODEN_TOOL, BlockTags.INCORRECT_FOR_GOLD_TOOL),
+        IRON(BlockTags.NEEDS_IRON_TOOL, BlockTags.INCORRECT_FOR_WOODEN_TOOL, BlockTags.INCORRECT_FOR_GOLD_TOOL, BlockTags.INCORRECT_FOR_STONE_TOOL),
+        DIAMOND(BlockTags.NEEDS_DIAMOND_TOOL, BlockTags.INCORRECT_FOR_WOODEN_TOOL, BlockTags.INCORRECT_FOR_GOLD_TOOL, BlockTags.INCORRECT_FOR_STONE_TOOL, BlockTags.INCORRECT_FOR_IRON_TOOL);
 
-        private final TagKey<Block> tag;
+        private final Set<TagKey<Block>> tags;
 
-        ToolTier(TagKey<Block> tag){
-            this.tag = tag;
+        ToolTier(TagKey<Block>... tags){
+            this.tags = Set.of(tags);
         }
 
         @Override
