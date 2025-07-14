@@ -8,7 +8,10 @@ import com.supermartijn642.oregrowth.OreGrowthConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -42,13 +45,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
  */
 public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock {
 
-    public static void trySpawnOreGrowth(OreGrowthRecipe recipe, ServerLevel level, BlockPos pos, RandomSource random){
+    public static void trySpawnOreGrowth(BlockStateBase base, OreGrowthRecipe recipe, ServerLevel level, BlockPos pos, RandomSource random){
         if(random.nextFloat() > recipe.spawnChance() * OreGrowthConfig.spawnChanceScalar.get())
             return;
 
@@ -59,11 +63,12 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
             return;
 
         Block block = recipe.stages() > 1 ? OreGrowth.ORE_GROWTH_BLOCK : OreGrowth.COMPLETE_ORE_GROWTH_BLOCK;
+        BlockState state = propertiesForBase(block.defaultBlockState(), base)
+            .setValue(FACE, side.getOpposite())
+            .setValue(WATERLOGGED, currentState.getFluidState().getType() == Fluids.WATER);
         level.setBlockAndUpdate(
             growthPos,
-            block.defaultBlockState()
-                .setValue(FACE, side.getOpposite())
-                .setValue(WATERLOGGED, currentState.getFluidState().getType() == Fluids.WATER)
+            state
         );
     }
 
@@ -71,6 +76,9 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     public static IntegerProperty STAGE = IntegerProperty.create("stage", 1, MAX_STAGES);
     public static EnumProperty<Direction> FACE = BlockStateProperties.FACING;
     public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static BooleanProperty REQUIRES_TOOL_FOR_DROPS = BooleanProperty.create("requires_tool_for_drops");
+    public static EnumProperty<HarvestTool> HARVEST_TOOL = EnumProperty.create("harvest_tool", HarvestTool.class);
+    public static EnumProperty<ToolTier> TOOL_TIER = EnumProperty.create("tool_tier", ToolTier.class);
 
     private static final BlockShape[] SHAPES = {
         BlockShape.createBlockShape(6.5, 0, 6.5, 9.5, 5, 9.5),
@@ -95,22 +103,49 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         }
     }
 
+    private static BlockState propertiesForBase(BlockState state, BlockStateBase base){
+        HarvestTool harvestTool = base.is(BlockTags.MINEABLE_WITH_PICKAXE) ? HarvestTool.PICKAXE
+            : base.is(BlockTags.MINEABLE_WITH_AXE) ? HarvestTool.AXE
+            : base.is(BlockTags.MINEABLE_WITH_SHOVEL) ? HarvestTool.SHOVEL
+            : base.is(BlockTags.MINEABLE_WITH_HOE) ? HarvestTool.HOE
+            : HarvestTool.NONE;
+        ToolTier toolTier = base.is(BlockTags.NEEDS_DIAMOND_TOOL) ? ToolTier.DIAMOND
+            : base.is(BlockTags.NEEDS_IRON_TOOL) ? ToolTier.IRON
+            : base.is(BlockTags.NEEDS_STONE_TOOL) ? ToolTier.STONE
+            : ToolTier.NONE;
+        return state
+            .setValue(REQUIRES_TOOL_FOR_DROPS, base.requiresCorrectToolForDrops())
+            .setValue(HARVEST_TOOL, harvestTool)
+            .setValue(TOOL_TIER, toolTier);
+    }
+
     private static BlockState copyProperties(BlockState from, Block to){
         return to.defaultBlockState()
             .setValue(STAGE, from.getValue(STAGE))
             .setValue(FACE, from.getValue(FACE))
-            .setValue(WATERLOGGED, from.getValue(WATERLOGGED));
+            .setValue(WATERLOGGED, from.getValue(WATERLOGGED))
+            .setValue(REQUIRES_TOOL_FOR_DROPS, from.getValue(REQUIRES_TOOL_FOR_DROPS))
+            .setValue(HARVEST_TOOL, from.getValue(HARVEST_TOOL))
+            .setValue(TOOL_TIER, from.getValue(TOOL_TIER));
     }
 
     public OreGrowthBlock(){
         super(false, BlockProperties.create().lootTable(BuiltInLootTables.EMPTY).randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
-        this.registerDefaultState(this.defaultBlockState().setValue(STAGE, 1).setValue(FACE, Direction.DOWN).setValue(WATERLOGGED, false));
+        this.registerDefaultState(
+            this.defaultBlockState()
+                .setValue(STAGE, 1)
+                .setValue(FACE, Direction.DOWN)
+                .setValue(WATERLOGGED, false)
+                .setValue(REQUIRES_TOOL_FOR_DROPS, false)
+                .setValue(HARVEST_TOOL, HarvestTool.NONE)
+                .setValue(TOOL_TIER, ToolTier.NONE)
+        );
     }
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random){
-        Block base = level.getBlockState(pos.relative(state.getValue(FACE))).getBlock();
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base);
+        BlockState base = level.getBlockState(pos.relative(state.getValue(FACE)));
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base.getBlock());
         if(recipe == null){
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             return;
@@ -118,16 +153,16 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         int stage = state.getValue(STAGE);
         if(this == OreGrowth.ORE_GROWTH_BLOCK){ // Not-fully-grown
             if(stage == recipe.stages()){
-                level.setBlockAndUpdate(pos, copyProperties(state, OreGrowth.COMPLETE_ORE_GROWTH_BLOCK));
+                level.setBlockAndUpdate(pos, copyProperties(propertiesForBase(state, base), OreGrowth.COMPLETE_ORE_GROWTH_BLOCK));
                 return;
             }
             if(stage < recipe.stages() && random.nextFloat() < recipe.growthChance() * OreGrowthConfig.growthChanceScalar.get()){
                 if(stage + 1 == recipe.stages())
                     state = copyProperties(state, OreGrowth.COMPLETE_ORE_GROWTH_BLOCK);
-                level.setBlockAndUpdate(pos, state.setValue(STAGE, stage + 1));
+                level.setBlockAndUpdate(pos, propertiesForBase(state, base).setValue(STAGE, stage + 1));
             }
         }else if(stage < recipe.stages()) // Fully grown
-            level.setBlockAndUpdate(pos, copyProperties(state, OreGrowth.ORE_GROWTH_BLOCK));
+            level.setBlockAndUpdate(pos, copyProperties(propertiesForBase(state, base), OreGrowth.ORE_GROWTH_BLOCK));
     }
 
     @Override
@@ -142,8 +177,12 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         BlockState base = level.getBlockState(pos.relative(facing));
 
         // Check if the base block would drop anything for the current tool
+        ItemStack tool = builder.getOptionalParameter(LootContextParams.TOOL);
         Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
-        if(entity instanceof Player){
+        if(tool != null){
+            if(!tool.isCorrectToolForDrops(state))
+                return Collections.emptyList();
+        }else if(entity instanceof Player){
             if(!ForgeHooks.isCorrectToolForDrops(base, (Player)entity))
                 return Collections.emptyList();
         }else if(entity instanceof LivingEntity){
@@ -195,7 +234,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){
-        builder.add(STAGE, FACE, WATERLOGGED);
+        builder.add(STAGE, FACE, WATERLOGGED, REQUIRES_TOOL_FOR_DROPS, HARVEST_TOOL, TOOL_TIER);
     }
 
     @Nullable
@@ -203,10 +242,11 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     public BlockState getStateForPlacement(BlockPlaceContext context){
         Direction face = context.getClickedFace().getOpposite();
         Level level = context.getLevel();
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(level.getBlockState(context.getClickedPos().relative(face)).getBlock());
+        BlockState base = level.getBlockState(context.getClickedPos().relative(face));
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base.getBlock());
         if(recipe == null)
             return null;
-        BlockState state = this.defaultBlockState()
+        BlockState state = propertiesForBase(this.defaultBlockState(), base)
             .setValue(FACE, face)
             .setValue(WATERLOGGED, level.getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
         if(this == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
@@ -216,11 +256,11 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     @Override
     public BlockState updateShape(BlockState state, Direction neighborDirection, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos){
-        if(!this.canSurvive(state, level, pos))
+        if(state.getBlock() != this || !this.canSurvive(state, level, pos))
             return Blocks.AIR.defaultBlockState();
         if(state.getValue(WATERLOGGED))
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        return super.updateShape(state, neighborDirection, neighborState, level, pos, neighborPos);
+        return propertiesForBase(state, level.getBlockState(pos.relative(state.getValue(FACE))));
     }
 
     @Override
@@ -232,5 +272,50 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public FluidState getFluidState(BlockState state){
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    public boolean requiresCorrectToolForDrops(BlockStateBase state){
+        return state.getValue(REQUIRES_TOOL_FOR_DROPS);
+    }
+
+    public boolean is(BlockStateBase state, TagKey<Block> tag){
+        return tag.equals(state.getValue(HARVEST_TOOL).tag) || tag.equals(state.getValue(TOOL_TIER).tag);
+    }
+
+    public enum HarvestTool implements StringRepresentable {
+        NONE(null),
+        AXE(BlockTags.MINEABLE_WITH_AXE),
+        HOE(BlockTags.MINEABLE_WITH_HOE),
+        PICKAXE(BlockTags.MINEABLE_WITH_PICKAXE),
+        SHOVEL(BlockTags.MINEABLE_WITH_SHOVEL);
+
+        private final TagKey<Block> tag;
+
+        HarvestTool(TagKey<Block> tag){
+            this.tag = tag;
+        }
+
+        @Override
+        public String getSerializedName(){
+            return this.name().toLowerCase(Locale.ROOT);
+        }
+    }
+
+    public enum ToolTier implements StringRepresentable {
+        NONE(null),
+        STONE(BlockTags.NEEDS_STONE_TOOL),
+        IRON(BlockTags.NEEDS_IRON_TOOL),
+        DIAMOND(BlockTags.NEEDS_DIAMOND_TOOL);
+
+        private final TagKey<Block> tag;
+
+        ToolTier(TagKey<Block> tag){
+            this.tag = tag;
+        }
+
+        @Override
+        public String getSerializedName(){
+            return this.name().toLowerCase(Locale.ROOT);
+        }
     }
 }
