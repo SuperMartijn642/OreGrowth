@@ -16,6 +16,7 @@ public class OreGrowthLanguageGenerator extends LanguageGenerator {
     @Override
     public void generate(){
         this.block(OreGrowth.ORE_GROWTH_BLOCK, "Ore Cluster");
+        this.block(OreGrowth.COMPLETE_ORE_GROWTH_BLOCK, "Fully Grown Ore Cluster");
         this.translation("oregrowth.ore_growth_block.adjusted_name", "%s Crystal");
         this.translation("oregrowth.ore_growth_block.growth_hint", "Growth: %s");
         this.translation("oregrowth.jei_category.title", "Crystal Growth");
