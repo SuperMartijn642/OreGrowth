@@ -16,6 +16,8 @@ public class OreGrowthModelGenerator extends ModelGenerator {
     @Override
     public void generate(){
         this.model("item/ore_growth")
+            .parent("block/ore_growth_stage_2");
+        this.model("item/complete_ore_growth")
             .parent("block/ore_growth_stage_4");
     }
 }
