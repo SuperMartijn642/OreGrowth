@@ -27,11 +27,13 @@ public class OreGrowthBlockItemModel implements ItemModel {
     private final List<ItemTintSource> tints;
     private final Supplier<Vector3f[]> extents;
     private final ModelRenderProperties properties;
+    private final boolean animated;
 
     public OreGrowthBlockItemModel(BlockModelWrapper original){
         this.tints = original.tints;
         this.extents = original.extents;
         this.properties = original.properties;
+        this.animated = original.animated;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class OreGrowthBlockItemModel implements ItemModel {
         if(stack.hasFoil()){
             layer.setFoilType(ItemStackRenderState.FoilType.STANDARD);
             renderState.appendModelIdentityElement(ItemStackRenderState.FoilType.STANDARD);
+            renderState.setAnimated();
         }
 
         int tintCount = this.tints.size();
@@ -63,5 +66,7 @@ public class OreGrowthBlockItemModel implements ItemModel {
         Block base = OreGrowthClient.itemModel.getItemBaseBlockContext();
         if(base != null)
             renderState.appendModelIdentityElement(base);
+        if(this.animated)
+            renderState.setAnimated();
     }
 }
