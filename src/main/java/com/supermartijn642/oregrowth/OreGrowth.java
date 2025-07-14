@@ -31,6 +31,8 @@ public class OreGrowth {
     public static RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE;
     public static OreGrowthBlock ORE_GROWTH_BLOCK;
     public static BaseBlockItem ORE_GROWTH_ITEM;
+    public static OreGrowthBlock COMPLETE_ORE_GROWTH_BLOCK;
+    public static BaseBlockItem COMPLETE_ORE_GROWTH_ITEM;
 
     public OreGrowth(IEventBus eventBus){
         OreGrowthConfig.init();
@@ -49,6 +51,8 @@ public class OreGrowth {
         handler.registerRecipeSerializer("ore_growth", () -> OreGrowthRecipe.SERIALIZER);
         handler.registerBlock("ore_growth", () -> ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
+        handler.registerBlock("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_BLOCK = new OreGrowthBlock());
+        handler.registerItem("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_ITEM = new BaseBlockItem(COMPLETE_ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
         handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(new ResourceLocation(MODID, "ore_growth")));
         handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }

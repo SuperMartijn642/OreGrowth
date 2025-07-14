@@ -5,6 +5,7 @@ import com.supermartijn642.core.generator.ResourceCache;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -17,7 +18,12 @@ public class OreGrowthBlockStateGenerator extends BlockStateGenerator {
 
     @Override
     public void generate(){
-        this.blockState(OreGrowth.ORE_GROWTH_BLOCK)
+        this.addClusterBlockState(OreGrowth.ORE_GROWTH_BLOCK);
+        this.addClusterBlockState(OreGrowth.COMPLETE_ORE_GROWTH_BLOCK);
+    }
+
+    private void addClusterBlockState(Block block){
+        this.blockState(block)
             .variantsForAllExcept((state, variant) -> {
                 int stage = state.get(OreGrowthBlock.STAGE);
                 Direction facing = state.get(OreGrowthBlock.FACE);
