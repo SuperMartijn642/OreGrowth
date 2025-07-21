@@ -188,7 +188,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         ItemStack tool = builder.getOptionalParameter(LootContextParams.TOOL);
         Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if(tool != null){
-            if(!tool.isCorrectToolForDrops(state))
+            if(!tool.isCorrectToolForDrops(base))
                 return Collections.emptyList();
         }else if(entity instanceof Player){
             if(!((Player)entity).hasCorrectToolForDrops(base))
