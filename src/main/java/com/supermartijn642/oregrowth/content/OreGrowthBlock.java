@@ -200,6 +200,12 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
+    public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player){
+        pos = pos.relative(state.getValue(FACE));
+        return level.getBlockState(pos).canHarvestBlock(level, pos, player);
+    }
+
+    @Override
     public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos){
         pos = pos.relative(state.getValue(FACE));
         return level.getBlockState(pos).getDestroyProgress(player, level, pos);
