@@ -60,7 +60,7 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
             return;
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(state.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(state.getBlock());
         if(recipe != null)
             OreGrowthBlock.trySpawnOreGrowth(state, recipe, level, pos, random);
     }
