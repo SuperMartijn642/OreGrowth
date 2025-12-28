@@ -5,7 +5,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 @JeiPlugin
 public class OreGrowthJEIPlugin implements IModPlugin {
 
-    public static final RecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = RecipeType.create(OreGrowth.MODID, "ore_growth", OreGrowthRecipe.class);
+    public static final IRecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = IRecipeType.create(OreGrowth.MODID, "ore_growth", OreGrowthRecipe.class);
 
     @Override
     public ResourceLocation getPluginUid(){

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.gui.GuiGraphicsHelper;
-import com.supermartijn642.core.render.RenderUtils;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
@@ -21,6 +20,8 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -46,7 +47,7 @@ import java.util.function.Function;
  */
 public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREIDisplay> {
 
-    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "screen/jei_category_background");
+    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png");
 
     @Override
     public CategoryIdentifier<? extends OreGrowthREIDisplay> getCategoryIdentifier(){
@@ -114,12 +115,9 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
             startX += 9;
 
         // Arrow
-        widgets.add(Widgets.wrapRenderer(new Rectangle(startX + 37, startY + 20, 32, 15), (graphics, bounds1, mouseX, mouseY, delta) -> {
-            graphics.pose().pushMatrix();
-            graphics.pose().translate(bounds1.x, bounds1.y);
-            graphics.blit(BACKGROUND, 0, 0, 111, 0, 32, 15, 256, 256);
-            graphics.pose().popMatrix();
-        }));
+        widgets.add(Widgets.wrapRenderer(new Rectangle(startX + 37, startY + 20, 32, 15), (graphics, bounds1, mouseX, mouseY, delta) ->
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, bounds1.x, bounds1.y, 111, 0, 32, 15, 256, 256)
+        ));
 
         // Pickaxe
         widgets.add(
@@ -138,7 +136,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
             .filter(BlockItem.class::isInstance)
             .map(item -> ((BlockItem)item).getBlock())
             .orElse(null);
-        Slot baseSlot = Widgets.createSlot(new Rectangle(startX + 2, startY + 24, 30, 30))
+        Slot baseSlot = Widgets.createSlot(new Rectangle(startX + 2, startY + 24, 32, 32))
             .entries(
                 recipe.bases(BuiltInRegistries.BLOCK).stream()
                     .map(EntryStacks::of)
@@ -151,9 +149,10 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
                                 if(base != null){
                                     graphics.pose().pushMatrix();
                                     graphics.pose().translate(bounds.x, bounds.y);
+                                    GuiGraphicsHelper.of(graphics).nextStratum();
                                     GuiGraphicsHelper.of(graphics).submitCustomRendering(
-                                        22, 39, 40, 40, // TODO
-                                        poseStack -> renderModel(poseStack, base.defaultBlockState(), 19, 14, 0)
+                                        -2, -2, 40, 40,
+                                        (poseStack, bufferSource) -> renderModel(poseStack, bufferSource, base.defaultBlockState(), 0)
                                     );
                                     graphics.pose().popMatrix();
                                 }
@@ -172,7 +171,7 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
         widgets.add(baseSlot);
 
         // Ore growth block
-        widgets.add(Widgets.wrapRenderer(new Rectangle(startX + 2, startY + 8, 30, 30), (graphics, bounds1, mouseX, mouseY, delta) -> {
+        widgets.add(Widgets.wrapRenderer(new Rectangle(startX + 2, startY + 8, 32, 32), (graphics, bounds1, mouseX, mouseY, delta) -> {
             Block base = baseGetter.apply(baseSlot.getCurrentEntry().cast());
             if(base != null){
                 graphics.pose().pushMatrix();
@@ -182,13 +181,13 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
                 BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
                 if(model instanceof OreGrowthBlockBakedModel)
                     GuiGraphicsHelper.of(graphics).submitCustomRendering(
-                        20, 15, 40, 40, // TODO
-                        poseStack -> ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(poseStack, state, 20, 15, 10))
+                        -1, -2, 40, 40,
+                        (poseStack, bufferSource) -> ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(poseStack, bufferSource, state, 10))
                     );
                 else
                     GuiGraphicsHelper.of(graphics).submitCustomRendering(
-                        20, 15, 40, 40, // TODO
-                        poseStack -> renderModel(poseStack, state, 20, 15, 10)
+                        -1, -2, 40, 40,
+                        (poseStack, bufferSource) -> renderModel(poseStack, bufferSource, state, 10)
                     );
                 graphics.pose().popMatrix();
             }
@@ -197,14 +196,14 @@ public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREID
         return widgets;
     }
 
-    private static void renderModel(PoseStack poseStack, BlockState state, int x, int y, int offset){
-        poseStack.translate(x + 21, y + 16, 150 + offset);
+    private static void renderModel(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, BlockState state, int offset){
+        poseStack.translate(30, 25, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.scale(16, -16, 16);
         BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        ModelBlockRenderer.renderModel(poseStack.last(), RenderUtils.getMainBufferSource().getBuffer(Sheets.translucentItemSheet()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        ModelBlockRenderer.renderModel(poseStack.last(), bufferSource.getBuffer(Sheets.translucentItemSheet()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
     }
 }

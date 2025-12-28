@@ -1,7 +1,6 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.supermartijn642.core.ClientUtils;
-import com.supermartijn642.core.render.TextureAtlases;
 import com.supermartijn642.core.util.Pair;
 import com.supermartijn642.oregrowth.OreGrowth;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -17,6 +16,7 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
@@ -191,7 +191,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         QuadEmitter emitter = dummyMesh.emitter();
 
         // Push a transform to capture each quad
-        SpriteFinder spriteFinder = SpriteFinder.get(ClientUtils.getMinecraft().getModelManager().getAtlas(TextureAtlases.getBlocks()));
+        SpriteFinder spriteFinder = ClientUtils.getMinecraft().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).spriteFinder();
         emitter.pushTransform(quad -> {
             TextureAtlasSprite sprite = spriteFinder.find(quad);
             if(sprite != null)

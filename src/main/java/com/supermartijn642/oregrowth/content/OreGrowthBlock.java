@@ -152,7 +152,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random){
         BlockState base = level.getBlockState(pos.relative(state.getValue(FACE)));
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base.getBlock());
         if(recipe == null){
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             return;
@@ -199,7 +199,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
             return Collections.emptyList();
 
         // Find the recipe for the base block and generate the drops
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base.getBlock());
         if(recipe == null)
             return Collections.emptyList();
         LootParams lootParams = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
@@ -218,9 +218,9 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos){
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction side){
         Block base = level.getBlockState(pos.relative(state.getValue(FACE))).getBlock();
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base);
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base);
         if(recipe == null)
             return 0;
         int stage = state.getValue(STAGE);
@@ -243,7 +243,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         Direction face = context.getClickedFace().getOpposite();
         Level level = context.getLevel();
         BlockState base = level.getBlockState(context.getClickedPos().relative(face));
-        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide).getRecipeFor(base.getBlock());
+        OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base.getBlock());
         if(recipe == null)
             return null;
         BlockState state = propertiesForBase(this.defaultBlockState(), base)
