@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.gui.GuiGraphicsHelper;
-import com.supermartijn642.core.render.RenderUtils;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
@@ -19,14 +18,15 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -46,7 +46,6 @@ import java.util.List;
 /**
  * Created 05/10/2023 by SuperMartijn642
  */
-@SuppressWarnings("removal")
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
 
     private final IDrawable background;
@@ -64,7 +63,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     }
 
     @Override
-    public RecipeType<OreGrowthRecipe> getRecipeType(){
+    public IRecipeType<OreGrowthRecipe> getRecipeType(){
         return OreGrowthJEIPlugin.ORE_GROWTH_RECIPE_TYPE;
     }
 
@@ -87,8 +86,8 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     public void setRecipe(IRecipeLayoutBuilder layoutBuilder, OreGrowthRecipe recipe, IFocusGroup focusGroup){
         // Add the ore growth block as catalyst, just so it is easier to look up all ore growth recipes
         layoutBuilder.addInvisibleIngredients(RecipeIngredientRole.CRAFTING_STATION)
-            .addItemStack(OreGrowth.ORE_GROWTH_ITEM.getDefaultInstance())
-            .addItemStack(OreGrowth.COMPLETE_ORE_GROWTH_ITEM.getDefaultInstance());
+            .add(OreGrowth.ORE_GROWTH_ITEM)
+            .add(OreGrowth.COMPLETE_ORE_GROWTH_ITEM);
         // Outputs
         int outputs = Math.min(recipe.getRecipeViewerDrops().size(), 6);
         int columns = outputs > 1 ? 2 : 1;
@@ -116,7 +115,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             layoutBuilder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
                 .setBackground(this.slotBackground, -1, -1)
                 .addRichTooltipCallback((slotView, list) -> list.addAll(tooltips))
-                .addItemStack(drop.result());
+                .add(drop.result());
         }
         // Base block
         IIngredientRenderer<ItemStack> originalRenderer = this.ingredientManager.getIngredientRenderer(VanillaTypes.ITEM_STACK);
@@ -133,7 +132,6 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
                     originalRenderer.getTooltip(tooltip, ingredient, tooltipFlag);
                 }
 
-                @SuppressWarnings("removal")
                 @Override
                 public List<Component> getTooltip(ItemStack stack, TooltipFlag flag){
                     return List.of();
@@ -158,7 +156,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
     @Override
     public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY){
-        guiGraphics.pose().popMatrix();
+        guiGraphics.pose().pushMatrix();
         if(slotsView.getSlotViews(RecipeIngredientRole.OUTPUT).size() <= 1)
             guiGraphics.pose().translate(9, 0);
 
@@ -175,10 +173,11 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             .filter(BlockItem.class::isInstance)
             .map(item -> ((BlockItem)item).getBlock())
             .orElse(null);
+        GuiGraphicsHelper.of(guiGraphics).nextStratum();
         if(base != null)
             GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
-                22, 39, 40, 40, // TODO
-                poseStack -> renderModel(poseStack, base.defaultBlockState(), 22, 39, 0)
+                0, 22, 40, 40,
+                (poseStack, bufferSource) -> renderModel(poseStack, bufferSource, base.defaultBlockState(), 0)
             );
 
         // Ore growth block
@@ -188,27 +187,27 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
             if(model instanceof OreGrowthBlockBakedModel)
                 GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
-                    22, 39, 40, 40, // TODO
-                    poseStack -> ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(poseStack, state, 22, 23, 10))
+                    0, 6, 40, 40,
+                    (poseStack, bufferSource) -> ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(poseStack, bufferSource, state, 10))
                 );
             else
                 GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
-                    22, 39, 40, 40, // TODO
-                    poseStack -> renderModel(poseStack, state, 22, 23, 10)
+                    0, 6, 40, 40,
+                    (poseStack, bufferSource) -> renderModel(poseStack, bufferSource, state, 10)
                 );
         }
 
         guiGraphics.pose().popMatrix();
     }
 
-    private static void renderModel(PoseStack poseStack, BlockState state, int x, int y, int offset){
-        poseStack.translate(x + 21, y + 16, 150 + offset);
+    private static void renderModel(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, BlockState state, int offset){
+        poseStack.translate(30, 25, 150 + offset);
         poseStack.scale(1.85f, 1.85f, 1.85f);
         poseStack.scale(16, -16, 16);
         BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        ModelBlockRenderer.renderModel(poseStack.last(), RenderUtils.getMainBufferSource(), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state);
+        ModelBlockRenderer.renderModel(poseStack.last(), bufferSource, model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state);
     }
 }

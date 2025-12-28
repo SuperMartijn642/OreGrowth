@@ -8,9 +8,7 @@
     "PlayerListMixin",
     "RecipeManagerMixin"
   ],
-  "client": [
-    "ParticleEngineMixin"
-  ],
+  "client": [],
   "server": [],
   "injectors": {
     "defaultRequire": 1

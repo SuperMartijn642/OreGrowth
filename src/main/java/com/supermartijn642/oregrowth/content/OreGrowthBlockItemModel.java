@@ -6,7 +6,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.item.*;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -37,7 +37,7 @@ public class OreGrowthBlockItemModel implements ItemModel {
     }
 
     @Override
-    public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver modelResolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable LivingEntity entity, int k){
+    public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver modelResolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner owner, int k){
         renderState.appendModelIdentityElement(this);
         ItemStackRenderState.LayerRenderState layer = renderState.newLayer();
         if(stack.hasFoil()){
@@ -49,7 +49,7 @@ public class OreGrowthBlockItemModel implements ItemModel {
         int tintCount = this.tints.size();
         int[] tints = layer.prepareTintLayers(tintCount);
         for(int i = 0; i < tintCount; i++){
-            int tint = this.tints.get(i).calculate(stack, level, entity);
+            int tint = this.tints.get(i).calculate(stack, level, owner == null ? null : owner.asLivingEntity());
             tints[i] = tint;
             renderState.appendModelIdentityElement(tint);
         }

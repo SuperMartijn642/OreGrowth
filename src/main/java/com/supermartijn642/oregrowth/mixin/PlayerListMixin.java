@@ -29,8 +29,8 @@ public class PlayerListMixin {
     @Inject(
         method = "placeNewPlayer",
         at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/server/players/PlayerList;sendPlayerPermissionLevel(Lnet/minecraft/server/level/ServerPlayer;)V",
+            value = "NEW",
+            target = "net/minecraft/network/protocol/game/ClientboundUpdateRecipesPacket",
             shift = At.Shift.BEFORE
         )
     )
