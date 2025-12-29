@@ -3,7 +3,7 @@ package com.supermartijn642.oregrowth.content;
 import com.supermartijn642.oregrowth.OreGrowthClient;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.item.*;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -24,7 +24,7 @@ public class OreGrowthBlockItemModel implements ItemModel {
     private final RandomSource random = RandomSource.create();
 
     private final List<ItemTintSource> tints;
-    private final Supplier<Vector3f[]> extents;
+    private final Supplier<Vector3fc[]> extents;
     private final ModelRenderProperties properties;
     private final boolean animated;
 
@@ -54,7 +54,7 @@ public class OreGrowthBlockItemModel implements ItemModel {
         }
 
         layer.setExtents(this.extents);
-        layer.setRenderType(ItemBlockRenderTypes.getRenderType(stack));
+        layer.setRenderType(Sheets.cutoutBlockSheet());
         this.properties.applyToLayer(layer, displayContext);
         OreGrowthClient.itemModel.emitItemQuads(layer, this.random);
         Block base = OreGrowthClient.itemModel.getItemBaseBlockContext();

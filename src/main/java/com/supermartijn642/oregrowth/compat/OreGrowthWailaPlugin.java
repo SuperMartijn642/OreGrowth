@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -53,8 +53,8 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
             }
 
             @Override
-            public ResourceLocation getUid(){
-                return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_hint");
+            public Identifier getUid(){
+                return Identifier.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_hint");
             }
         }, OreGrowthBlock.class);
         registration.registerBlockIcon(new IBlockComponentProvider() {
@@ -88,8 +88,8 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
             }
 
             @Override
-            public ResourceLocation getUid(){
-                return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_icon");
+            public Identifier getUid(){
+                return Identifier.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_icon");
             }
         }, OreGrowthBlock.class);
     }

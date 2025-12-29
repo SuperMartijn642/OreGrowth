@@ -6,7 +6,7 @@ import com.supermartijn642.core.generator.ResourceCache;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
@@ -20,7 +20,7 @@ public class OreGrowthOreGrowthRecipeGenerator extends OreGrowthRecipeGenerator 
     }
 
     @Override
-    public OreGrowthRecipeBuilder recipe(String namespace, String location, ResourceLocation base, int stages, double spawnChance, double growthChance){
+    public OreGrowthRecipeBuilder recipe(String namespace, String location, Identifier base, int stages, double spawnChance, double growthChance){
         return super.recipe(namespace, location, base, stages, spawnChance, growthChance)
             .condition(new OreGrowthDefaultRecipeCondition());
     }

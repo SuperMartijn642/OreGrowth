@@ -8,7 +8,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Created 05/10/2023 by SuperMartijn642
@@ -19,8 +19,8 @@ public class OreGrowthJEIPlugin implements IModPlugin {
     public static final IRecipeType<OreGrowthRecipe> ORE_GROWTH_RECIPE_TYPE = IRecipeType.create(OreGrowth.MODID, "ore_growth", OreGrowthRecipe.class);
 
     @Override
-    public ResourceLocation getPluginUid(){
-        return ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_plugin");
+    public Identifier getPluginUid(){
+        return Identifier.fromNamespaceAndPath(OreGrowth.MODID, "ore_growth_plugin");
     }
 
     @Override

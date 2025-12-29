@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,7 +47,7 @@ import java.util.function.Function;
  */
 public class OreGrowthREIRecipeCategory implements DisplayCategory<OreGrowthREIDisplay> {
 
-    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png");
+    public static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png");
 
     @Override
     public CategoryIdentifier<? extends OreGrowthREIDisplay> getCategoryIdentifier(){

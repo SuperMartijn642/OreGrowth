@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,15 +47,13 @@ import java.util.List;
  */
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
 
-    private final IDrawable background;
     private final IDrawable arrow;
     private final IDrawable slotBackground;
     private final IDrawable icon;
     private final IIngredientManager ingredientManager;
 
     public OreGrowthJEIRecipeCategory(IGuiHelper guiHelper, IIngredientManager ingredientManager){
-        this.background = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 0, 8, 111, 56);
-        this.arrow = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 111, 0, 32, 15);
+        this.arrow = guiHelper.createDrawable(Identifier.fromNamespaceAndPath(OreGrowth.MODID, "textures/screen/jei_category_background.png"), 111, 0, 32, 15);
         this.slotBackground = guiHelper.getSlotDrawable();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(OreGrowth.COMPLETE_ORE_GROWTH_BLOCK));
         this.ingredientManager = ingredientManager;
@@ -72,8 +70,13 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     }
 
     @Override
-    public IDrawable getBackground(){
-        return this.background;
+    public int getWidth(){
+        return 111;
+    }
+
+    @Override
+    public int getHeight(){
+        return 56;
     }
 
     @Override
@@ -207,6 +210,6 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
 
         poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
         poseStack.scale(0.625f, 0.625f, 0.625f);
-        ModelBlockRenderer.renderModel(poseStack.last(), bufferSource.getBuffer(Sheets.translucentItemSheet()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        ModelBlockRenderer.renderModel(poseStack.last(), bufferSource.getBuffer(Sheets.translucentBlockItemSheet()), model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
     }
 }

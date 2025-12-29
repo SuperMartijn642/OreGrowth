@@ -19,8 +19,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -109,7 +109,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
         return this.resolvedDrops;
     }
 
-    public void resolveDrops(Function<ResourceLocation,LootTable> lookup){
+    public void resolveDrops(Function<Identifier,LootTable> lookup){
         if(this.resolvedDrops == null){
             this.resolvedDrops = this.drops.stream()
                 .flatMap(drop -> drop.result.flatMap(
@@ -207,13 +207,13 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 baseIdentifier = baseIdentifier.substring(1);
                 if(!RegistryUtil.isValidIdentifier(baseIdentifier))
                     throw new JsonParseException("Property 'base' must be a valid identifier, not '" + baseIdentifier + "'!");
-                bases.add(Either.right(TagKey.create(net.minecraft.core.registries.Registries.BLOCK, ResourceLocation.parse(baseIdentifier))));
+                bases.add(Either.right(TagKey.create(net.minecraft.core.registries.Registries.BLOCK, Identifier.parse(baseIdentifier))));
             }else{
                 if(!RegistryUtil.isValidIdentifier(baseIdentifier))
                     throw new JsonParseException("Property 'base' must be a valid identifier, not '" + baseIdentifier + "'!");
-                if(!Registries.BLOCKS.hasIdentifier(ResourceLocation.parse(baseIdentifier)))
+                if(!Registries.BLOCKS.hasIdentifier(Identifier.parse(baseIdentifier)))
                     throw new JsonParseException("Unknown base block '" + baseIdentifier + "'!");
-                Block block = Registries.BLOCKS.getValue(ResourceLocation.parse(baseIdentifier));
+                Block block = Registries.BLOCKS.getValue(Identifier.parse(baseIdentifier));
                 if(block == Blocks.AIR || block == Blocks.CAVE_AIR || block == Blocks.VOID_AIR)
                     throw new JsonParseException("Got AIR block for base identifier '" + baseIdentifier + "'!");
                 bases.add(Either.left(block));
@@ -253,7 +253,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 throw new JsonParseException("Drop property 'item' must be a valid identifier, not '" + resultJson.get("item").getAsString() + "'!");
             if(resultJson.has("id") && !RegistryUtil.isValidIdentifier(resultJson.get("id").getAsString()))
                 throw new JsonParseException("Drop property 'id' must be a valid identifier, not '" + resultJson.get("id").getAsString() + "'!");
-            ResourceLocation id = ResourceLocation.parse(resultJson.has("item") ? resultJson.get("item").getAsString() : resultJson.get("id").getAsString());
+            Identifier id = Identifier.parse(resultJson.has("item") ? resultJson.get("item").getAsString() : resultJson.get("id").getAsString());
             if(!Registries.ITEMS.hasIdentifier(id))
                 throw new JsonParseException("Unknown item '" + id + "'!");
             Item item = Registries.ITEMS.getValue(id);
@@ -277,7 +277,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
         return new OreGrowthRecipe(new ArrayList<>(bases), stages, spawnChance, growthChance, drops);
     }
 
-    public record OreGrowthDrop(int minStage, int maxStage, double chance, Either<ItemStack,ResourceLocation> result) {
+    public record OreGrowthDrop(int minStage, int maxStage, double chance, Either<ItemStack,Identifier> result) {
 
         public JsonObject toJson(){
             JsonObject json = new JsonObject();
@@ -341,7 +341,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 throw new JsonParseException("Drop must have either object property 'item' or string property 'loot_table'!");
             if(json.has("item") && json.has("loot_table"))
                 throw new JsonParseException("Drop can only have either 'item' or 'loot_table', not both!");
-            Either<ItemStack,ResourceLocation> result;
+            Either<ItemStack,Identifier> result;
             if(json.has("item")){
                 if(!json.get("item").isJsonObject())
                     throw new JsonParseException("Drop property 'item' must be an object!");
@@ -351,7 +351,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                     throw new JsonParseException("Drop property 'item' must have string property 'id' and int property 'count'!");
                 if(!RegistryUtil.isValidIdentifier(resultJson.get("id").getAsString()))
                     throw new JsonParseException("Drop property 'id' must be a valid identifier, not '" + resultJson.get("id").getAsString() + "'!");
-                ResourceLocation id = ResourceLocation.parse(resultJson.get("id").getAsString());
+                Identifier id = Identifier.parse(resultJson.get("id").getAsString());
                 if(!Registries.ITEMS.hasIdentifier(id))
                     throw new JsonParseException("Unknown item '" + id + "'!");
                 Item item = Registries.ITEMS.getValue(id);
@@ -364,7 +364,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                     throw new JsonParseException("Drop property 'loot_table' must be a string!");
                 if(!RegistryUtil.isValidIdentifier(json.get("loot_table").getAsString()))
                     throw new JsonParseException("Drop property 'loot_table' must be a valid identifier, not '" + json.get("loot_table").getAsString() + "'!");
-                result = Either.right(ResourceLocation.parse(json.get("loot_table").getAsString()));
+                result = Either.right(Identifier.parse(json.get("loot_table").getAsString()));
             }
             return new OreGrowthDrop(minStage, maxStage, chance, result);
         }
@@ -396,7 +396,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
             List<Either<Block,TagKey<Block>>> bases = new ArrayList<>(baseCount);
             for(int i = 0; i < baseCount; i++){
                 boolean isBlock = buffer.readBoolean();
-                ResourceLocation baseIdentifier = buffer.readResourceLocation();
+                Identifier baseIdentifier = buffer.readIdentifier();
                 if(isBlock){
                     if(!Registries.BLOCKS.hasIdentifier(baseIdentifier))
                         throw new IllegalArgumentException("Unknown block '" + baseIdentifier + "'!");
@@ -422,11 +422,11 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 int minStage = buffer.readInt();
                 int maxStage = buffer.readInt();
                 double chance = buffer.readDouble();
-                Either<ItemStack,ResourceLocation> result;
+                Either<ItemStack,Identifier> result;
                 if(buffer.readBoolean())
                     result = Either.left(ItemStack.OPTIONAL_STREAM_CODEC.decode(buffer));
                 else
-                    result = Either.right(buffer.readResourceLocation());
+                    result = Either.right(buffer.readIdentifier());
                 drops.add(new OreGrowthDrop(minStage, maxStage, chance, result));
             }
             int resolvedDropCount = buffer.readInt();
@@ -451,7 +451,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
             buffer.writeInt(recipe.bases.size());
             for(Either<Block,TagKey<Block>> base : recipe.bases){
                 buffer.writeBoolean(base.isLeft());
-                buffer.writeResourceLocation(base.flatMap(Registries.BLOCKS::getIdentifier, TagKey::location));
+                buffer.writeIdentifier(base.flatMap(Registries.BLOCKS::getIdentifier, TagKey::location));
             }
             buffer.writeInt(recipe.stages);
             buffer.writeDouble(recipe.spawnChance);
@@ -463,7 +463,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 buffer.writeDouble(drop.chance);
                 buffer.writeBoolean(drop.result.isLeft());
                 drop.result.ifLeft(item -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, item));
-                drop.result.ifRight(buffer::writeResourceLocation);
+                drop.result.ifRight(buffer::writeIdentifier);
             }
             // Send the resolved drops as well
             //noinspection ConstantValue
