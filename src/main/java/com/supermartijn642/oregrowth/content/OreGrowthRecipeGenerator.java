@@ -9,7 +9,7 @@ import com.supermartijn642.core.generator.ResourceCache;
 import com.supermartijn642.core.generator.ResourceGenerator;
 import com.supermartijn642.core.generator.ResourceType;
 import com.supermartijn642.core.registry.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -21,13 +21,13 @@ import java.util.*;
  */
 public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
 
-    private final Map<ResourceLocation,OreGrowthRecipeBuilder> recipes = new HashMap<>();
+    private final Map<Identifier,OreGrowthRecipeBuilder> recipes = new HashMap<>();
 
     public OreGrowthRecipeGenerator(String modid, ResourceCache cache){
         super(modid, cache);
     }
 
-    public OreGrowthRecipeBuilder recipe(String namespace, String location, ResourceLocation base, int stages, double spawnChance, double growthChance){
+    public OreGrowthRecipeBuilder recipe(String namespace, String location, Identifier base, int stages, double spawnChance, double growthChance){
         if(stages < 1 || stages > OreGrowthBlock.MAX_STAGES)
             throw new RuntimeException("Invalid number of stages: '" + stages + "'!");
         if(spawnChance <= 0 || spawnChance > 1)
@@ -35,7 +35,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         if(growthChance <= 0 || growthChance > 1)
             throw new RuntimeException("Invalid growth chance: '" + growthChance + "'!");
 
-        ResourceLocation identifier = ResourceLocation.fromNamespaceAndPath(namespace, location);
+        Identifier identifier = Identifier.fromNamespaceAndPath(namespace, location);
         if(this.recipes.containsKey(identifier))
             throw new RuntimeException("Duplicate recipe for location '" + identifier + "'!");
 
@@ -50,7 +50,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
     }
 
     public OreGrowthRecipeBuilder modIntegration(String modid, String base, int stages, double spawnChance, double growthChance){
-        ResourceLocation baseIdentifier = base.contains(":") ? ResourceLocation.parse(base) : ResourceLocation.fromNamespaceAndPath(modid, base);
+        Identifier baseIdentifier = base.contains(":") ? Identifier.parse(base) : Identifier.fromNamespaceAndPath(modid, base);
         return this.recipe(this.modid, modid + "_" + baseIdentifier.getPath() + "_growth", baseIdentifier, stages, spawnChance, growthChance)
             .defaultNamespace(modid)
             .modLoadedCondition(modid);
@@ -58,7 +58,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
 
     @Override
     public void save(){
-        for(Map.Entry<ResourceLocation,OreGrowthRecipeBuilder> entry : this.recipes.entrySet()){
+        for(Map.Entry<Identifier,OreGrowthRecipeBuilder> entry : this.recipes.entrySet()){
             OreGrowthRecipeBuilder recipe = entry.getValue();
 
             // Convert the recipe to json
@@ -103,7 +103,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             if(!conditions.isEmpty())
                 json = ConditionalRecipeSerializer.wrapRecipe(json, conditions);
 
-            ResourceLocation location = entry.getKey();
+            Identifier location = entry.getKey();
             this.cache.saveJsonResource(ResourceType.DATA, json, location.getNamespace(), "recipe", location.getPath() + ".json");
         }
     }
@@ -118,7 +118,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
 
         private final List<ResourceCondition> conditions = new ArrayList<>();
 
-        public OreGrowthRecipeBuilder(ResourceLocation base, int stages, double spawnChance, double growthChance){
+        public OreGrowthRecipeBuilder(Identifier base, int stages, double spawnChance, double growthChance){
             this.bases.add(base.toString());
             this.stages = stages;
             this.spawnChance = spawnChance;
@@ -130,7 +130,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this;
         }
 
-        public OreGrowthRecipeBuilder baseBlock(ResourceLocation block){
+        public OreGrowthRecipeBuilder baseBlock(Identifier block){
             if(!this.bases.add(block.toString()))
                 throw new IllegalStateException("Duplicate base block '" + block + "'!");
             return this;
@@ -141,14 +141,14 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         }
 
         public OreGrowthRecipeBuilder baseBlock(String namespace, String identifier){
-            return this.baseBlock(ResourceLocation.fromNamespaceAndPath(namespace, identifier));
+            return this.baseBlock(Identifier.fromNamespaceAndPath(namespace, identifier));
         }
 
         public OreGrowthRecipeBuilder baseBlock(String block){
             return this.baseBlock(this.parseIdentifier(block));
         }
 
-        public OreGrowthRecipeBuilder baseTag(ResourceLocation tag){
+        public OreGrowthRecipeBuilder baseTag(Identifier tag){
             if(!this.bases.add("#" + tag))
                 throw new IllegalStateException("Duplicate base tag '" + tag + "'!");
             return this;
@@ -159,14 +159,14 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         }
 
         public OreGrowthRecipeBuilder baseTag(String namespace, String identifier){
-            return this.baseTag(ResourceLocation.fromNamespaceAndPath(namespace, identifier));
+            return this.baseTag(Identifier.fromNamespaceAndPath(namespace, identifier));
         }
 
         public OreGrowthRecipeBuilder baseTag(String tag){
             return this.baseTag(this.parseIdentifier(tag));
         }
 
-        public OreGrowthRecipeBuilder itemDrop(int minStage, int maxStage, double chance, ResourceLocation item, int count){
+        public OreGrowthRecipeBuilder itemDrop(int minStage, int maxStage, double chance, Identifier item, int count){
             if(minStage <= 0 || minStage > OreGrowthBlock.MAX_STAGES)
                 throw new IllegalArgumentException("Minimum stage must be between 1 and " + OreGrowthBlock.MAX_STAGES + ", not '" + minStage + "'!");
             if(maxStage <= 0 || maxStage > OreGrowthBlock.MAX_STAGES)
@@ -186,14 +186,14 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
         }
 
         public OreGrowthRecipeBuilder itemDrop(int minStage, int maxStage, double chance, String namespace, String identifier, int count){
-            return this.itemDrop(minStage, maxStage, chance, ResourceLocation.fromNamespaceAndPath(namespace, identifier), count);
+            return this.itemDrop(minStage, maxStage, chance, Identifier.fromNamespaceAndPath(namespace, identifier), count);
         }
 
         public OreGrowthRecipeBuilder itemDrop(int minStage, int maxStage, double chance, String item, int count){
             return this.itemDrop(minStage, maxStage, chance, this.parseIdentifier(item), count);
         }
 
-        public OreGrowthRecipeBuilder itemDrop(int minStage, int maxStage, double chance, ResourceLocation item){
+        public OreGrowthRecipeBuilder itemDrop(int minStage, int maxStage, double chance, Identifier item){
             return this.itemDrop(minStage, maxStage, chance, item, 1);
         }
 
@@ -209,7 +209,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this.itemDrop(minStage, maxStage, chance, item, 1);
         }
 
-        public OreGrowthRecipeBuilder itemDrop(int stage, double chance, ResourceLocation item, int count){
+        public OreGrowthRecipeBuilder itemDrop(int stage, double chance, Identifier item, int count){
             return this.itemDrop(stage, stage, chance, item, count);
         }
 
@@ -225,7 +225,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this.itemDrop(stage, stage, chance, item, count);
         }
 
-        public OreGrowthRecipeBuilder itemDrop(int stage, double chance, ResourceLocation item){
+        public OreGrowthRecipeBuilder itemDrop(int stage, double chance, Identifier item){
             return this.itemDrop(stage, chance, item, 1);
         }
 
@@ -241,7 +241,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this.itemDrop(stage, chance, item, 1);
         }
 
-        public OreGrowthRecipeBuilder itemDrop(int stage, ResourceLocation item, int count){
+        public OreGrowthRecipeBuilder itemDrop(int stage, Identifier item, int count){
             return this.itemDrop(stage, 1, item, count);
         }
 
@@ -257,7 +257,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this.itemDrop(stage, 1, item, count);
         }
 
-        public OreGrowthRecipeBuilder itemDrop(int stage, ResourceLocation item){
+        public OreGrowthRecipeBuilder itemDrop(int stage, Identifier item){
             return this.itemDrop(stage, item, 1);
         }
 
@@ -273,7 +273,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this.itemDrop(stage, item, 1);
         }
 
-        public OreGrowthRecipeBuilder lootTableDrop(int minStage, int maxStage, double chance, ResourceLocation lootTable){
+        public OreGrowthRecipeBuilder lootTableDrop(int minStage, int maxStage, double chance, Identifier lootTable){
             if(minStage <= 0 || minStage > OreGrowthBlock.MAX_STAGES)
                 throw new IllegalArgumentException("Minimum stage must be between 1 and " + OreGrowthBlock.MAX_STAGES + ", not '" + minStage + "'!");
             if(maxStage <= 0 || maxStage > OreGrowthBlock.MAX_STAGES)
@@ -286,11 +286,11 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this;
         }
 
-        public OreGrowthRecipeBuilder lootTableDrop(int stage, double chance, ResourceLocation lootTable){
+        public OreGrowthRecipeBuilder lootTableDrop(int stage, double chance, Identifier lootTable){
             return this.lootTableDrop(stage, stage, chance, lootTable);
         }
 
-        public OreGrowthRecipeBuilder lootTableDrop(int stage, ResourceLocation lootTable){
+        public OreGrowthRecipeBuilder lootTableDrop(int stage, Identifier lootTable){
             return this.lootTableDrop(stage, 1, lootTable);
         }
 
@@ -303,17 +303,17 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             return this.condition(new ModLoadedResourceCondition(modid));
         }
 
-        private ResourceLocation parseIdentifier(String identifier){
+        private Identifier parseIdentifier(String identifier){
             if(this.baseNamespace == null)
-                return ResourceLocation.parse(identifier);
+                return Identifier.parse(identifier);
             int separatorIndex = identifier.indexOf(':');
             if(separatorIndex < 0)
-                return ResourceLocation.fromNamespaceAndPath(this.baseNamespace, identifier);
-            return ResourceLocation.fromNamespaceAndPath(identifier.substring(0, separatorIndex), identifier.substring(separatorIndex + 1));
+                return Identifier.fromNamespaceAndPath(this.baseNamespace, identifier);
+            return Identifier.fromNamespaceAndPath(identifier.substring(0, separatorIndex), identifier.substring(separatorIndex + 1));
         }
     }
 
-    private record OreGrowthDrop(int minStage, int maxStage, double chance, ResourceLocation item, int count,
-                                 ResourceLocation lootTable) {
+    private record OreGrowthDrop(int minStage, int maxStage, double chance, Identifier item, int count,
+                                 Identifier lootTable) {
     }
 }

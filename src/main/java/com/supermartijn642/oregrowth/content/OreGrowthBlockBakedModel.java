@@ -1,12 +1,9 @@
 package com.supermartijn642.oregrowth.content;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
-import com.supermartijn642.oregrowth.OreGrowth;
+import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -30,7 +27,6 @@ import java.util.function.Function;
  */
 public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
 
-    private static final int BLOCK_VERTEX_DATA_UV_OFFSET = findUVOffset(DefaultVertexFormat.BLOCK, VertexFormatElement.Usage.UV);
     public static final Direction[] MODEL_DIRECTIONS = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, null};
 
     private final BlockStateModel original;
@@ -51,7 +47,7 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
     private Block getBase(BlockAndTintGetter blockView, BlockPos pos, BlockState state){
         Block base;
         if(this.baseBlockContext == null){
-            if(!state.is(OreGrowth.ORE_GROWTH_BLOCK))
+            if(!(state.getBlock() instanceof OreGrowthBlock))
                 return null;
             BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
             base = blockView.getBlockState(basePos).getBlock();
@@ -171,45 +167,27 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
     }
 
     private static BakedQuad remapQuad(BakedQuad quad, MaterialEntry material){
-        TextureAtlasSprite sprite = quad.sprite();
-        int[] vertexData = quad.vertices();
-        // Make sure we don't change the original quad
-        vertexData = Arrays.copyOf(vertexData, vertexData.length);
-
-        // Adjust the uv
-        int vertexSize = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
-        int vertices = vertexData.length / vertexSize;
-        int uvOffset = BLOCK_VERTEX_DATA_UV_OFFSET / 4;
-
+        TextureAtlasSprite oldSprite = quad.sprite();
         TextureAtlasSprite newSprite = material.sprite;
-        for(int i = 0; i < vertices; i++){
-            int offset = i * vertexSize;
-
-            // UV
-            float u = Float.intBitsToFloat(vertexData[offset + uvOffset]);
-            float newU = newSprite.getU0() + (u - sprite.getU0()) / (sprite.getU1() - sprite.getU0()) * (newSprite.getU1() - newSprite.getU0());
-            vertexData[offset + uvOffset] = Float.floatToRawIntBits(newU);
-            float v = Float.intBitsToFloat(vertexData[offset + uvOffset + 1]);
-            float newV = newSprite.getV0() + (v - sprite.getV0()) / (sprite.getV1() - sprite.getV0()) * (newSprite.getV1() - newSprite.getV0());
-            vertexData[offset + uvOffset + 1] = Float.floatToRawIntBits(newV);
+        long[] uvs = new long[4];
+        for(int i = 0; i < 4; i++){
+            uvs[i] = UVPair.pack(
+                (UVPair.unpackU(quad.packedUV(i)) - oldSprite.getU0()) / (oldSprite.getU1() - oldSprite.getU0()) * (newSprite.getU1() - newSprite.getU0()) + newSprite.getU0(),
+                (UVPair.unpackV(quad.packedUV(i)) - oldSprite.getV0()) / (oldSprite.getV1() - oldSprite.getV0()) * (newSprite.getV1() - newSprite.getV0()) + newSprite.getV0()
+            );
         }
-
-        // Create a new quad
-        return new BakedQuad(vertexData, quad.tintIndex(), quad.direction(), newSprite, material.shading, material.lightEmission, material.ambientOcclusion != TriState.FALSE);
-    }
-
-    private static int findUVOffset(VertexFormat vertexFormat, VertexFormatElement.Usage usage){
-        VertexFormatElement element = null;
-        for(int index = 0; index < vertexFormat.getElements().size(); index++){
-            VertexFormatElement el = vertexFormat.getElements().get(index);
-            if(el.usage() == usage){
-                element = el;
-                break;
-            }
-        }
-        if(element == null)
-            throw new RuntimeException("Expected vertex format to have a '" + vertexFormat + "' attribute");
-        return vertexFormat.getOffset(element);
+        return new BakedQuad(
+            quad.position0(), quad.position1(), quad.position2(), quad.position3(),
+            uvs[0], uvs[1], uvs[2], uvs[3],
+            quad.tintIndex(),
+            quad.direction(),
+            newSprite,
+            material.shading,
+            material.lightEmission,
+            quad.bakedNormals(),
+            quad.bakedColors(),
+            material.ambientOcclusion.toBoolean(quad.hasAmbientOcclusion())
+        );
     }
 
     @Override

@@ -7,20 +7,15 @@ import com.supermartijn642.core.item.ItemProperties;
 import com.supermartijn642.core.network.PacketChannel;
 import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
 import com.supermartijn642.core.registry.RegistrationHandler;
-import com.supermartijn642.oregrowth.compat.OreGrowthTOPPlugin;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.SyncOreGrowthRecipesPacket;
 import com.supermartijn642.oregrowth.generators.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-
-import java.util.function.Consumer;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -45,10 +40,6 @@ public class OreGrowth {
         if(CommonUtils.getEnvironmentSide().isClient())
             OreGrowthClient.initializeClient();
         registerGenerators();
-
-        // The One Probe integration
-        if(CommonUtils.isModLoaded("theoneprobe"))
-            eventBus.addListener((Consumer<InterModEnqueueEvent>)event -> InterModComms.sendTo("theoneprobe", "getTheOneProbe", OreGrowthTOPPlugin::new));
     }
 
     private static void register(){
@@ -58,7 +49,7 @@ public class OreGrowth {
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
         handler.registerBlock("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_ITEM = new BaseBlockItem(COMPLETE_ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
-        handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(MODID, "ore_growth")));
+        handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "ore_growth")));
         handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
 

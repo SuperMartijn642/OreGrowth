@@ -43,8 +43,6 @@ dependencies {
     compileOnly "curse.maven:jei-238222:${just_enough_items_file}"
     // Jade
     implementation "curse.maven:jade-324717:${jade_file}"
-    // The One Probe
-    compileOnly "curse.maven:the-one-probe-245211:${the_one_probe_file}"
     // Roughly Enough Items
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${roughly_enough_items_version}"
 }
