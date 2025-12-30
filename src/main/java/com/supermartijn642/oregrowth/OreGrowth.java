@@ -12,7 +12,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthDefaultRecipeCondition;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.SyncOreGrowthRecipesPacket;
 import com.supermartijn642.oregrowth.generators.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.common.Mod;
 
@@ -48,7 +48,7 @@ public class OreGrowth {
         handler.registerItem("ore_growth", () -> ORE_GROWTH_ITEM = new BaseBlockItem(ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
         handler.registerBlock("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_BLOCK = new OreGrowthBlock());
         handler.registerItem("complete_ore_growth", () -> COMPLETE_ORE_GROWTH_ITEM = new BaseBlockItem(COMPLETE_ORE_GROWTH_BLOCK, ItemProperties.create().group(CreativeItemGroup.getNaturalBlocks())));
-        handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(ResourceLocation.fromNamespaceAndPath(MODID, "ore_growth")));
+        handler.registerRecipeType("ore_growth", () -> ORE_GROWTH_RECIPE_TYPE = RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "ore_growth")));
         handler.registerResourceConditionSerializer("default_recipes", OreGrowthDefaultRecipeCondition.SERIALIZER);
     }
 

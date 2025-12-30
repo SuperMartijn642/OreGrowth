@@ -4,15 +4,15 @@ import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.util.Triple;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -62,11 +62,11 @@ public class LootTableHelper {
         }
     }
 
-    public static List<LootEntry> entriesInTable(ResourceLocation tableIdentifier, Function<ResourceLocation,LootTable> lookup){
+    public static List<LootEntry> entriesInTable(Identifier tableIdentifier, Function<Identifier,LootTable> lookup){
         return entriesInTable(lookup.apply(tableIdentifier), lookup);
     }
 
-    private static List<LootEntry> entriesInTable(LootTable table, Function<ResourceLocation,LootTable> lookup){
+    private static List<LootEntry> entriesInTable(LootTable table, Function<Identifier,LootTable> lookup){
         List<LootEntry> items = new ArrayList<>();
         // Extract the entries from each pool
         for(LootPool pool : table.pools){
@@ -99,7 +99,7 @@ public class LootTableHelper {
         return 1;
     }
 
-    private static Stream<LootEntry> itemsFromContainer(LootPoolEntryContainer container, int totalWeight, Function<ResourceLocation,LootTable> lookup){
+    private static Stream<LootEntry> itemsFromContainer(LootPoolEntryContainer container, int totalWeight, Function<Identifier,LootTable> lookup){
         List<LootEntryConditions> conditions = container.conditions.stream().map(LootTableHelper::formatCondition).filter(Objects::nonNull).toList();
         if(container instanceof AlternativesEntry){
             MutableComponent not = TextComponents.translation("oregrowth.jei_category.conditions.none_of").get();
@@ -132,7 +132,7 @@ public class LootTableHelper {
         if(container instanceof LootItem)
             return Stream.of(new LootEntry(new ItemStack(((LootItem)container).item), (double)((LootItem)container).weight / totalWeight, conditions));
         if(container instanceof NestedLootTable)
-            return entriesInTable(((NestedLootTable)container).contents.map(key -> lookup.apply(key.location()), Function.identity()), lookup).stream().map(entry -> entry.withChance(entry.chance * ((NestedLootTable)container).weight / totalWeight).prependConditions(conditions.stream(), conditions.size()));
+            return entriesInTable(((NestedLootTable)container).contents.map(key -> lookup.apply(key.identifier()), Function.identity()), lookup).stream().map(entry -> entry.withChance(entry.chance * ((NestedLootTable)container).weight / totalWeight).prependConditions(conditions.stream(), conditions.size()));
         return Stream.empty();
     }
 
@@ -217,7 +217,7 @@ public class LootTableHelper {
             enchantments = TextComponents.translation("oregrowth.jei_category.conditions.match_tool.more_items", builder.get(), lastEnchant).get();
         }
         if(predicate.items().isPresent() && predicate.items().get() instanceof HolderSet.Named){
-            ResourceLocation tag = ((HolderSet.Named<Item>)predicate.items().get()).key().location();
+            Identifier tag = ((HolderSet.Named<Item>)predicate.items().get()).key().location();
             if(enchantments == null)
                 return TextComponents.translation("oregrowth.jei_category.conditions.match_tool.tag", tag).get();
             else
