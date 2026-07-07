@@ -8,11 +8,9 @@ import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
  */
 public class OreGrowthClient {
 
-    public static OreGrowthBlockBakedModel itemModel;
-
     public static void initializeClient(){
         ClientRegistrationHandler handler = ClientRegistrationHandler.get(OreGrowth.MODID);
-        handler.registerBlockModelOverwrite(() -> OreGrowth.ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
-        handler.registerBlockModelOverwrite(() -> OreGrowth.COMPLETE_ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
+        handler.registerBlockStateModelOverwrite(() -> OreGrowth.ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
+        handler.registerBlockStateModelOverwrite(() -> OreGrowth.COMPLETE_ORE_GROWTH_BLOCK, OreGrowthBlockBakedModel::new);
     }
 }

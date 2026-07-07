@@ -4,15 +4,17 @@ import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
@@ -33,7 +35,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     private static final Direction[] MODEL_DIRECTIONS = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, null};
 
     private final BlockStateModel original;
-    private final Map<Block,List<BlockModelPart>> meshCache = new HashMap<>();
+    private final Map<Block,List<BlockStateModelPart>> meshCache = new HashMap<>();
 
     public OreGrowthBlockBakedModel(BlockStateModel original){
         this.original = original;
@@ -51,16 +53,16 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> parts, ModelData modelData, @Nullable ChunkSectionLayer layer){
+    public void collectParts(RandomSource random, List<BlockStateModelPart> parts, ModelData modelData){
         // Get the base block
         Block base = modelData.get(BASE_BLOCK_PROPERTY);
         if(base == null){
-            this.original.collectParts(random, parts, modelData, layer);
+            this.original.collectParts(random, parts, modelData);
             return;
         }
 
         // Get the mesh from cache
-        List<BlockModelPart> mesh;
+        List<BlockStateModelPart> mesh;
         synchronized(this.meshCache){
             mesh = this.meshCache.get(base);
         }
@@ -68,7 +70,11 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         // Compute the mesh if it doesn't exist yet
         if(mesh == null){
             mesh = this.computeMesh(
-                model -> model.collectParts(random, ModelData.EMPTY, null),
+                model -> {
+                    List<BlockStateModelPart> l = new ArrayList<>();
+                    model.collectParts(random, l, ModelData.EMPTY);
+                    return l;
+                },
                 base
             );
             synchronized(this.meshCache){
@@ -83,22 +89,23 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> parts){
-        this.original.collectParts(random, parts);
+    public void collectParts(RandomSource random, List<BlockStateModelPart> parts){
+        this.collectParts(random, parts, ModelData.EMPTY);
     }
 
-    private List<BlockModelPart> computeMesh(Function<BlockStateModel,List<BlockModelPart>> modelEmitter, Block baseBlock){
+    private List<BlockStateModelPart> computeMesh(Function<BlockStateModel,List<BlockStateModelPart>> modelEmitter, Block baseBlock){
         BlockState baseState = baseBlock.defaultBlockState();
-        BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(baseState);
 
         // Find the most occurring sprite
         Map<TextureAtlasSprite,Pair<Holder<Integer>,MaterialEntry>> spriteCounts = new HashMap<>();
-        for(BlockModelPart part : modelEmitter.apply(baseModel)){
+        for(BlockStateModelPart part : modelEmitter.apply(baseModel)){
             for(Direction cullFace : MODEL_DIRECTIONS){
                 part.getQuads(cullFace)
                     .forEach(quad -> {
-                        TextureAtlasSprite sprite = quad.sprite();
-                        Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), new MaterialEntry(sprite, quad.shade(), quad.lightEmission(), quad.ambientOcclusion()))).left();
+                        BakedQuad.MaterialInfo materialInfo = quad.materialInfo();
+                        TextureAtlasSprite sprite = materialInfo.sprite();
+                        Holder<Integer> count = spriteCounts.computeIfAbsent(sprite, s -> Pair.of(new Holder<>(0), new MaterialEntry(sprite, materialInfo.shade(), materialInfo.lightEmission(), part.useAmbientOcclusion()))).left();
                         count.set(count.get() + 1);
                     });
             }
@@ -118,7 +125,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         Map<Direction,List<BakedQuad>> quads = new EnumMap<>(Direction.class);
         for(Direction direction : Direction.values()) quads.put(direction, new ArrayList<>());
         List<BakedQuad> directionLessQuads = new ArrayList<>();
-        for(BlockModelPart part : modelEmitter.apply(this.original)){
+        for(BlockStateModelPart part : modelEmitter.apply(this.original)){
             for(Direction cullDirection : MODEL_DIRECTIONS){
                 for(BakedQuad quad : part.getQuads(cullDirection)){
                     if(cullDirection == null)
@@ -132,26 +139,36 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         // Create new model part
         TextureAtlasSprite sprite = material.sprite;
         boolean ambientOcclusion = material.ambientOcclusion;
-        return List.of(new BlockModelPart() {
+        return List.of(new BlockStateModelPart() {
             @Override
             public List<BakedQuad> getQuads(@Nullable Direction cullDirection){
                 return cullDirection == null ? directionLessQuads : quads.get(cullDirection);
             }
 
             @Override
-            public TextureAtlasSprite particleIcon(){
-                return sprite;
+            public Material.Baked particleMaterial(){
+                return new Material.Baked(sprite, false);
             }
 
             @Override
             public boolean useAmbientOcclusion(){
                 return ambientOcclusion;
             }
+
+            @Override
+            public @BakedQuad.MaterialFlags int materialFlags(){
+                int flags = 0;
+                if(sprite.transparency().hasTranslucent())
+                    flags |= BakedQuad.FLAG_TRANSLUCENT;
+                if(sprite.contents().isAnimated())
+                    flags |= BakedQuad.FLAG_ANIMATED;
+                return flags;
+            }
         });
     }
 
     private static BakedQuad remapQuad(BakedQuad quad, MaterialEntry material){
-        TextureAtlasSprite oldSprite = quad.sprite();
+        TextureAtlasSprite oldSprite = quad.materialInfo().sprite();
         TextureAtlasSprite newSprite = material.sprite;
         long[] uvs = new long[4];
         for(int i = 0; i < 4; i++){
@@ -163,28 +180,40 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         return new BakedQuad(
             quad.position0(), quad.position1(), quad.position2(), quad.position3(),
             uvs[0], uvs[1], uvs[2], uvs[3],
-            quad.tintIndex(),
             quad.direction(),
-            newSprite,
-            material.shading,
-            material.lightEmission,
-            material.ambientOcclusion
+            new BakedQuad.MaterialInfo(
+                newSprite,
+                ChunkSectionLayer.byTransparency(newSprite.transparency()),
+                newSprite.transparency().hasTranslucent() ? Sheets.translucentBlockItemSheet() : Sheets.cutoutBlockItemSheet(),
+                quad.materialInfo().tintIndex(),
+                material.shading,
+                material.lightEmission
+            )
         );
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(ModelData modelData){
+    public Material.Baked particleMaterial(ModelData modelData){
         Block base = modelData.get(BASE_BLOCK_PROPERTY);
-        BlockState baseState;
-        if(base == null || (baseState = base.defaultBlockState()).isAir())
-            return this.original.particleIcon(modelData);
-        BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
-        return baseModel.particleIcon(ModelData.EMPTY);
+        if(base == null)
+            return this.original.particleMaterial(modelData);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(base.defaultBlockState());
+        return baseModel.particleMaterial(ModelData.EMPTY);
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(){
-        return this.original.particleIcon();
+    public Material.Baked particleMaterial(){
+        return this.original.particleMaterial();
+    }
+
+    @Override
+    public @BakedQuad.MaterialFlags int materialFlags(){
+        return this.original.materialFlags();
+    }
+
+    @Override
+    public boolean hasMaterialFlag(@BakedQuad.MaterialFlags int flag){
+        return this.original.hasMaterialFlag(flag);
     }
 
     private record MaterialEntry(TextureAtlasSprite sprite, boolean shading, int lightEmission, boolean ambientOcclusion) {
