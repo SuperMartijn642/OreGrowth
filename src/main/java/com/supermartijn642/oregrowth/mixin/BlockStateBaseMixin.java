@@ -6,9 +6,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import com.supermartijn642.oregrowth.extensions.OreGrowthBlockState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -23,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Created 04/10/2023 by SuperMartijn642
  */
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public class BlockStateBaseMixin implements OreGrowthBlockState {
+public abstract class BlockStateBaseMixin implements OreGrowthBlockState {
 
     @Unique
     private boolean hasOreGrowthRecipe;
@@ -63,36 +61,6 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
         OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(state.getBlock());
         if(recipe != null)
             OreGrowthBlock.trySpawnOreGrowth(state, recipe, level, pos, random);
-    }
-
-    @Inject(
-        method = "is(Lnet/minecraft/tags/TagKey;)Z",
-        at = @At("HEAD"),
-        cancellable = true
-    )
-    public void is(TagKey<Block> tag, CallbackInfoReturnable<Boolean> ci){
-        // Intercept checks for mining tags
-        //noinspection DataFlowIssue
-        BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-        Block block = state.getBlock();
-        if((block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
-            && ((OreGrowthBlock)block).is(state, tag))
-            ci.setReturnValue(true);
-    }
-
-    @Inject(
-        method = "is(Lnet/minecraft/core/HolderSet;)Z",
-        at = @At("HEAD"),
-        cancellable = true
-    )
-    public void is(HolderSet<Block> tag, CallbackInfoReturnable<Boolean> ci){
-        // Intercept checks for mining tags
-        //noinspection DataFlowIssue
-        BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
-        Block block = state.getBlock();
-        if((block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
-            && tag instanceof HolderSet.Named && ((OreGrowthBlock)block).is(state, ((HolderSet.Named<Block>)tag).key()))
-            ci.setReturnValue(true);
     }
 
     @Inject(

@@ -3,22 +3,22 @@ package com.supermartijn642.oregrowth.content;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Pair;
 import com.supermartijn642.oregrowth.OreGrowth;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MutableMesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
+import net.fabricmc.fabric.api.client.renderer.v1.Renderer;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.MutableMesh;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.client.renderer.v1.sprite.SpriteFinder;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -38,8 +38,8 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     private static final Direction[] MODEL_DIRECTIONS = {Direction.UP, Direction.DOWN, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, null};
 
     private final BlockStateModel original;
-    private final Mesh mesh;
-    private final TextureAtlasSprite[] meshSprites;
+    private Mesh mesh;
+    private TextureAtlasSprite[] meshSprites;
     private final Map<Block,MaterialEntry> blockMaterialCache = new HashMap<>();
     private final Map<Block,MaterialEntry> itemMaterialCache = new HashMap<>();
 
@@ -47,23 +47,31 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
 
     public OreGrowthBlockBakedModel(BlockStateModel original){
         this.original = original;
+    }
 
+    private void createMesh(){
+        if(this.mesh != null)
+            return;
         // Create a mesh from the original model's quads
         Renderer renderer = Renderer.get();
         MutableMesh mesh = renderer.mutableMesh();
         QuadEmitter emitter = mesh.emitter();
         RandomSource random = RandomSource.create();
         List<TextureAtlasSprite> sprites = new ArrayList<>();
-        for(BlockModelPart part : original.collectParts(random)){
+        SpriteFinder spriteFinder = ClientUtils.getMinecraft().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).spriteFinder();
+        List<BlockStateModelPart> parts = new ArrayList<>();
+        this.original.collectParts(random, parts);
+        for(BlockStateModelPart part : parts){
             for(Direction cullFace : MODEL_DIRECTIONS){
                 List<BakedQuad> quads = part.getQuads(cullFace);
                 for(BakedQuad quad : quads){
                     emitter.fromBakedQuad(quad);
                     emitter.cullFace(cullFace);
-                    int spriteIndex = sprites.indexOf(quad.sprite());
+                    TextureAtlasSprite sprite = spriteFinder.find(emitter);
+                    int spriteIndex = sprites.indexOf(sprite);
                     if(spriteIndex == -1){
                         spriteIndex = sprites.size();
-                        sprites.add(quad.sprite());
+                        sprites.add(sprite);
                     }
                     emitter.tag(spriteIndex);
                     emitter.emit();
@@ -97,9 +105,11 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     }
 
     @Override
-    public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest){
+    public void emitQuads(QuadEmitter emitter, BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest){
+        this.createMesh();
+
         // Get the base block
-        Block base = this.getBase(blockView, pos, state);
+        Block base = this.getBase(level, pos, state);
         if(base == null){
             this.mesh.outputTo(emitter);
             return;
@@ -109,15 +119,17 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         this.emitQuads(base, this.blockMaterialCache, (model, output) -> {
             BlockState baseState = base.defaultBlockState();
             BlockPos basePos = state.is(OreGrowth.ORE_GROWTH_BLOCK) ? pos.relative(state.getValue(OreGrowthBlock.FACE)) : pos;
-            model.emitQuads(output, blockView, basePos, baseState, random, side -> false);
+            model.emitQuads(output, level, basePos, baseState, random, side -> false);
         }, emitter);
     }
 
-    public void emitItemQuads(ItemStackRenderState.LayerRenderState renderLayer, RandomSource random){
+    public void emitItemQuads(QuadEmitter emitter, RandomSource random){
+        this.createMesh();
+
         // Get the base block
         Block base = this.baseBlockContext;
         if(base == null){
-            this.mesh.outputTo(renderLayer.emitter());
+            this.mesh.outputTo(emitter);
             return;
         }
 
@@ -125,7 +137,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         this.emitQuads(base, this.itemMaterialCache, (model, output) -> {
             random.setSeed(42);
             model.emitQuads(output, EmptyLevelView.INSTANCE, BlockPos.ZERO, base.defaultBlockState(), random, direction -> false);
-        }, renderLayer.emitter());
+        }, emitter);
     }
 
     private void emitQuads(Block base, Map<Block,MaterialEntry> materialCache, BiConsumer<BlockStateModel,QuadEmitter> modelEmitter, QuadEmitter emitter){
@@ -181,7 +193,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
 
     private static MaterialEntry findMaterial(Block baseBlock, BiConsumer<BlockStateModel,QuadEmitter> modelEmitter){
         BlockState baseState = baseBlock.defaultBlockState();
-        BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(baseState);
 
         // Keep track of how many times a sprite occurs along with the material used
         Map<TextureAtlasSprite,Pair<Integer,MaterialEntry>> materials = new HashMap<>();
@@ -194,8 +206,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         SpriteFinder spriteFinder = ClientUtils.getMinecraft().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).spriteFinder();
         emitter.pushTransform(quad -> {
             TextureAtlasSprite sprite = spriteFinder.find(quad);
-            if(sprite != null)
-                materials.compute(sprite, (s, pair) -> pair == null ? Pair.of(1, new MaterialEntry(s, quad.diffuseShade(), quad.emissive(), quad.ambientOcclusion())) : pair.mapLeft(i -> i + 1));
+            materials.compute(sprite, (s, pair) -> pair == null ? Pair.of(1, new MaterialEntry(s, quad.diffuseShade(), quad.emissive(), quad.ambientOcclusion())) : pair.mapLeft(i -> i + 1));
             // Cancel all quads
             return false;
         });
@@ -221,28 +232,71 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
     }
 
     @Override
-    public @Nullable Object createGeometryKey(BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random){// Get the base block
-        return Pair.of(this, this.getBase(blockView, pos, state));
-    }
-
-    @Override
-    public TextureAtlasSprite particleSprite(BlockAndTintGetter blockView, BlockPos pos, BlockState state){
-        Block base = this.getBase(blockView, pos, state);
+    public @Nullable Object createGeometryKey(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random){// Get the base block
+        Block base = this.getBase(level, pos, state);
+        if(base == null)
+            return this.original.createGeometryKey(level, pos, state, random);
         BlockState baseState = base.defaultBlockState();
         if(baseState.isAir())
-            return this.original.particleSprite(blockView, pos, state);
-        BlockStateModel baseModel = ClientUtils.getBlockRenderer().getBlockModel(baseState);
-        return baseModel.particleSprite(blockView, pos, state);
+            return this.original.createGeometryKey(level, pos, state, random);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(baseState);
+        return Pair.of(this, baseModel.createGeometryKey(level, pos, baseState, random));
     }
 
     @Override
-    public void collectParts(RandomSource randomSource, List<BlockModelPart> list){
-        this.original.collectParts(randomSource, list);
+    public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state){
+        Block base = this.getBase(level, pos, state);
+        if(base == null)
+            return this.original.particleMaterial(level, pos, state);
+        BlockState baseState = base.defaultBlockState();
+        if(baseState.isAir())
+            return this.original.particleMaterial(level, pos, state);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(baseState);
+        return baseModel.particleMaterial(level, pos, baseState);
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(){
-        return this.original.particleIcon();
+    public void collectParts(RandomSource random, List<BlockStateModelPart> parts){
+        this.original.collectParts(random, parts);
+    }
+
+    @Override
+    public Material.Baked particleMaterial(){
+        return this.original.particleMaterial();
+    }
+
+    @Override
+    public @BakedQuad.MaterialFlags int materialFlags(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random){
+        Block base = this.getBase(level, pos, state);
+        if(base == null)
+            return this.original.materialFlags(level, pos, state, random);
+        BlockState baseState = base.defaultBlockState();
+        if(baseState.isAir())
+            return this.original.materialFlags(level, pos, state, random);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(baseState);
+        return baseModel.materialFlags(level, pos, baseState, random);
+    }
+
+    @Override
+    public boolean hasMaterialFlag(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, @BakedQuad.MaterialFlags int flag){
+        Block base = this.getBase(level, pos, state);
+        if(base == null)
+            return this.original.hasMaterialFlag(level, pos, state, random, flag);
+        BlockState baseState = base.defaultBlockState();
+        if(baseState.isAir())
+            return this.original.hasMaterialFlag(level, pos, state, random, flag);
+        BlockStateModel baseModel = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(baseState);
+        return baseModel.hasMaterialFlag(level, pos, baseState, random, flag);
+    }
+
+    @Override
+    public @BakedQuad.MaterialFlags int materialFlags(){
+        return this.original.materialFlags();
+    }
+
+    @Override
+    public boolean hasMaterialFlag(@BakedQuad.MaterialFlags int flag){
+        return this.original.hasMaterialFlag(flag);
     }
 
     private record MaterialEntry(TextureAtlasSprite sprite, boolean shading, boolean emissive, TriState ambientOcclusion) {

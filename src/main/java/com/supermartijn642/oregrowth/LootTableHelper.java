@@ -8,6 +8,8 @@ import net.minecraft.advancements.criterion.EnchantmentPredicate;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.network.chat.Component;
@@ -24,6 +26,7 @@ import net.minecraft.world.level.storage.loot.providers.number.BinomialDistribut
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -34,6 +37,13 @@ import java.util.stream.Stream;
  * Created 24/08/2024 by SuperMartijn642
  */
 public class LootTableHelper {
+
+    private static final DataComponentGetter EMPTY_COMPONENTS = new DataComponentGetter() {
+        @Override
+        public @Nullable <T> T get(DataComponentType<? extends T> type){
+            return null;
+        }
+    };
 
     public record LootEntry(ItemStack stack, double chance, Collection<LootEntryConditions> conditions) {
         LootEntry withChance(double chance){
@@ -191,7 +201,7 @@ public class LootTableHelper {
     private static MutableComponent formatItemPredicate(ItemPredicate predicate){
         MutableComponent enchantments = null;
         List<Enchantment> actualEnchants = Stream.concat(
-            predicate.components().exact().asPatch().get(DataComponents.ENCHANTMENTS)
+            Optional.ofNullable(predicate.components().exact().asPatch().get(EMPTY_COMPONENTS, DataComponents.ENCHANTMENTS))
                 .map(c -> c.keySet().stream()).orElseGet(Stream::of)
                 .filter(Holder::isBound)
                 .map(Holder::value),

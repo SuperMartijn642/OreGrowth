@@ -7,7 +7,7 @@ import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipeManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -70,10 +70,10 @@ public class OreGrowthWailaPlugin implements IWailaPlugin {
                     }
 
                     @Override
-                    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
+                    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks){
                         currentIcon.setX(this.getX());
                         currentIcon.setY(this.getY());
-                        OreGrowthClient.itemModel.withContext(base, () -> currentIcon.render(guiGraphics, mouseX, mouseY, partialTicks));
+                        OreGrowthClient.itemModel.withContext(base, () -> currentIcon.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks));
                     }
 
                     @Override
