@@ -1,6 +1,5 @@
 package com.supermartijn642.oregrowth.compat.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.gui.GuiGraphicsHelper;
@@ -8,6 +7,7 @@ import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.content.OreGrowthBlock;
 import com.supermartijn642.oregrowth.content.OreGrowthBlockBakedModel;
 import com.supermartijn642.oregrowth.content.OreGrowthRecipe;
+import it.unimi.dsi.fastutil.ints.IntList;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -23,21 +23,26 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
@@ -47,6 +52,9 @@ import java.util.List;
  * Created 05/10/2023 by SuperMartijn642
  */
 public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthRecipe> {
+
+    private static final Matrix4fc IDENTITY_MATRIX = new Matrix4f().identity();
+    private static final RandomSource RANDOM_SOURCE = RandomSource.create();
 
     private final IDrawable arrow;
     private final IDrawable slotBackground;
@@ -127,7 +135,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             .addItemStacks(recipe.bases(BuiltInRegistries.BLOCK).stream().map(Block::asItem).map(Item::getDefaultInstance).toList())
             .setCustomRenderer(VanillaTypes.ITEM_STACK, new IIngredientRenderer<>() {
                 @Override
-                public void render(GuiGraphics guiGraphics, ItemStack stack){
+                public void render(GuiGraphicsExtractor guiGraphics, ItemStack stack){
                 }
 
                 @Override
@@ -158,7 +166,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
     }
 
     @Override
-    public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY){
+    public void draw(OreGrowthRecipe recipe, IRecipeSlotsView slotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY){
         guiGraphics.pose().pushMatrix();
         if(slotsView.getSlotViews(RecipeIngredientRole.OUTPUT).size() <= 1)
             guiGraphics.pose().translate(9, 0);
@@ -167,7 +175,7 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
         this.arrow.draw(guiGraphics, 37, 20);
 
         // Pickaxe
-        guiGraphics.renderFakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 18);
+        guiGraphics.fakeItem(Items.DIAMOND_PICKAXE.getDefaultInstance(), 43, 18);
 
         // Base block
         Block base = slotsView.findSlotByName("base")
@@ -178,39 +186,47 @@ public class OreGrowthJEIRecipeCategory implements IRecipeCategory<OreGrowthReci
             .orElse(null);
         GuiGraphicsHelper.of(guiGraphics).nextStratum();
         if(base != null)
-            GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
-                0, 22, 40, 40,
-                (poseStack, bufferSource) -> renderModel(poseStack, bufferSource, base.defaultBlockState(), 0)
-            );
+            renderBlock(GuiGraphicsHelper.of(guiGraphics), base.defaultBlockState(), 0, 22, 0);
 
         // Ore growth block
         if(base != null){
             int stage = (int)(System.currentTimeMillis() / 1200 % recipe.stages() + 1);
             BlockState state = OreGrowth.ORE_GROWTH_BLOCK.defaultBlockState().setValue(OreGrowthBlock.STAGE, stage);
-            BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
+            BlockStateModel model = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(state);
             if(model instanceof OreGrowthBlockBakedModel)
-                GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
-                    0, 6, 40, 40,
-                    (poseStack, bufferSource) -> ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderModel(poseStack, bufferSource, state, 10))
-                );
+                ((OreGrowthBlockBakedModel)model).withContext(base, () -> renderBlock(GuiGraphicsHelper.of(guiGraphics), state, 0, 6, 10));
             else
-                GuiGraphicsHelper.of(guiGraphics).submitCustomRendering(
-                    0, 6, 40, 40,
-                    (poseStack, bufferSource) -> renderModel(poseStack, bufferSource, state, 10)
-                );
+                renderBlock(GuiGraphicsHelper.of(guiGraphics), state, 0, 6, 10);
         }
 
         guiGraphics.pose().popMatrix();
     }
 
-    private static void renderModel(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, BlockState state, int offset){
-        poseStack.translate(30, 25, 150 + offset);
-        poseStack.scale(1.85f, 1.85f, 1.85f);
-        poseStack.scale(16, -16, 16);
-        BlockStateModel model = ClientUtils.getBlockRenderer().getBlockModel(state);
+    private static void renderBlock(GuiGraphicsHelper graphics, BlockState state, int x, int y, int offset){
+        // Create block render state
+        BlockStateModel model = ClientUtils.getMinecraft().getModelManager().getBlockStateModelSet().get(state);
+        BlockModelRenderState blockRenderState = new BlockModelRenderState();
+        long seed = state.getSeed(BlockPos.ZERO);
+        List<BlockStateModelPart> parts = blockRenderState.setupModel(IDENTITY_MATRIX, model.hasMaterialFlag(BlockAndTintGetter.EMPTY, BlockPos.ZERO, state, BakedQuad.FLAG_TRANSLUCENT));
+        RANDOM_SOURCE.setSeed(seed);
+        model.collectParts(BlockAndTintGetter.EMPTY, BlockPos.ZERO, state, RANDOM_SOURCE, parts);
+        IntList tintLayers = blockRenderState.tintLayers();
+        for(BlockTintSource tintSource : ClientUtils.getMinecraft().getBlockColors().getTintSources(state))
+            tintLayers.add(tintSource.color(state));
 
-        poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
-        poseStack.scale(0.625f, 0.625f, 0.625f);
-        ModelBlockRenderer.renderModel(poseStack.last(), bufferSource, model, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, state);
+        // Submit block model
+        graphics.submitFeatures(
+            x, y, 40, 40,
+            (poseStack, output) -> {
+                poseStack.pushPose();
+                poseStack.translate(30, 25, 150 + offset);
+                poseStack.scale(1.85f, 1.85f, 1.85f);
+                poseStack.scale(16, -16, 16);
+                poseStack.mulPose(new Quaternionf().rotationXYZ(30 * ((float)Math.PI / 180), 225 * ((float)Math.PI / 180), 0 * ((float)Math.PI / 180)));
+                poseStack.scale(0.625f, 0.625f, 0.625f);
+                blockRenderState.submit(poseStack, output, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+                poseStack.popPose();
+            }
+        );
     }
 }

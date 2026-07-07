@@ -6,7 +6,8 @@
   "mixins": [
     "BlockStateBaseMixin",
     "PlayerListMixin",
-    "RecipeManagerMixin"
+    "RecipeManagerMixin",
+    "TypedInstanceMixin"
   ],
   "client": [],
   "server": [],

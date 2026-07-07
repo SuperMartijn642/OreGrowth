@@ -1,19 +1,23 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.supermartijn642.oregrowth.OreGrowthClient;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.*;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4fc;
 import org.joml.Vector3fc;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,13 +31,13 @@ public class OreGrowthBlockItemModel implements ItemModel {
     private final List<ItemTintSource> tints;
     private final Supplier<Vector3fc[]> extents;
     private final ModelRenderProperties properties;
-    private final boolean animated;
+    private final Matrix4fc transformation;
 
-    public OreGrowthBlockItemModel(BlockModelWrapper original){
+    public OreGrowthBlockItemModel(CuboidItemModelWrapper original){
         this.tints = original.tints;
         this.extents = original.extents;
         this.properties = original.properties;
-        this.animated = original.animated;
+        this.transformation = original.transformation;
     }
 
     @Override
@@ -46,26 +50,36 @@ public class OreGrowthBlockItemModel implements ItemModel {
             renderState.setAnimated();
         }
 
-        int tintCount = this.tints.size();
-        int[] tints = layer.prepareTintLayers(tintCount);
-        for(int i = 0; i < tintCount; i++){
-            int tint = this.tints.get(i).calculate(stack, level, owner == null ? null : owner.asLivingEntity());
-            tints[i] = tint;
-            renderState.appendModelIdentityElement(tint);
+        if(!this.tints.isEmpty()){
+            IntList tintLayers = layer.tintLayers();
+            for(ItemTintSource tintSource : this.tints){
+                int tint = tintSource.calculate(stack, level, owner == null ? null : owner.asLivingEntity());
+                tintLayers.add(tint);
+                renderState.appendModelIdentityElement(tint);
+            }
         }
 
         layer.setExtents(this.extents);
-        layer.setRenderType(Sheets.cutoutBlockSheet());
+        layer.setLocalTransform(this.transformation);
         this.properties.applyToLayer(layer, displayContext);
-        //noinspection deprecation
-        OreGrowthClient.itemModel.collectParts(this.random).stream()
-            .flatMap(part -> Arrays.stream(OreGrowthBlockBakedModel.MODEL_DIRECTIONS).map(part::getQuads))
-            .flatMap(List::stream)
-            .forEach(layer.prepareQuadList()::add);
+        List<BlockStateModelPart> parts = new ArrayList<>();
+        this.random.setSeed(k);
+        OreGrowthClient.itemModel.collectParts(this.random, parts);
+        boolean animated = false;
+        List<BakedQuad> quads = layer.prepareQuadList();
+        for(BlockStateModelPart part : parts){
+            for(Direction cullDirection : OreGrowthBlockBakedModel.MODEL_DIRECTIONS){
+                for(BakedQuad quad : part.getQuads(cullDirection)){
+                    if(quad.materialInfo().sprite().contents().isAnimated())
+                        animated = true;
+                    quads.add(quad);
+                }
+            }
+        }
+        if(animated)
+            renderState.setAnimated();
         Block base = OreGrowthClient.itemModel.getItemBaseBlockContext();
         if(base != null)
             renderState.appendModelIdentityElement(base);
-        if(this.animated)
-            renderState.setAnimated();
     }
 }

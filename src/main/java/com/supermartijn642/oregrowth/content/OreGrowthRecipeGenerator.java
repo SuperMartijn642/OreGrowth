@@ -101,7 +101,7 @@ public abstract class OreGrowthRecipeGenerator extends ResourceGenerator {
             // Add conditions
             List<ResourceCondition> conditions = recipe.conditions;
             if(!conditions.isEmpty())
-                json = ConditionalRecipeSerializer.wrapRecipe(json, conditions);
+                json = ConditionalRecipeSerializer.wrapRecipeWithForgeConditions(json, conditions.stream().map(ResourceCondition::createForgeCondition).toList());
 
             Identifier location = entry.getKey();
             this.cache.saveJsonResource(ResourceType.DATA, json, location.getNamespace(), "recipe", location.getPath() + ".json");

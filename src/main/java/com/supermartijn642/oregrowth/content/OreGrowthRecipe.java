@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -41,7 +42,7 @@ import java.util.stream.Stream;
  */
 public class OreGrowthRecipe implements Recipe<RecipeInput> {
 
-    public static final RecipeSerializer<OreGrowthRecipe> SERIALIZER = new Serializer();
+    public static final RecipeSerializer<OreGrowthRecipe> SERIALIZER = new RecipeSerializer<>(Serializer.CODEC, Serializer.STREAM_CODEC);
 
     private final List<Either<Block,TagKey<Block>>> bases;
     private List<Block> resolvedBases;
@@ -90,7 +91,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
             if(drop.chance < 1 && context.getLevel().getRandom().nextDouble() > drop.chance)
                 continue;
             if(drop.result.isLeft())
-                drops.add(drop.result.left().copy());
+                drops.add(drop.result.left().create());
             else
                 context.getLevel().getServer().reloadableRegistries().getLootTable(ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, drop.result.right())).getRandomItems(context, drops::add);
         }
@@ -113,7 +114,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
         if(this.resolvedDrops == null){
             this.resolvedDrops = this.drops.stream()
                 .flatMap(drop -> drop.result.flatMap(
-                    stack -> Stream.of(new RecipeViewerDrop(drop.minStage, drop.maxStage, drop.chance, stack, List.of())),
+                    stack -> Stream.of(new RecipeViewerDrop(drop.minStage, drop.maxStage, drop.chance, stack.create(), List.of())),
                     loot -> LootTableHelper.entriesInTable(loot, lookup).stream()
                         .map(entry -> new RecipeViewerDrop(drop.minStage, drop.maxStage, drop.chance * entry.chance(), entry.stack(), entry.conditions().stream().map(LootTableHelper.LootEntryConditions::toComponents).flatMap(List::stream).toList()))
                 ))
@@ -132,12 +133,22 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
+    public boolean showNotification(){
+        return false;
+    }
+
+    @Override
+    public String group(){
+        return "";
+    }
+
+    @Override
     public boolean matches(RecipeInput input, Level level){
         return false;
     }
 
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider provider){
+    public ItemStack assemble(RecipeInput input){
         return ItemStack.EMPTY;
     }
 
@@ -260,7 +271,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
             int count = resultJson.get("count").getAsInt();
             if(count < 1)
                 throw new JsonParseException("Drop property 'count' must be a positive integer!");
-            drops.add(new OreGrowthDrop(stages, stages, 1, Either.left(new ItemStack(item, count))));
+            drops.add(new OreGrowthDrop(stages, stages, 1, Either.left(new ItemStackTemplate(item, count))));
         }else{
             if(!json.has("drops") || !json.get("drops").isJsonArray())
                 throw new JsonParseException("Recipe must have array property 'drops'!");
@@ -277,7 +288,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
         return new OreGrowthRecipe(new ArrayList<>(bases), stages, spawnChance, growthChance, drops);
     }
 
-    public record OreGrowthDrop(int minStage, int maxStage, double chance, Either<ItemStack,Identifier> result) {
+    public record OreGrowthDrop(int minStage, int maxStage, double chance, Either<ItemStackTemplate,Identifier> result) {
 
         public JsonObject toJson(){
             JsonObject json = new JsonObject();
@@ -290,8 +301,8 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
             json.addProperty("chance", this.chance);
             this.result.ifLeft(stack -> {
                 JsonObject resultJson = new JsonObject();
-                resultJson.addProperty("id", Registries.ITEMS.getIdentifier(stack.getItem()).toString());
-                resultJson.addProperty("count", stack.getCount());
+                resultJson.addProperty("id", stack.item().unwrapKey().get().toString());
+                resultJson.addProperty("count", stack.count());
                 json.add("item", resultJson);
             });
             this.result.ifRight(lootTable -> json.addProperty("loot_table", lootTable.toString()));
@@ -341,7 +352,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 throw new JsonParseException("Drop must have either object property 'item' or string property 'loot_table'!");
             if(json.has("item") && json.has("loot_table"))
                 throw new JsonParseException("Drop can only have either 'item' or 'loot_table', not both!");
-            Either<ItemStack,Identifier> result;
+            Either<ItemStackTemplate,Identifier> result;
             if(json.has("item")){
                 if(!json.get("item").isJsonObject())
                     throw new JsonParseException("Drop property 'item' must be an object!");
@@ -358,7 +369,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 int count = resultJson.get("count").getAsInt();
                 if(count < 1)
                     throw new JsonParseException("Drop property 'count' must be a positive integer!");
-                result = Either.left(new ItemStack(item, count));
+                result = Either.left(new ItemStackTemplate(item, count));
             }else{
                 if(!json.get("loot_table").isJsonPrimitive() || !json.getAsJsonPrimitive("loot_table").isString())
                     throw new JsonParseException("Drop property 'loot_table' must be a string!");
@@ -370,26 +381,24 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
         }
     }
 
-    private static class Serializer implements RecipeSerializer<OreGrowthRecipe> {
+    private static class Serializer {
 
         private static final MapCodec<OreGrowthRecipe> CODEC = CodecHelper.jsonSerializerToMapCodec(
             OreGrowthRecipe::toJson,
-            OreGrowthRecipe::fromJson
+            json -> {
+                try{
+
+                return OreGrowthRecipe.fromJson(json.getAsJsonObject());
+                }catch(Exception e){
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
         );
         private static final StreamCodec<RegistryFriendlyByteBuf,OreGrowthRecipe> STREAM_CODEC = StreamCodec.of(
             Serializer::toNetwork,
             Serializer::fromNetwork
         );
-
-        @Override
-        public MapCodec<OreGrowthRecipe> codec(){
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf,OreGrowthRecipe> streamCodec(){
-            return STREAM_CODEC;
-        }
 
         public static OreGrowthRecipe fromNetwork(RegistryFriendlyByteBuf buffer){
             int baseCount = buffer.readInt();
@@ -422,9 +431,9 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 int minStage = buffer.readInt();
                 int maxStage = buffer.readInt();
                 double chance = buffer.readDouble();
-                Either<ItemStack,Identifier> result;
+                Either<ItemStackTemplate,Identifier> result;
                 if(buffer.readBoolean())
-                    result = Either.left(ItemStack.OPTIONAL_STREAM_CODEC.decode(buffer));
+                    result = Either.left(ItemStackTemplate.STREAM_CODEC.decode(buffer));
                 else
                     result = Either.right(buffer.readIdentifier());
                 drops.add(new OreGrowthDrop(minStage, maxStage, chance, result));
@@ -462,7 +471,7 @@ public class OreGrowthRecipe implements Recipe<RecipeInput> {
                 buffer.writeInt(drop.maxStage);
                 buffer.writeDouble(drop.chance);
                 buffer.writeBoolean(drop.result.isLeft());
-                drop.result.ifLeft(item -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, item));
+                drop.result.ifLeft(item -> ItemStackTemplate.STREAM_CODEC.encode(buffer, item));
                 drop.result.ifRight(buffer::writeIdentifier);
             }
             // Send the resolved drops as well
