@@ -4,8 +4,8 @@ import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.util.Triple;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.predicates.EnchantmentPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentGetter;
@@ -171,14 +171,12 @@ public class LootTableHelper {
         }
         if(condition instanceof WeatherCheck){
             if(((WeatherCheck)condition).isRaining.isPresent()){
-                //noinspection OptionalGetWithoutIsPresent
                 if(((WeatherCheck)condition).isRaining.get())
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.raining").get(), List.of());
                 else
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.raining.not").get(), List.of());
             }
             if(((WeatherCheck)condition).isThundering.isPresent()){
-                //noinspection OptionalGetWithoutIsPresent
                 if(((WeatherCheck)condition).isThundering.get())
                     return new LootEntryConditions(TextComponents.translation("oregrowth.jei_category.conditions.thundering").get(), List.of());
                 else
@@ -189,7 +187,6 @@ public class LootTableHelper {
         if(condition instanceof MatchTool){
             if(((MatchTool)condition).predicate.isEmpty())
                 return null;
-            //noinspection OptionalGetWithoutIsPresent
             MutableComponent predicate = formatItemPredicate(((MatchTool)condition).predicate.get());
             if(predicate == null)
                 return null;
