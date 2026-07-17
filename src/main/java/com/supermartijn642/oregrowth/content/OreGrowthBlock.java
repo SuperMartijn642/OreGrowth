@@ -13,7 +13,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -33,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -278,6 +278,11 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     public boolean is(BlockStateBase state, TagKey<Block> tag){
         return tag.equals(state.getValue(HARVEST_TOOL).tag) || state.getValue(TOOL_TIER).tags.contains(tag);
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(BlockState state){
+        return PushReaction.DESTROY;
     }
 
     public enum HarvestTool implements StringRepresentable {

@@ -13,6 +13,7 @@ public class OreGrowthConfig {
     public static final Supplier<Boolean> enableRecipes;
     public static final Supplier<Double> spawnChanceScalar;
     public static final Supplier<Double> growthChanceScalar;
+    public static final Supplier<Boolean> allowPistonToBypassToolRequirement;
 
     static{
         IConfigBuilder builder = ConfigBuilders.newTomlConfig(OreGrowth.MODID, null, false);
@@ -20,6 +21,7 @@ public class OreGrowthConfig {
         enableRecipes = builder.comment("Should the default Ore Growth recipes be enabled?").define("enableRecipes", true);
         spawnChanceScalar = builder.comment("Global scalar for the spawn chance of ore growth recipes. For example, if set to 0.5, all crystals will spawn half as often.").define("spawnChanceScalar", 1, 0.01, 10);
         growthChanceScalar = builder.comment("Global scalar for the growth chance of ore growth recipes. For example, if set to 0.5, all crystals will be half as likely to grow.").define("growthChanceScalar", 1, 0.01, 10);
+        allowPistonToBypassToolRequirement = builder.comment("Should crystals that normally requires a tool for drops drop resources when broken by a piston?").define("allowPistonToBypassToolRequirement", false);
 
         builder.build();
     }
