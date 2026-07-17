@@ -13,7 +13,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -39,7 +38,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -183,21 +181,6 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         BlockPos pos = new BlockPos((int)Math.floor(origin.x), (int)Math.floor(origin.y), (int)Math.floor(origin.z));
         Direction facing = state.getValue(FACE);
         BlockState base = level.getBlockState(pos.relative(facing));
-
-        // Check if the base block would drop anything for the current tool
-        ItemStack tool = builder.getOptionalParameter(LootContextParams.TOOL);
-        Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
-        if(tool != null){
-            if(!tool.isCorrectToolForDrops(base))
-                return Collections.emptyList();
-        }else if(entity instanceof Player){
-            if(!ForgeHooks.isCorrectToolForDrops(base, (Player)entity))
-                return Collections.emptyList();
-        }else if(entity instanceof LivingEntity){
-            if(!((LivingEntity)entity).getMainHandItem().isCorrectToolForDrops(base))
-                return Collections.emptyList();
-        }else if(base.requiresCorrectToolForDrops())
-            return Collections.emptyList();
 
         // Find the recipe for the base block and generate the drops
         OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base.getBlock());
