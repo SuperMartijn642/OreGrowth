@@ -1,7 +1,6 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.supermartijn642.core.block.BaseBlock;
-import com.supermartijn642.core.block.BlockProperties;
 import com.supermartijn642.core.block.BlockShape;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.OreGrowthConfig;
@@ -31,7 +30,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -127,7 +126,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     public OreGrowthBlock(){
-        super(false, BlockProperties.create().lootTable(BuiltInLootTables.EMPTY).randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
+        super(false, Properties.of().noLootTable().randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE).pushReaction(PushReaction.DESTROY));
         this.registerDefaultState(
             this.defaultBlockState()
                 .setValue(STAGE, 1)
