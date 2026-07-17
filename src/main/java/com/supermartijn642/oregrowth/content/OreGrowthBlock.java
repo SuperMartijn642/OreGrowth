@@ -30,10 +30,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.*;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -271,6 +268,11 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     public boolean is(BlockStateBase state, TagKey<Block> tag){
         return tag.equals(state.getValue(HARVEST_TOOL).tag) || tag.equals(state.getValue(TOOL_TIER).tag);
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(BlockState state){
+        return PushReaction.DESTROY;
     }
 
     public enum HarvestTool implements StringRepresentable {
