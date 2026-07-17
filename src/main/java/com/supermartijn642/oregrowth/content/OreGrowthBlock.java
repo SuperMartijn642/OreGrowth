@@ -7,18 +7,13 @@ import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.OreGrowthConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -43,7 +38,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -187,30 +181,6 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         BlockPos pos = new BlockPos((int)Math.floor(origin.x), (int)Math.floor(origin.y), (int)Math.floor(origin.z));
         Direction facing = state.getValue(FACE);
         BlockState base = level.getBlockState(pos.relative(facing));
-
-        // Check if the base block would drop anything for the current tool
-        ItemInstance tool = builder.getOptionalParameter(LootContextParams.TOOL);
-        Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
-        if(tool != null){
-            // This is the only way to convert an ItemInstance to an ItemStack because Mojang made it so insanely stupid
-            DataComponentPatch.Builder components = DataComponentPatch.builder();
-            for(DataComponentType<?> type : BuiltInRegistries.DATA_COMPONENT_TYPE){
-                Object value = tool.get(type);
-                if(value != null)
-                    //noinspection rawtypes,unchecked
-                    components.set((DataComponentType)type, value);
-            }
-            ItemStack s = new ItemStack(tool.typeHolder(), tool.count(), components.build());
-            if(!s.isCorrectToolForDrops(base))
-                return Collections.emptyList();
-        }else if(entity instanceof Player){
-            if(!ForgeHooks.isCorrectToolForDrops(base, (Player)entity))
-                return Collections.emptyList();
-        }else if(entity instanceof LivingEntity){
-            if(!((LivingEntity)entity).getMainHandItem().isCorrectToolForDrops(base))
-                return Collections.emptyList();
-        }else if(base.requiresCorrectToolForDrops())
-            return Collections.emptyList();
 
         // Find the recipe for the base block and generate the drops
         OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base.getBlock());
