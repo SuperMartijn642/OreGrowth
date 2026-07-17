@@ -183,21 +183,6 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
         Direction facing = state.getValue(FACE);
         BlockState base = level.getBlockState(pos.relative(facing));
 
-        // Check if the base block would drop anything for the current tool
-        ItemStack tool = builder.getOptionalParameter(LootContextParams.TOOL);
-        Entity entity = builder.getOptionalParameter(LootContextParams.THIS_ENTITY);
-        if(tool != null){
-            if(!tool.isCorrectToolForDrops(base))
-                return Collections.emptyList();
-        }else if(entity instanceof Player){
-            if(!((Player)entity).hasCorrectToolForDrops(base, level, pos))
-                return Collections.emptyList();
-        }else if(entity instanceof LivingEntity){
-            if(!((LivingEntity)entity).getMainHandItem().isCorrectToolForDrops(base))
-                return Collections.emptyList();
-        }else if(base.requiresCorrectToolForDrops())
-            return Collections.emptyList();
-
         // Find the recipe for the base block and generate the drops
         OreGrowthRecipe recipe = OreGrowthRecipeManager.get(level.isClientSide()).getRecipeFor(base.getBlock());
         if(recipe == null)
