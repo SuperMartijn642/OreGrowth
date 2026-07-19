@@ -14,6 +14,7 @@ import com.supermartijn642.oregrowth.content.SyncOreGrowthRecipesPacket;
 import com.supermartijn642.oregrowth.generators.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
@@ -31,6 +32,10 @@ public class OreGrowth {
     public static BaseBlockItem ORE_GROWTH_ITEM;
     public static OreGrowthBlock COMPLETE_ORE_GROWTH_BLOCK;
     public static BaseBlockItem COMPLETE_ORE_GROWTH_ITEM;
+
+    public static boolean isOreGrowthBlock(Block block){
+        return block == ORE_GROWTH_BLOCK || block == COMPLETE_ORE_GROWTH_BLOCK;
+    }
 
     public OreGrowth(IEventBus eventBus){
         CHANNEL.registerMessage(SyncOreGrowthRecipesPacket.class, SyncOreGrowthRecipesPacket::new, false);

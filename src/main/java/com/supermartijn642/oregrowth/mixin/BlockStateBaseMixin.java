@@ -72,7 +72,7 @@ public abstract class BlockStateBaseMixin implements OreGrowthBlockState {
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
         Block block = state.getBlock();
-        if(block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
+        if(OreGrowth.isOreGrowthBlock(block))
             ci.setReturnValue(((OreGrowthBlock)block).requiresCorrectToolForDrops(state));
     }
 }
