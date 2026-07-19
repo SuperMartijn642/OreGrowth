@@ -1,7 +1,6 @@
 package com.supermartijn642.oregrowth.content;
 
 import com.supermartijn642.core.block.BaseBlock;
-import com.supermartijn642.core.block.BlockProperties;
 import com.supermartijn642.core.block.BlockShape;
 import com.supermartijn642.oregrowth.OreGrowth;
 import com.supermartijn642.oregrowth.OreGrowthConfig;
@@ -136,7 +135,7 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     }
 
     public OreGrowthBlock(){
-        super(false, BlockProperties.create().noLootTable().randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE));
+        super(false, Properties.of().noLootTable().randomTicks().destroyTime(0.5f).explosionResistance(0.5f).sound(SoundType.STONE).pushReaction(PushReaction.DESTROY));
         this.registerDefaultState(
             this.defaultBlockState()
                 .setValue(STAGE, 1)
@@ -264,11 +263,6 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     public boolean is(BlockStateBase state, TagKey<Block> tag){
         return tag.equals(state.getValue(HARVEST_TOOL).tag) || state.getValue(TOOL_TIER).tags.contains(tag);
-    }
-
-    @Override
-    public @Nullable PushReaction getPistonPushReaction(BlockState state){
-        return PushReaction.DESTROY;
     }
 
     public enum HarvestTool implements StringRepresentable {
