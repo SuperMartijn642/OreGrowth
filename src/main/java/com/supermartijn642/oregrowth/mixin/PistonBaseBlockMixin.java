@@ -24,7 +24,7 @@ public class PistonBaseBlockMixin {
         )
     )
     private boolean cancelDropsIfToolIsRequired(BlockState state, LevelAccessor level, BlockPos pos, BlockEntity entity){
-        if(state.getBlock() != OreGrowth.ORE_GROWTH_BLOCK && state.getBlock() != OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
+        if(!OreGrowth.isOreGrowthBlock(state.getBlock()))
             return true;
         return !state.requiresCorrectToolForDrops();
     }
