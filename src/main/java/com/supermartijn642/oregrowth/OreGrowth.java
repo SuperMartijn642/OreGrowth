@@ -16,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Created 04/10/2023 by SuperMartijn642
@@ -34,6 +35,10 @@ public class OreGrowth implements ModInitializer {
     public static BaseBlockItem ORE_GROWTH_ITEM;
     public static OreGrowthBlock COMPLETE_ORE_GROWTH_BLOCK;
     public static BaseBlockItem COMPLETE_ORE_GROWTH_ITEM;
+
+    public static boolean isOreGrowthBlock(Block block){
+        return block == ORE_GROWTH_BLOCK || block == COMPLETE_ORE_GROWTH_BLOCK;
+    }
 
     @Override
     public void onInitialize(){

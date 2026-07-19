@@ -11,7 +11,11 @@
     "ServerPlayerGameModeMixin",
     "TypedInstanceMixin"
   ],
-  "client": [],
+  "client": [
+    "BlockDestructionProgressMixin",
+    "ClientLevelMixin",
+    "LevelRendererMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
