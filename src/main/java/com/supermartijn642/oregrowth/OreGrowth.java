@@ -35,6 +35,10 @@ public class OreGrowth {
     public static OreGrowthBlock COMPLETE_ORE_GROWTH_BLOCK;
     public static BaseBlockItem COMPLETE_ORE_GROWTH_ITEM;
 
+    public static boolean isOreGrowthBlock(Block block){
+        return block == ORE_GROWTH_BLOCK || block == COMPLETE_ORE_GROWTH_BLOCK;
+    }
+
     public OreGrowth(){
         OreGrowthConfig.init();
         register();
