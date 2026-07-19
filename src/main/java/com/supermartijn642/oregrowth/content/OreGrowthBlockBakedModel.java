@@ -108,7 +108,7 @@ public class OreGrowthBlockBakedModel implements BlockStateModel {
         // Emit the quads
         this.emitQuads(base, this.blockMaterialCache, (model, output) -> {
             BlockState baseState = base.defaultBlockState();
-            BlockPos basePos = state.is(OreGrowth.ORE_GROWTH_BLOCK) ? pos.relative(state.getValue(OreGrowthBlock.FACE)) : pos;
+            BlockPos basePos = OreGrowth.isOreGrowthBlock(state.getBlock()) ? pos.relative(state.getValue(OreGrowthBlock.FACE)) : pos;
             model.emitQuads(output, blockView, basePos, baseState, random, side -> false);
         }, emitter);
     }
