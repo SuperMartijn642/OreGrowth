@@ -3,6 +3,7 @@ package com.supermartijn642.oregrowth.content;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.util.Holder;
 import com.supermartijn642.core.util.Pair;
+import com.supermartijn642.oregrowth.OreGrowth;
 import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
@@ -47,7 +48,7 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
     private Block getBase(BlockAndTintGetter blockView, BlockPos pos, BlockState state){
         Block base;
         if(this.baseBlockContext == null){
-            if(!(state.getBlock() instanceof OreGrowthBlock))
+            if(!OreGrowth.isOreGrowthBlock(state.getBlock()))
                 return null;
             BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
             base = blockView.getBlockState(basePos).getBlock();
