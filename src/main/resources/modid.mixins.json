@@ -7,9 +7,14 @@
     "BlockStateBaseMixin",
     "PistonBaseBlockMixin",
     "PlayerListMixin",
-    "RecipeManagerMixin"
+    "RecipeManagerMixin",
+    "ServerPlayerGameModeMixin"
   ],
-  "client": [],
+  "client": [
+    "BlockDestructionProgressMixin",
+    "ClientLevelMixin",
+    "LevelRendererMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
