@@ -40,7 +40,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
 
             @Override
             public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level level, BlockState state, IProbeHitData hitData){
-                if(!state.is(OreGrowth.ORE_GROWTH_BLOCK))
+                if(!OreGrowth.isOreGrowthBlock(state.getBlock()))
                     return;
 
                 Direction facing = state.getValue(OreGrowthBlock.FACE);
