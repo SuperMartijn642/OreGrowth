@@ -75,8 +75,7 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
         Block block = state.getBlock();
-        if((block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
-            && ((OreGrowthBlock)block).is(state, tag))
+        if(OreGrowth.isOreGrowthBlock(block) && ((OreGrowthBlock)block).is(state, tag))
             ci.setReturnValue(true);
     }
 
@@ -90,8 +89,7 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
         Block block = state.getBlock();
-        if((block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
-            && tag instanceof HolderSet.Named && ((OreGrowthBlock)block).is(state, ((HolderSet.Named<Block>)tag).key()))
+        if(OreGrowth.isOreGrowthBlock(block) && tag instanceof HolderSet.Named && ((OreGrowthBlock)block).is(state, ((HolderSet.Named<Block>)tag).key()))
             ci.setReturnValue(true);
     }
 
@@ -104,7 +102,7 @@ public class BlockStateBaseMixin implements OreGrowthBlockState {
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
         Block block = state.getBlock();
-        if(block == OreGrowth.ORE_GROWTH_BLOCK || block == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK)
+        if(OreGrowth.isOreGrowthBlock(block))
             ci.setReturnValue(((OreGrowthBlock)block).requiresCorrectToolForDrops(state));
     }
 }
