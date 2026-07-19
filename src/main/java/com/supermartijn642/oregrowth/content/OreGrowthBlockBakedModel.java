@@ -51,7 +51,7 @@ public class OreGrowthBlockBakedModel implements DynamicBlockStateModel {
     private Block getBase(BlockAndTintGetter blockView, BlockPos pos, BlockState state){
         Block base;
         if(this.baseBlockContext == null){
-            if(!state.is(OreGrowth.ORE_GROWTH_BLOCK))
+            if(!OreGrowth.isOreGrowthBlock(state.getBlock()))
                 return null;
             BlockPos basePos = pos.relative(state.getValue(OreGrowthBlock.FACE));
             base = blockView.getBlockState(basePos).getBlock();
