@@ -7,9 +7,13 @@
     "BlockStateBaseMixin",
     "PistonBaseBlockMixin",
     "PlayerListMixin",
-    "RecipeManagerMixin"
+    "RecipeManagerMixin",
+    "ServerPlayerGameModeMixin"
   ],
   "client": [
+    "BlockDestructionProgressMixin",
+    "ClientLevelMixin",
+    "LevelRendererMixin",
     "ParticleEngineMixin"
   ],
   "server": [],
