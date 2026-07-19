@@ -11,6 +11,9 @@
     "ServerPlayerGameModeMixin"
   ],
   "client": [
+    "BlockDestructionProgressMixin",
+    "ClientLevelMixin",
+    "LevelRendererMixin",
     "ParticleEngineMixin"
   ],
   "server": [],
