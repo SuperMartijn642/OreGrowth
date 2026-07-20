@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
@@ -227,7 +228,9 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context){
-        return SHAPES_ROTATED[(state.getValue(STAGE) - 1) * 6 + state.getValue(FACE).ordinal()].getUnderlying();
+        BlockShape shape = SHAPES_ROTATED[(state.getValue(STAGE) - 1) * 6 + state.getValue(FACE).ordinal()];
+        Vec3 offset = this.getOffset(pos, state);
+        return shape.offset(offset.x, offset.y, offset.z).getUnderlying();
     }
 
     @Override
@@ -270,6 +273,26 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public FluidState getFluidState(BlockState state){
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    public Vec3 getOffset(BlockPos pos, BlockStateBase state){
+        Direction facing = state.getValue(FACE);
+        long seed = Mth.getSeed(pos.getX(), pos.getY(), pos.getZ());
+        float maxOffset = 0.2f, maxSink = 0.08f;
+        double xOffset = facing.getAxis() == Direction.Axis.X ?
+            facing.getStepX() * ((seed & 15) / 15f) * maxSink :
+            (((seed & 15) / 15f) - 0.5) * maxOffset;
+        double yOffset = facing.getAxis() == Direction.Axis.Y ?
+            facing.getStepY() * ((seed >> 4 & 15) / 15f) * maxSink :
+            (((seed >> 4 & 15) / 15f) - 0.5) * maxOffset;
+        double zOffset = facing.getAxis() == Direction.Axis.Z ?
+            facing.getStepZ() * ((seed >> 8 & 15) / 15f) * maxSink :
+            (((seed >> 8 & 15) / 15f) - 0.5) * maxOffset;
+        return new Vec3(
+            xOffset,
+            yOffset,
+            zOffset
+        );
     }
 
     public boolean requiresCorrectToolForDrops(BlockStateBase state){
