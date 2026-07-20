@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -74,5 +75,18 @@ public abstract class BlockStateBaseMixin implements OreGrowthBlockState {
         Block block = state.getBlock();
         if(OreGrowth.isOreGrowthBlock(block))
             ci.setReturnValue(((OreGrowthBlock)block).requiresCorrectToolForDrops(state));
+    }
+
+    @Inject(
+        method = "getOffset",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void getOffset(BlockPos pos, CallbackInfoReturnable<Vec3> ci) {
+        //noinspection DataFlowIssue
+        BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
+        Block block = state.getBlock();
+        if(OreGrowth.isOreGrowthBlock(block))
+            ci.setReturnValue(((OreGrowthBlock)block).getOffset(pos, state));
     }
 }
