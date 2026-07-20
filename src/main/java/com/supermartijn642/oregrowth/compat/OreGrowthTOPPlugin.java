@@ -54,7 +54,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
                         // Replace the icon
                         if(elements.get(0) instanceof ElementItemStack){
                             ElementItemStack oldElement = (ElementItemStack)elements.remove(0);
-                            elements.add(0, new WrappedItemStackElement(oldElement, probeInfo.defaultItemStyle(), base));
+                            elements.add(0, new WrappedItemStackElement(oldElement, probeInfo.defaultItemStyle(), state.getBlock() == OreGrowth.COMPLETE_ORE_GROWTH_BLOCK, base));
                         }
                         // Replace the name
                         if(elements.get(1) instanceof ElementVertical vertical && vertical.getElements().get(0) instanceof ElementItemLabel){
@@ -90,11 +90,13 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
     private static class WrappedItemStackElement extends ElementItemStack {
 
         private final ElementItemStack wrapped;
+        private final boolean isComplete;
         private final Block base;
 
-        public WrappedItemStackElement(ElementItemStack wrapped, IItemStyle itemStyle, Block base){
+        public WrappedItemStackElement(ElementItemStack wrapped, IItemStyle itemStyle, boolean isComplete, Block base){
             super(ItemStack.EMPTY, itemStyle);
             this.wrapped = wrapped;
+            this.isComplete = isComplete;
             this.base = base;
         }
 
@@ -106,6 +108,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
         public WrappedItemStackElement(RegistryFriendlyByteBuf buf){
             super(buf);
             this.wrapped = null;
+            this.isComplete = buf.readBoolean();
             this.base = Registries.BLOCKS.getValue(buf.readResourceLocation());
             if(this.base == null)
                 throw new RuntimeException("Received invalid base block!");
@@ -113,7 +116,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
 
         @Override
         public void render(GuiGraphics graphics, int x, int y){
-            BakedModel model = ClientUtils.getItemRenderer().getModel(OreGrowth.ORE_GROWTH_BLOCK.asItem().getDefaultInstance(), null, null, 0);
+            BakedModel model = ClientUtils.getItemRenderer().getModel((this.isComplete ? OreGrowth.COMPLETE_ORE_GROWTH_BLOCK : OreGrowth.ORE_GROWTH_BLOCK).asItem().getDefaultInstance(), null, null, 0);
             if(model instanceof OreGrowthBlockBakedModel)
                 ((OreGrowthBlockBakedModel)model).withContext(this.base, () -> super.render(graphics, x, y));
             else
@@ -126,6 +129,7 @@ public class OreGrowthTOPPlugin implements Function<ITheOneProbe,Void> {
                 this.wrapped.toBytes(buf);
             else
                 super.toBytes(buf);
+            buf.writeBoolean(this.isComplete);
             buf.writeResourceLocation(Registries.BLOCKS.getIdentifier(this.base));
         }
     }
