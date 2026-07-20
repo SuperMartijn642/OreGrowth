@@ -29,10 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.*;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -94,10 +91,10 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
                 SHAPES_ROTATED[stage * 6 + face.ordinal()] =
                     face == Direction.UP ? shape.rotate(Direction.Axis.X).rotate(Direction.Axis.X)
                         : face == Direction.NORTH ? shape.rotate(Direction.Axis.X).rotate(Direction.Axis.Y).rotate(Direction.Axis.Y)
-                        : face == Direction.EAST ? shape.rotate(Direction.Axis.X).rotate(Direction.Axis.Y).rotate(Direction.Axis.Y).rotate(Direction.Axis.Y)
-                        : face == Direction.SOUTH ? shape.rotate(Direction.Axis.X)
-                        : face == Direction.WEST ? shape.rotate(Direction.Axis.X).rotate(Direction.Axis.Y)
-                        : shape;
+                          : face == Direction.EAST ? shape.rotate(Direction.Axis.X).rotate(Direction.Axis.Y).rotate(Direction.Axis.Y).rotate(Direction.Axis.Y)
+                            : face == Direction.SOUTH ? shape.rotate(Direction.Axis.X)
+                              : face == Direction.WEST ? shape.rotate(Direction.Axis.X).rotate(Direction.Axis.Y)
+                                : shape;
             }
         }
     }
@@ -105,13 +102,13 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     private static BlockState propertiesForBase(BlockState state, BlockStateBase base){
         HarvestTool harvestTool = base.is(BlockTags.MINEABLE_WITH_PICKAXE) ? HarvestTool.PICKAXE
             : base.is(BlockTags.MINEABLE_WITH_AXE) ? HarvestTool.AXE
-            : base.is(BlockTags.MINEABLE_WITH_SHOVEL) ? HarvestTool.SHOVEL
-            : base.is(BlockTags.MINEABLE_WITH_HOE) ? HarvestTool.HOE
-            : HarvestTool.NONE;
+              : base.is(BlockTags.MINEABLE_WITH_SHOVEL) ? HarvestTool.SHOVEL
+                : base.is(BlockTags.MINEABLE_WITH_HOE) ? HarvestTool.HOE
+                  : HarvestTool.NONE;
         ToolTier toolTier = base.is(BlockTags.NEEDS_DIAMOND_TOOL) ? ToolTier.DIAMOND
             : base.is(BlockTags.NEEDS_IRON_TOOL) ? ToolTier.IRON
-            : base.is(BlockTags.NEEDS_STONE_TOOL) ? ToolTier.STONE
-            : ToolTier.NONE;
+              : base.is(BlockTags.NEEDS_STONE_TOOL) ? ToolTier.STONE
+                : ToolTier.NONE;
         return state
             .setValue(REQUIRES_TOOL_FOR_DROPS, base.requiresCorrectToolForDrops())
             .setValue(HARVEST_TOOL, harvestTool)
@@ -249,6 +246,11 @@ public class OreGrowthBlock extends BaseBlock implements SimpleWaterloggedBlock 
     @Override
     public FluidState getFluidState(BlockState state){
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState blockState){
+        return PushReaction.DESTROY;
     }
 
     public boolean requiresCorrectToolForDrops(BlockStateBase state){
