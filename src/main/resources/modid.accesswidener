@@ -25,3 +25,6 @@ accessible field net/minecraft/world/level/storage/loot/providers/number/Binomia
 accessible field net/minecraft/world/level/storage/loot/providers/number/ConstantValue value F
 accessible field net/minecraft/world/level/storage/loot/providers/number/UniformGenerator max Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
 accessible field net/minecraft/world/level/storage/loot/providers/number/UniformGenerator min Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+accessible field net/minecraft/client/renderer/LevelRenderer destroyingBlocks Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible field net/minecraft/client/renderer/LevelRenderer destructionProgress Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+accessible method net/minecraft/client/renderer/LevelRenderer removeProgress (Lnet/minecraft/server/level/BlockDestructionProgress;)V
