@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.ModList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -83,6 +84,8 @@ public abstract class BlockStateBaseMixin implements OreGrowthBlockState {
         cancellable = true
     )
     private void getOffset(BlockPos pos, CallbackInfoReturnable<Vec3> ci) {
+        if(ModList.get() == null) // This is needed because NeoForge already loads blocks before mods are initialized
+            return;
         //noinspection DataFlowIssue
         BlockBehaviour.BlockStateBase state = (BlockBehaviour.BlockStateBase)(Object)this;
         Block block = state.getBlock();
