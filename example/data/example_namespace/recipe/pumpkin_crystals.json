@@ -1,0 +1,25 @@
+{
+  "type": "oregrowth:ore_growth",
+  "base": [
+    "minecraft:pumpkin"
+  ],
+  "stages": 4,
+  "spawn_chance": 0.2,
+  "growth_chance": 0.3,
+  "drops": [
+    {
+      "stage": 4,
+      "chance": 0.9,
+      "item": {
+        "id": "minecraft:pumpkin_pie",
+        "count": 2
+      }
+    },
+    {
+      "min_stage": 1,
+      "max_stage": 3,
+      "chance": 0.3,
+      "loot_table": "minecraft:blocks/short_grass"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "description": "Example data pack that adds an Ore Growth recipe for Pumpkins",
+    "comment": "The fields below indicate to Minecraft what versions this pack is compatible with. You can find more info on the Minecraft wiki https://minecraft.wiki/w/Pack.mcmeta",
+    "pack_format": 15,
+    "supported_formats": {
+      "min_inclusive": 15,
+      "max_inclusive": 1000
+    },
+    "min_format": 15,
+    "max_format": 1000
+  }
+}

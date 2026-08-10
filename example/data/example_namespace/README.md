@@ -1,0 +1,1 @@
+For Minecraft 1.21 and above, recipes go into `/recipe/`. For Minecraft 1.20.6 and below, recipes go into `/recipes/`.
