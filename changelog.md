@@ -1,3 +1,6 @@
+### Ore Growth 1.2.0a
+- Added icon and banner images for new NeoForge 26.2.0.50-beta mod list
+
 ### Ore Growth 1.2.0
 - When mining a block, you will now also mine any attached crystals
 - Added a random offset to crystals to give some natural variation
